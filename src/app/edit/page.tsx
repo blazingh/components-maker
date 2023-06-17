@@ -1,101 +1,21 @@
 "use client";
 // Import necessary modules
 import * as React from "react";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowDown,
-  ArrowDownFromLine,
-  ArrowRight,
-  ArrowUpFromLine,
-  ChevronDown,
-  ChevronUp,
-  Dot,
-  PlusIcon,
-  Trash,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
+
+import { ComponentsFileTree } from "@/components/componentsFileTree";
+import ComponentsPreviewTree from "@/components/componentsPreviewTree";
+import { initialComponents } from "@/initialTestComponents";
+import ComponentsEditBar from "@/components/componentsEditBar";
 
 // Define the structure of a component in the tree
-interface TreeComponent {
+export interface TreeComponent {
   id: number;
   name: string;
   style: React.CSSProperties;
   parent?: number;
+  content?: string;
   children: { id: number }[];
 }
-
-// Define the initial state of components
-const initialComponents: TreeComponent[] = [
-  {
-    id: 1,
-    name: "root",
-    style: {
-      width: "500px",
-      height: "500px",
-      backgroundColor: "red",
-    },
-    parent: undefined,
-    children: [
-      {
-        id: 2,
-      },
-      {
-        id: 3,
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "header",
-    style: {
-      width: "50px",
-      height: "50px",
-      backgroundColor: "blue",
-    },
-    parent: 1,
-    children: [],
-  },
-  {
-    id: 3,
-    name: "logo",
-    style: {
-      width: "50px",
-      height: "50px",
-      backgroundColor: "green",
-    },
-    parent: 1,
-    children: [
-      {
-        id: 4,
-      },
-      {
-        id: 5,
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: "logo",
-    style: {
-      width: "50px",
-      height: "50px",
-      backgroundColor: "green",
-    },
-    parent: 3,
-    children: [],
-  },
-  {
-    id: 5,
-    name: "logo",
-    style: {
-      width: "50px",
-      height: "50px",
-      backgroundColor: "green",
-    },
-    parent: 3,
-    children: [],
-  },
-];
 
 export default function Demo() {
   // Define state for components and activeId
@@ -281,10 +201,27 @@ export default function Demo() {
     setComponents([...components]);
   };
 
+  const [selectedComponent, setSelectedComponent] =
+    React.useState<TreeComponent>();
+
+  React.useEffect(() => {
+    const index = components.findIndex(
+      (component) => component.id === activeId
+    );
+    if (index === -1) return;
+
+    setSelectedComponent(components[index]);
+  }, [activeId, components]);
+
   return (
-    <div className="flex w-full h-full">
-      <div style={{ width: "200px" }}>
-        <ComponentsTree
+    <div className="flex w-full h-screen">
+      <div
+        style={{
+          maxWidth: 200,
+          minWidth: "200px",
+        }}
+      >
+        <ComponentsFileTree
           addComponentTo={addComponentTo}
           components={components}
           id={1}
@@ -293,116 +230,37 @@ export default function Demo() {
         />
       </div>
 
-      {/* button to add a new component */}
-      <Button variant="default" onClick={() => addComponentTo(activeId)}>
-        <PlusIcon size={16} /> add child
-      </Button>
-
-      {/* button to delete a component */}
-      <Button
-        variant="destructive"
-        onClick={() => deleteComponentAndChildren(activeId)}
+      <div
+        className="w-full h-full flex items-center justify-center p-6"
+        style={{
+          maxWidth: "calc(100% - 425px)",
+        }}
       >
-        <Trash size={16} /> delete
-      </Button>
-
-      {/* button to rearrange a component */}
-      <Button
-        variant="default"
-        onClick={() => rearrangeComponent(activeId, "up")}
-      >
-        <ChevronUp size={16} />
-      </Button>
-
-      <Button
-        variant="default"
-        onClick={() => rearrangeComponent(activeId, "down")}
-      >
-        <ChevronDown size={16} />
-      </Button>
-
-      {/* button to move a component to the same level as its parent */}
-      <Button
-        variant="default"
-        onClick={() => moveComponentToParentLevel(activeId)}
-      >
-        <ArrowUpFromLine size={16} />
-      </Button>
-
-      {/* button to move a component to the level of its first child of its next sibling */}
-      <Button
-        variant="default"
-        onClick={() => moveComponentToChildLevel(activeId)}
-      >
-        <ArrowDownFromLine size={16} />
-      </Button>
-
-      <Input
-        value={components.find((c) => c.id === activeId)?.name || ""}
-        onChange={(e) => updateComponentName(activeId, e.target.value)}
-      />
-    </div>
-  );
-}
-
-interface ComponentsTreeProps {
-  components: TreeComponent[];
-  addComponentTo: (parentId: number) => void;
-  activeId: number;
-  id: number;
-  setActiveId: (id: number) => void;
-}
-
-function ComponentsTree({
-  components,
-  addComponentTo,
-  id,
-  activeId,
-  setActiveId,
-}: ComponentsTreeProps) {
-  const [open, setOpen] = React.useState(false);
-
-  const component = components.find((c) => c.id === id);
-
-  if (!component) return null;
-
-  const hasChildren = component.children.length > 0;
-
-  return (
-    <div className="relative border-l border-gray-200">
-      <div className="flex items-center bg-secondary">
-        <Button
-          className="px-0 w-6 rounded-none"
-          variant={activeId === id ? "default" : "secondary"}
-          onClick={() => hasChildren && setOpen((prev) => !prev)}
-        >
-          {!hasChildren ? (
-            <Dot size={16} />
-          ) : open ? (
-            <ArrowDown size={16} />
-          ) : (
-            <ArrowRight size={16} />
-          )}
-        </Button>
-        <Button
-          className="rounded-none px-2 pl-1 w-full justify-start"
-          variant={activeId === id ? "default" : "secondary"}
-          onClick={() => setActiveId(id)}
-        >
-          {component.name}
-        </Button>
+        <ComponentsPreviewTree
+          components={components}
+          id={1}
+          activeId={activeId}
+        />
       </div>
-      <div className={`ml-2 ${open ? "block" : "hidden"}`}>
-        {component.children.map((child, index) => (
-          <ComponentsTree
-            addComponentTo={addComponentTo}
-            key={child.id}
-            id={child.id}
-            components={components}
-            activeId={activeId}
-            setActiveId={setActiveId}
-          />
-        ))}
+
+      <div
+        className="flex flex-col flex-1 p-2 bg-gray-100 gap-y-2"
+        style={{
+          maxWidth: "225px",
+          minWidth: "225px",
+        }}
+      >
+        <ComponentsEditBar
+          selectedComponent={selectedComponent}
+          activeId={activeId}
+          addComponentTo={addComponentTo}
+          rearrangeComponent={rearrangeComponent}
+          moveComponentToParentLevel={moveComponentToParentLevel}
+          moveComponentToChildLevel={moveComponentToChildLevel}
+          updateComponentName={updateComponentName}
+          updateComponentStyle={updateComponentStyle}
+          deleteComponentAndChildren={deleteComponentAndChildren}
+        />
       </div>
     </div>
   );
