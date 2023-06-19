@@ -36,7 +36,9 @@ import {
 import { Button } from "./ui/button";
 import React from "react";
 import { TreeComponentItem } from "@/types/types";
-import { ComponentPropritiesOptions } from "@/constants/objects";
+import { ComponentStylePropritiesOptions as ComponentPropritiesOptions } from "@/constants/objects";
+import InputWithUnit from "./inputs/inputWithUnit";
+import Position from "./porpreties/position";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -87,17 +89,17 @@ export default function ComponentsEditBar({
           <AccordionTrigger>Content</AccordionTrigger>
           <AccordionContent>
             {/* input to change the content type of a component */}
-            <PropritySelector
-              label="Content Type"
-              value={selectedComponent?.content?.type || "none"}
-              onValueChange={(type: any) =>
-                updateComponentContent(activeId, {
-                  ...selectedComponent?.content,
-                  type,
-                })
-              }
-              proprities={ComponentPropritiesOptions.contentTypes}
-            />
+            {/* <PropritySelector */}
+            {/*   label="Content Type" */}
+            {/*   value={selectedComponent?.content?.type || "none"} */}
+            {/*   onValueChange={(type: any) => */}
+            {/*     updateComponentContent(activeId, { */}
+            {/*       ...selectedComponent?.content, */}
+            {/*       type, */}
+            {/*     }) */}
+            {/*   } */}
+            {/*   proprities={ComponentPropritiesOptions.contentTypes} */}
+            {/* /> */}
             {/* options if the content is a tect */}
             {selectedComponent?.content?.type === "text" && (
               <>
@@ -169,6 +171,13 @@ export default function ComponentsEditBar({
         <AccordionItem value="Move Component">
           <AccordionTrigger>Position</AccordionTrigger>
           <AccordionContent>
+            <Position
+              styles={selectedComponent?.style}
+              setStyles={(atr: any, value: any) =>
+                updateComponentStyle(activeId, { ...selectedComponent?.style, [atr]: value })
+              }
+            />
+
             <div className="flex justify-around">
               {/* button to rearrange a component up */}
               <TooltipButton
@@ -473,6 +482,13 @@ export default function ComponentsEditBar({
         </AccordionItem>
       </Accordion>
 
+      <InputWithUnit
+        label="width"
+        value="10px"
+        placeholder="ro"
+        onChange={(e) => console.log(e)}
+      />
+
       {/* button to delete a component */}
       <TooltipButton
         variant="destructive"
@@ -493,7 +509,7 @@ interface PropritySelectorProps {
   proprities: { label: string; value: string }[];
 }
 
-function PropritySelector({
+export function PropritySelector({
   label,
   value,
   onValueChange,

@@ -1,13 +1,16 @@
-export const ComponentPropritiesOptions = {
-  contentTypes: [
-    { value: "none", label: "None" },
-    { value: "text", label: "Text" },
-    { value: "image", label: "Image" },
-    { value: "link", label: "Link" },
-    { value: "component", label: "Component" },
+export const ComponentStylePropritiesOptions = {
+  position: [
+    { value: "initial", label: "Initial" },
+    { value: "absolute", label: "Absolute" },
+    { value: "fixed", label: "Fixed" },
+    { value: "relative", label: "Relative" },
+    { value: "static", label: "Static" },
+    { value: "sticky", label: "Sticky" },
+    { value: "inherit", label: "Inherit" },
   ],
   size: [
-    { value: "static", label: "Static" },
+    { value: "initial", label: "Initial" },
+    { value: "input", label: "Custom" },
     { value: "100%", label: "Fill" },
     { value: "max-content", label: "Content" },
     { value: "auto", label: "Auto" },
@@ -24,23 +27,27 @@ export const ComponentPropritiesOptions = {
     { value: "outset", label: "Outset" },
   ],
   display: [
+    { value: "initial", label: "Initial" },
     { value: "block", label: "Block" },
     { value: "inline", label: "Inline" },
     { value: "flex", label: "Flex" },
     { value: "grid", label: "Grid" },
   ],
   flexDirection: [
+    { value: "initial", label: "Initial" },
     { value: "row", label: "Row" },
     { value: "row-reverse", label: "Row Reverse" },
     { value: "column", label: "Column" },
     { value: "column-reverse", label: "Column Reverse" },
   ],
   flexWrap: [
+    { value: "initial", label: "Initial" },
     { value: "nowrap", label: "No Wrap" },
     { value: "wrap", label: "Wrap" },
     { value: "wrap-reverse", label: "Wrap Reverse" },
   ],
   justifyContent: [
+    { value: "initial", label: "Initial" },
     { value: "flex-start", label: "Flex Start" },
     { value: "flex-end", label: "Flex End" },
     { value: "center", label: "Center" },
@@ -49,6 +56,7 @@ export const ComponentPropritiesOptions = {
     { value: "space-evenly", label: "Space Evenly" },
   ],
   alignItems: [
+    { value: "initial", label: "Initial" },
     { value: "flex-start", label: "Flex Start" },
     { value: "flex-end", label: "Flex End" },
     { value: "center", label: "Center" },

@@ -211,6 +211,8 @@ export default function Demo() {
     );
     if (index === -1) return;
 
+    console.log(typeof React.CSSProperties);
+
     setSelectedComponent(components[index]);
   }, [activeId, components]);
 
