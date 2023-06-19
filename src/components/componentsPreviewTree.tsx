@@ -1,15 +1,17 @@
-import { TreeComponent } from "@/app/edit/page";
+import { ComponentContentType, TreeComponentItem } from "@/types/types";
 
 interface ComponentsPreviewTreeProps {
-  components: TreeComponent[];
+  components: TreeComponentItem[];
   id: number;
   activeId: number;
+  data?: { [key: string]: any };
 }
 
 export default function ComponentsPreviewTree({
   components,
   id,
   activeId,
+  data,
 }: ComponentsPreviewTreeProps) {
   const component = components.find((c) => c.id === id);
 
@@ -18,12 +20,23 @@ export default function ComponentsPreviewTree({
   return (
     <div
       style={component.style}
-      className={activeId === id ? "outline outline-primary" : ""}
+      className={activeId === id ? "outline outline-primary outline-thin " : ""}
     >
-      {component.content && component.content}
+      {component.content?.type === ComponentContentType.Text && (
+        <div style={component.content?.style}>
+          {component.content?.text || ""}
+        </div>
+      )}
+
+      {component.content?.type === ComponentContentType.Key && (
+        <div style={component.content?.style}>
+          {data?.[component.content?.key || ""] || ""}
+        </div>
+      )}
 
       {component.children.map((child) => (
         <ComponentsPreviewTree
+          data={data}
           activeId={activeId}
           key={child.id}
           id={child.id}

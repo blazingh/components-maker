@@ -6,22 +6,23 @@ import { ComponentsFileTree } from "@/components/componentsFileTree";
 import ComponentsPreviewTree from "@/components/componentsPreviewTree";
 import { initialComponents } from "@/initialTestComponents";
 import ComponentsEditBar from "@/components/componentsEditBar";
-
-// Define the structure of a component in the tree
-export interface TreeComponent {
-  id: number;
-  name: string;
-  style: React.CSSProperties;
-  parent?: number;
-  content?: string;
-  children: { id: number }[];
-}
+import { TreeComponentItem } from "@/types/types";
 
 export default function Demo() {
   // Define state for components and activeId
   const [components, setComponents] =
-    React.useState<TreeComponent[]>(initialComponents);
+    React.useState<TreeComponentItem[]>(initialComponents);
   const [activeId, setActiveId] = React.useState<number>(0);
+
+  // Function to update the content of a component
+  const updateComponentContent = (id: number, content: any) => {
+    const index = components.findIndex((component) => component.id === id);
+    if (index === -1) return;
+
+    // Update the content
+    components[index].content = content;
+    setComponents([...components]);
+  };
 
   // Function to add a new component as a child to a given parent
   const addComponentTo = (parentId: number) => {
@@ -34,7 +35,7 @@ export default function Demo() {
     if (parentIndex === -1) return;
 
     // Create a new component
-    const newComponent: TreeComponent = {
+    const newComponent: TreeComponentItem = {
       id: components.length + 1,
       name: "new component",
       style: {},
@@ -202,7 +203,7 @@ export default function Demo() {
   };
 
   const [selectedComponent, setSelectedComponent] =
-    React.useState<TreeComponent>();
+    React.useState<TreeComponentItem>();
 
   React.useEffect(() => {
     const index = components.findIndex(
@@ -244,13 +245,15 @@ export default function Demo() {
       </div>
 
       <div
-        className="flex flex-col flex-1 p-2 bg-gray-100 gap-y-2"
+        className="flex flex-col flex-1 p-2 bg-gray-100 gap-y-2 overflow-y-scroll"
         style={{
           maxWidth: "225px",
           minWidth: "225px",
+          maxHeight: "100%",
         }}
       >
         <ComponentsEditBar
+          updateComponentContent={updateComponentContent}
           selectedComponent={selectedComponent}
           activeId={activeId}
           addComponentTo={addComponentTo}

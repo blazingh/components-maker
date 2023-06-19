@@ -1,4 +1,3 @@
-import { TreeComponent } from "@/app/edit/page";
 import { Input } from "./ui/input";
 import TooltipButton from "./ui/tooltipButton";
 import {
@@ -36,51 +35,8 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import React from "react";
-
-const propritiesOptions = {
-  borderStyle: [
-    { value: "none", label: "None" },
-    { value: "solid", label: "Solid" },
-    { value: "dashed", label: "Dashed" },
-    { value: "dotted", label: "Dotted" },
-    { value: "double", label: "Double" },
-    { value: "groove", label: "Groove" },
-    { value: "ridge", label: "Ridge" },
-    { value: "inset", label: "Inset" },
-    { value: "outset", label: "Outset" },
-  ],
-  display: [
-    { value: "block", label: "Block" },
-    { value: "inline", label: "Inline" },
-    { value: "flex", label: "Flex" },
-    { value: "grid", label: "Grid" },
-  ],
-  flexDirection: [
-    { value: "row", label: "Row" },
-    { value: "row-reverse", label: "Row Reverse" },
-    { value: "column", label: "Column" },
-    { value: "column-reverse", label: "Column Reverse" },
-  ],
-  flexWrap: [
-    { value: "nowrap", label: "No Wrap" },
-    { value: "wrap", label: "Wrap" },
-    { value: "wrap-reverse", label: "Wrap Reverse" },
-  ],
-  justifyContent: [
-    { value: "flex-start", label: "Flex Start" },
-    { value: "flex-end", label: "Flex End" },
-    { value: "center", label: "Center" },
-    { value: "space-between", label: "Space Between" },
-    { value: "space-around", label: "Space Around" },
-    { value: "space-evenly", label: "Space Evenly" },
-  ],
-  alignItems: [
-    { value: "flex-start", label: "Flex Start" },
-    { value: "flex-end", label: "Flex End" },
-    { value: "center", label: "Center" },
-    { value: "baseline", label: "Baseline" },
-  ],
-};
+import { TreeComponentItem } from "@/types/types";
+import { ComponentPropritiesOptions } from "@/constants/objects";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -91,9 +47,10 @@ export default function ComponentsEditBar({
   moveComponentToChildLevel,
   updateComponentName,
   updateComponentStyle,
+  updateComponentContent,
   deleteComponentAndChildren,
 }: {
-  selectedComponent: TreeComponent | undefined;
+  selectedComponent: TreeComponentItem | undefined;
   activeId: number;
   addComponentTo: (parentId: number) => void;
   rearrangeComponent: (id: number, direction: "up" | "down") => void;
@@ -101,14 +58,16 @@ export default function ComponentsEditBar({
   moveComponentToChildLevel: (id: number) => void;
   updateComponentName: (id: number, name: string) => void;
   updateComponentStyle: (id: number, style: React.CSSProperties) => void;
+  updateComponentContent: (id: number, content: any) => void;
   deleteComponentAndChildren: (id: number) => void;
 }) {
   return (
     <>
       {/* input to change the name of a component */}
-      <Input
+      <InputWithLabel
+        label="Component Name"
         placeholder="Component Name"
-        className="bg-white"
+        type="text"
         value={selectedComponent?.name || ""}
         onChange={(e) => updateComponentName(activeId, e.target.value)}
       />
@@ -124,6 +83,89 @@ export default function ComponentsEditBar({
       </TooltipButton>
 
       <Accordion type="single" collapsible>
+        <AccordionItem value="Edit Content">
+          <AccordionTrigger>Content</AccordionTrigger>
+          <AccordionContent>
+            {/* input to change the content type of a component */}
+            <PropritySelector
+              label="Content Type"
+              value={selectedComponent?.content?.type || "none"}
+              onValueChange={(type: any) =>
+                updateComponentContent(activeId, {
+                  ...selectedComponent?.content,
+                  type,
+                })
+              }
+              proprities={ComponentPropritiesOptions.contentTypes}
+            />
+            {/* options if the content is a tect */}
+            {selectedComponent?.content?.type === "text" && (
+              <>
+                {/* input to change the text of a component */}
+                <InputWithLabel
+                  label="Text"
+                  placeholder="Text"
+                  type="text"
+                  value={selectedComponent?.content?.text || ""}
+                  onChange={(e) =>
+                    updateComponentContent(activeId, {
+                      ...selectedComponent?.content,
+                      text: e.target.value,
+                    })
+                  }
+                />
+                {/* input to change the font family of a component */}
+                <PropritySelector
+                  label="Font Family"
+                  value={selectedComponent?.style?.fontFamily || "sans-serif"}
+                  onValueChange={(fontFamily: any) =>
+                    updateComponentContent(activeId, {
+                      ...selectedComponent?.content,
+                      style: {
+                        ...selectedComponent?.style,
+                        fontFamily,
+                      },
+                    })
+                  }
+                  proprities={ComponentPropritiesOptions.fontFamily}
+                />
+                {/* input to change the font size of a component */}
+                <InputWithLabel
+                  type="number"
+                  label="Font Size"
+                  placeholder="Font Size"
+                  value={selectedComponent?.style?.fontSize || 16}
+                  onChange={(e) =>
+                    updateComponentContent(activeId, {
+                      ...selectedComponent?.content,
+                      style: {
+                        ...selectedComponent?.style,
+                        fontSize: Number(e.target.value),
+                      },
+                    })
+                  }
+                />
+                {/* input to change the font weight of a component */}
+                <PropritySelector
+                  label="Font Weight"
+                  value={
+                    String(selectedComponent?.style?.fontWeight) || "normal"
+                  }
+                  onValueChange={(fontWeight: any) =>
+                    updateComponentContent(activeId, {
+                      ...selectedComponent?.content,
+                      style: {
+                        ...selectedComponent?.style,
+                        fontWeight,
+                      },
+                    })
+                  }
+                  proprities={ComponentPropritiesOptions.fontWeight}
+                />
+              </>
+            )}
+          </AccordionContent>
+        </AccordionItem>
         <AccordionItem value="Move Component">
           <AccordionTrigger>Position</AccordionTrigger>
           <AccordionContent>
@@ -166,7 +208,6 @@ export default function ComponentsEditBar({
             </div>
           </AccordionContent>
         </AccordionItem>
-
         {/* input to change the width and height of a component */}
         <AccordionItem value="Component Size">
           <AccordionTrigger>Size</AccordionTrigger>
@@ -174,59 +215,35 @@ export default function ComponentsEditBar({
             {/* select input to choose the width and height of a component */}
             <div className="flex gap-x-2">
               {/* select input to choose the width of a component */}
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="width" className="text-sm">
-                  Width
-                </Label>
-                <Select
-                  value={
-                    typeof selectedComponent?.style?.width === "number"
-                      ? "static"
-                      : selectedComponent?.style?.width
-                  }
-                  onValueChange={(value) =>
-                    updateComponentStyle(activeId, {
-                      width: value === "static" ? 100 : value,
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Width" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="100%">Fill</SelectItem>
-                    <SelectItem value="static">Static</SelectItem>
-                    <SelectItem value="max-content">Content</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <PropritySelector
+                label="Width"
+                value={
+                  typeof selectedComponent?.style?.width === "number"
+                    ? "static"
+                    : selectedComponent?.style?.width || "static"
+                }
+                onValueChange={(value) =>
+                  updateComponentStyle(activeId, {
+                    width: value === "static" ? 100 : value,
+                  })
+                }
+                proprities={ComponentPropritiesOptions.size}
+              />
               {/* select input to choose the height of a component */}
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="height" className="text-sm">
-                  Height
-                </Label>
-                <Select
-                  value={
-                    typeof selectedComponent?.style?.height === "number"
-                      ? "static"
-                      : selectedComponent?.style?.height
-                  }
-                  onValueChange={(value) =>
-                    updateComponentStyle(activeId, {
-                      height: value === "static" ? 100 : value,
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Height" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="100%">Fill</SelectItem>
-                    <SelectItem value="static">Static</SelectItem>
-                    <SelectItem value="max-content">Content</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <PropritySelector
+                label="Height"
+                value={
+                  typeof selectedComponent?.style?.height === "number"
+                    ? "static"
+                    : selectedComponent?.style?.height || "static"
+                }
+                onValueChange={(value) =>
+                  updateComponentStyle(activeId, {
+                    height: value === "static" ? 100 : value,
+                  })
+                }
+                proprities={ComponentPropritiesOptions.size}
+              />
             </div>
             {/* input to staticly set the width and height of a component */}
             <div className="flex gap-x-2 mt-2">
@@ -338,42 +355,32 @@ export default function ComponentsEditBar({
               onValueChange={(borderStyle) =>
                 updateComponentStyle(activeId, { borderStyle })
               }
-              proprities={propritiesOptions.borderStyle}
+              proprities={ComponentPropritiesOptions.borderStyle}
             />
             {/* input to change the border width of a component */}
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="border-width" className="text-sm">
-                Border Width
-              </Label>
-              <Input
-                type="number"
-                placeholder="Border Width"
-                className="bg-white"
-                value={selectedComponent?.style?.borderWidth || 0}
-                onChange={(e) =>
-                  updateComponentStyle(activeId, {
-                    borderWidth: Number(e.target.value),
-                  })
-                }
-              />
-            </div>
+            <InputWithLabel
+              type="number"
+              label="Border Width"
+              placeholder="Border Width"
+              value={selectedComponent?.style?.borderWidth || 0}
+              onChange={(e) =>
+                updateComponentStyle(activeId, {
+                  borderWidth: Number(e.target.value),
+                })
+              }
+            />
             {/* input to change the border radius of a component */}
-            <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-              <Label htmlFor="border-radius" className="text-sm">
-                Border Radius
-              </Label>
-              <Input
-                type="number"
-                placeholder="Border Radius"
-                className="bg-white"
-                value={selectedComponent?.style?.borderRadius || 0}
-                onChange={(e) =>
-                  updateComponentStyle(activeId, {
-                    borderRadius: Number(e.target.value),
-                  })
-                }
-              />
-            </div>
+            <InputWithLabel
+              type="number"
+              label="Border Radius"
+              placeholder="Border Radius"
+              value={selectedComponent?.style?.borderRadius || 0}
+              onChange={(e) =>
+                updateComponentStyle(activeId, {
+                  borderRadius: Number(e.target.value),
+                })
+              }
+            />
             {/* input to change the border color of a component */}
             <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
               <Label htmlFor="border-color" className="text-sm">
@@ -417,7 +424,7 @@ export default function ComponentsEditBar({
               onValueChange={(display: any) =>
                 updateComponentStyle(activeId, { display })
               }
-              proprities={propritiesOptions.display}
+              proprities={ComponentPropritiesOptions.display}
             />
             {/* options for when the flex display is selected */}
             {selectedComponent?.style?.display === "flex" && (
@@ -429,7 +436,7 @@ export default function ComponentsEditBar({
                   onValueChange={(flexDirection: any) =>
                     updateComponentStyle(activeId, { flexDirection })
                   }
-                  proprities={propritiesOptions.flexDirection}
+                  proprities={ComponentPropritiesOptions.flexDirection}
                 />
                 {/* input to change the flex wrap of a component */}
                 <PropritySelector
@@ -438,7 +445,7 @@ export default function ComponentsEditBar({
                   onValueChange={(flexWrap: any) =>
                     updateComponentStyle(activeId, { flexWrap })
                   }
-                  proprities={propritiesOptions.flexWrap}
+                  proprities={ComponentPropritiesOptions.flexWrap}
                 />
                 {/* input to change the justify content of a component */}
                 <PropritySelector
@@ -449,7 +456,7 @@ export default function ComponentsEditBar({
                   onValueChange={(justifyContent: any) =>
                     updateComponentStyle(activeId, { justifyContent })
                   }
-                  proprities={propritiesOptions.justifyContent}
+                  proprities={ComponentPropritiesOptions.justifyContent}
                 />
                 {/* input to change the align items of a component */}
                 <PropritySelector
@@ -458,7 +465,7 @@ export default function ComponentsEditBar({
                   onValueChange={(alignItems: any) =>
                     updateComponentStyle(activeId, { alignItems })
                   }
-                  proprities={propritiesOptions.alignItems}
+                  proprities={ComponentPropritiesOptions.alignItems}
                 />
               </>
             )}
@@ -509,6 +516,37 @@ function PropritySelector({
           ))}
         </SelectContent>
       </Select>
+    </div>
+  );
+}
+
+interface InputWithLabelProps {
+  label: string;
+  value: string | number;
+  placeholder: string;
+  type: string;
+  onChange: (value: any) => void;
+}
+
+function InputWithLabel({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type,
+}: InputWithLabelProps) {
+  return (
+    <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
+      <Label htmlFor="border-radius" className="text-sm">
+        {label}
+      </Label>
+      <Input
+        type={type}
+        placeholder={placeholder}
+        className="bg-white"
+        value={value}
+        onChange={onChange}
+      />
     </div>
   );
 }

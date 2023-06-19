@@ -1,10 +1,10 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowRight, Dot } from "lucide-react";
-import { TreeComponent } from "@/app/edit/page";
+import { TreeComponentItem } from "@/types/types";
 
 interface ComponentsFileTreeProps {
-  components: TreeComponent[];
+  components: TreeComponentItem[];
   addComponentTo: (parentId: number) => void;
   activeId: number;
   id: number;
