@@ -39,6 +39,7 @@ import { TreeComponentItem } from "@/types/types";
 import { ComponentStylePropritiesOptions as ComponentPropritiesOptions } from "@/constants/objects";
 import InputWithUnit from "./inputs/inputWithUnit";
 import Position from "./porpreties/position";
+import Layout from "./porpreties/layout";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -426,58 +427,10 @@ export default function ComponentsEditBar({
         <AccordionItem value="Component Layout">
           <AccordionTrigger>Layout</AccordionTrigger>
           <AccordionContent>
-            {/* input to change the display of a component */}
-            <PropritySelector
-              label="Display"
-              value={selectedComponent?.style?.display || "block"}
-              onValueChange={(display: any) =>
-                updateComponentStyle(activeId, { display })
-              }
-              proprities={ComponentPropritiesOptions.display}
+            <Layout
+              styles={selectedComponent?.style}
+              setStyles={(atr: string, value: any) => updateComponentStyle(activeId, { [atr]: value })}
             />
-            {/* options for when the flex display is selected */}
-            {selectedComponent?.style?.display === "flex" && (
-              <>
-                {/* input to change the flex direction of a component */}
-                <PropritySelector
-                  label="Flex Direction"
-                  value={selectedComponent?.style?.flexDirection || "row"}
-                  onValueChange={(flexDirection: any) =>
-                    updateComponentStyle(activeId, { flexDirection })
-                  }
-                  proprities={ComponentPropritiesOptions.flexDirection}
-                />
-                {/* input to change the flex wrap of a component */}
-                <PropritySelector
-                  label="Flex Wrap"
-                  value={selectedComponent?.style?.flexWrap || "nowrap"}
-                  onValueChange={(flexWrap: any) =>
-                    updateComponentStyle(activeId, { flexWrap })
-                  }
-                  proprities={ComponentPropritiesOptions.flexWrap}
-                />
-                {/* input to change the justify content of a component */}
-                <PropritySelector
-                  label="Justify Content"
-                  value={
-                    selectedComponent?.style?.justifyContent || "flex-start"
-                  }
-                  onValueChange={(justifyContent: any) =>
-                    updateComponentStyle(activeId, { justifyContent })
-                  }
-                  proprities={ComponentPropritiesOptions.justifyContent}
-                />
-                {/* input to change the align items of a component */}
-                <PropritySelector
-                  label="Align Items"
-                  value={selectedComponent?.style?.alignItems || "flex-start"}
-                  onValueChange={(alignItems: any) =>
-                    updateComponentStyle(activeId, { alignItems })
-                  }
-                  proprities={ComponentPropritiesOptions.alignItems}
-                />
-              </>
-            )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -544,7 +497,7 @@ interface InputWithLabelProps {
   onChange: (value: any) => void;
 }
 
-function InputWithLabel({
+export function InputWithLabel({
   label,
   value,
   onChange,
