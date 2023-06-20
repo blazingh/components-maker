@@ -35,16 +35,23 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import React from "react";
-import { ComponentContentType, TreeComponentItem } from "@/types/types";
+import {
+  ComponentContentType,
+  ComponentItem,
+  ComponentsTree,
+  TreeComponentItem,
+} from "@/types/types";
 import { ComponentStylePropritiesOptions as ComponentPropritiesOptions } from "@/constants/objects";
 import InputWithUnit from "./inputs/inputWithUnit";
 import Position from "./porpreties/position";
 import Layout from "./porpreties/layout";
 import Border from "./porpreties/borber";
+import { Content } from "./porpreties/content";
 
 export default function ComponentsEditBar({
   selectedComponent,
   activeId,
+  components,
   addComponentTo,
   rearrangeComponent,
   moveComponentToParentLevel,
@@ -53,15 +60,16 @@ export default function ComponentsEditBar({
   updateComponentStyle,
   deleteComponentAndChildren,
 }: {
-  selectedComponent: TreeComponentItem | undefined;
-  activeId: number;
-  addComponentTo: (parentId: number, type: ComponentContentType) => void;
-  rearrangeComponent: (id: number, direction: "up" | "down") => void;
-  moveComponentToParentLevel: (id: number) => void;
-  moveComponentToChildLevel: (id: number) => void;
-  updateComponentName: (id: number, name: string) => void;
-  updateComponentStyle: (id: number, style: React.CSSProperties) => void;
-  deleteComponentAndChildren: (id: number) => void;
+  selectedComponent: ComponentItem | undefined;
+  activeId: string;
+  components: ComponentsTree;
+  addComponentTo: (parentId: string, type: ComponentContentType) => void;
+  rearrangeComponent: (id: string, direction: "up" | "down") => void;
+  moveComponentToParentLevel: (id: string) => void;
+  moveComponentToChildLevel: (id: string) => void;
+  updateComponentName: (id: string, name: string) => void;
+  updateComponentStyle: (id: string, style: React.CSSProperties) => void;
+  deleteComponentAndChildren: (id: string) => void;
 }) {
   return (
     <>
@@ -87,7 +95,16 @@ export default function ComponentsEditBar({
       <Accordion type="single" collapsible>
         <AccordionItem value="Edit Content">
           <AccordionTrigger>Content</AccordionTrigger>
-          <AccordionContent></AccordionContent>
+          <AccordionContent>
+            <Content
+              components={components}
+              selectedComponent={selectedComponent}
+              addComponent={(parent: string, type: ComponentContentType) =>
+                addComponentTo(parent, type)
+              }
+              deleteComponent={(id: string) => deleteComponentAndChildren(id)}
+            />
+          </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="Move Component">

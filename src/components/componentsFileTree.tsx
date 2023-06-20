@@ -5,10 +5,10 @@ import { ComponentContentType, ComponentsTree } from "@/types/types";
 
 interface ComponentsFileTreeProps {
   components: ComponentsTree;
-  addComponentTo: (parentId: number, type: ComponentContentType) => void;
-  activeId: number;
-  id: number;
-  setActiveId: (id: number) => void;
+  addComponentTo: (parentId: string, type: ComponentContentType) => void;
+  activeId: string;
+  id: string;
+  setActiveId: (id: string) => void;
 }
 
 export function ComponentsFileTree({
@@ -45,7 +45,7 @@ export function ComponentsFileTree({
         <Button
           className="rounded-none px-2 pl-1 w-full justify-start"
           variant={activeId === id ? "default" : "secondary"}
-          onClick={() => setActiveId(id === activeId ? 0 : id)}
+          onClick={() => setActiveId(id === activeId ? "o" : id)}
         >
           {component.name}
         </Button>

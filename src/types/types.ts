@@ -11,11 +11,11 @@ export enum ComponentContentType {
 }
 
 export interface TreeComponentItem {
-  id: number;
+  id: string;
   name: string;
   style: React.CSSProperties;
-  parent?: number;
-  children: { id: number }[];
+  parent?: string;
+  children: { id: string }[];
 }
 
 export interface ContainerComponentItem extends TreeComponentItem {
@@ -49,12 +49,14 @@ export interface ComponentComponentItem extends TreeComponentItem {
   component: string;
 }
 
-export interface ComponentsTree {
-  [key: number]:
+export type ComponentItem =
   | ContainerComponentItem
   | TextComponentItem
   | KeyComponentItem
   | LocalizedComponentItem
   | ImageComponentItem
   | ComponentComponentItem;
+
+export interface ComponentsTree {
+  [key: string]: ComponentItem;
 }

@@ -2,8 +2,8 @@ import { ComponentContentType, ComponentsTree } from "@/types/types";
 
 interface ComponentsPreviewTreeProps {
   components: ComponentsTree;
-  id: number;
-  activeId: number;
+  id: string;
+  activeId: string;
   data?: { [key: string]: any };
 }
 

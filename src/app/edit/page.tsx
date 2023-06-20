@@ -15,14 +15,14 @@ export default function Demo() {
   // Define state for components and activeId
   const [components, setComponents] =
     React.useState<ComponentsTree>(initialComponents);
-  const [activeId, setActiveId] = React.useState<number>(0);
+  const [activeId, setActiveId] = React.useState<string>("1");
 
   // Function to add a new component as a child to a given parent
-  const addComponentTo = (parentId: number, type: ComponentContentType) => {
+  const addComponentTo = (parentId: string, type: ComponentContentType) => {
     // Create a new component
     if (type === ComponentContentType.Container) {
       const newComponent: ContainerComponentItem = {
-        id: Math.random(),
+        id: String(Math.random()),
         name: "New Container",
         type: ComponentContentType.Container,
         children: [],
@@ -39,14 +39,11 @@ export default function Demo() {
   };
 
   // Recursive function to delete a component and its children
-  const deleteComponentAndChildren = (id: number) => {
+  const deleteComponentAndChildren = (id: string) => {
     // Delete children recursively
     for (const child of components[id].children) {
       deleteComponentAndChildren(child.id);
     }
-
-    // Delete the component from the components object
-    delete components[id];
 
     // Delete the component from its parent's children array
     const parentId = components[id].parent;
@@ -57,24 +54,27 @@ export default function Demo() {
       components[parentId].children.splice(index, 1);
     }
 
+    // Delete the component from the components object
+    delete components[id];
+
     // Update the state
     setComponents({ ...components });
   };
 
   // function to update the name of a component
-  const updateComponentName = (id: number, name: string) => {
+  const updateComponentName = (id: string, name: string) => {
     components[id].name = name;
     setComponents({ ...components });
   };
 
   // function to update the style of a component
-  const updateComponentStyle = (id: number, style: React.CSSProperties) => {
+  const updateComponentStyle = (id: string, style: React.CSSProperties) => {
     components[id].style = { ...components[id].style, ...style };
     setComponents({ ...components });
   };
 
   // function to rearrange the position of a child component
-  const rearrangeComponent = (id: number, direction: "up" | "down") => {
+  const rearrangeComponent = (id: string, direction: "up" | "down") => {
     // Find the parent id
     const parentId = components[id].parent;
 
@@ -108,7 +108,7 @@ export default function Demo() {
   };
 
   // fuction to move a component to the same level as its parent
-  const moveComponentToParentLevel = (id: number) => {
+  const moveComponentToParentLevel = (id: string) => {
     // find parent id
     const parentId = components[id].parent;
 
@@ -143,7 +143,7 @@ export default function Demo() {
   };
 
   // function to move a component to the level of its first child of its next sibling
-  const moveComponentToChildLevel = (id: number) => {
+  const moveComponentToChildLevel = (id: string) => {
     // find parent id
     const parentId = components[id].parent;
 
@@ -184,7 +184,7 @@ export default function Demo() {
         <ComponentsFileTree
           addComponentTo={addComponentTo}
           components={components}
-          id={1}
+          id={"1"}
           activeId={activeId}
           setActiveId={setActiveId}
         />
@@ -198,7 +198,7 @@ export default function Demo() {
       >
         <ComponentsPreviewTree
           components={components}
-          id={1}
+          id={"1"}
           activeId={activeId}
         />
       </div>
@@ -212,6 +212,7 @@ export default function Demo() {
         }}
       >
         <ComponentsEditBar
+          components={components}
           selectedComponent={components[activeId]}
           activeId={activeId}
           addComponentTo={addComponentTo}
