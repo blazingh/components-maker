@@ -40,6 +40,7 @@ import { ComponentStylePropritiesOptions as ComponentPropritiesOptions } from "@
 import InputWithUnit from "./inputs/inputWithUnit";
 import Position from "./porpreties/position";
 import Layout from "./porpreties/layout";
+import Border from "./porpreties/borber";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -88,6 +89,7 @@ export default function ComponentsEditBar({
           <AccordionTrigger>Content</AccordionTrigger>
           <AccordionContent></AccordionContent>
         </AccordionItem>
+
         <AccordionItem value="Move Component">
           <AccordionTrigger>Position</AccordionTrigger>
           <AccordionContent>
@@ -208,6 +210,7 @@ export default function ComponentsEditBar({
             </div>
           </AccordionContent>
         </AccordionItem>
+
         {/* input to change the background and content color of a component */}
         <AccordionItem value="Component Color">
           <AccordionTrigger>Color</AccordionTrigger>
@@ -276,75 +279,20 @@ export default function ComponentsEditBar({
             </div>
           </AccordionContent>
         </AccordionItem>
+
         {/* input to change the border of a component */}
         <AccordionItem value="Component Border">
           <AccordionTrigger>Border</AccordionTrigger>
           <AccordionContent>
-            {/* input to change the border style of a component */}
-            <PropritySelector
-              label="Border Style"
-              value={selectedComponent?.style?.borderStyle || "none"}
-              onValueChange={(borderStyle) =>
-                updateComponentStyle(activeId, { borderStyle })
-              }
-              proprities={ComponentPropritiesOptions.borderStyle}
-            />
-            {/* input to change the border width of a component */}
-            <InputWithLabel
-              type="number"
-              label="Border Width"
-              placeholder="Border Width"
-              value={selectedComponent?.style?.borderWidth || 0}
-              onChange={(e) =>
-                updateComponentStyle(activeId, {
-                  borderWidth: Number(e.target.value),
-                })
+            <Border
+              styles={selectedComponent?.style}
+              setStyles={(atr: string, value: any) =>
+                updateComponentStyle(activeId, { [atr]: value })
               }
             />
-            {/* input to change the border radius of a component */}
-            <InputWithLabel
-              type="number"
-              label="Border Radius"
-              placeholder="Border Radius"
-              value={selectedComponent?.style?.borderRadius || 0}
-              onChange={(e) =>
-                updateComponentStyle(activeId, {
-                  borderRadius: Number(e.target.value),
-                })
-              }
-            />
-            {/* input to change the border color of a component */}
-            <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-              <Label htmlFor="border-color" className="text-sm">
-                Border Color
-              </Label>
-              <div className="flex gap-x-2 w-full">
-                <HexColorInput
-                  className="w-full rounded-md px-2 py-1 border border-gray-200"
-                  color={selectedComponent?.style?.borderColor || "#000"}
-                  onChange={(borderColor) =>
-                    updateComponentStyle(activeId, { borderColor })
-                  }
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <Pipette width={16} height={16} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <HexColorPicker
-                      color={selectedComponent?.style?.borderColor || "#000"}
-                      onChange={(borderColor) =>
-                        updateComponentStyle(activeId, { borderColor })
-                      }
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
           </AccordionContent>
         </AccordionItem>
+
         {/* input to change the layout of a component */}
         <AccordionItem value="Component Layout">
           <AccordionTrigger>Layout</AccordionTrigger>
@@ -358,13 +306,6 @@ export default function ComponentsEditBar({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-
-      <InputWithUnit
-        label="width"
-        value="10px"
-        placeholder="ro"
-        onChange={(e) => console.log(e)}
-      />
 
       {/* button to delete a component */}
       <TooltipButton
