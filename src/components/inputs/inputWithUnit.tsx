@@ -23,8 +23,8 @@ export default function InputWithUnit({
 }: InputWithUnitProps) {
   const units = ["unset", "px", "%", "em", "rem", "vw", "vh"];
 
-  const number = value.slice(0, -2) || "";
-  const unit = value.slice(-2) || units[0];
+  const number = value.replace(/[^0-9]/g, "");
+  const unit = value.slice(number.length);
 
   const onChangeNumber = (e: any) => {
     onChange(e?.target?.value + unit);
@@ -32,6 +32,7 @@ export default function InputWithUnit({
 
   const onChangeUnit = (e: string) => {
     if (e === "unset") return onChange(e);
+    console.log(number + e);
     onChange(number + e);
   };
 
@@ -40,15 +41,15 @@ export default function InputWithUnit({
       <Label htmlFor="border-radius" className="text-sm">
         {label}
       </Label>
-      <div className="flex gap-1.5">
+      <div className="flex">
         <Input
           type="number"
           placeholder={placeholder}
-          className="bg-white"
+          className="bg-white w-full"
           value={number}
           onChange={onChangeNumber}
         />
-        <Select value={unit || units[0]} onValueChange={onChangeUnit}>
+        <Select value={unit} onValueChange={onChangeUnit}>
           <SelectTrigger>
             <SelectValue placeholder={unit} />
           </SelectTrigger>
