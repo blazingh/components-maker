@@ -35,7 +35,7 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import React from "react";
-import { TreeComponentItem } from "@/types/types";
+import { ComponentContentType, TreeComponentItem } from "@/types/types";
 import { ComponentStylePropritiesOptions as ComponentPropritiesOptions } from "@/constants/objects";
 import InputWithUnit from "./inputs/inputWithUnit";
 import Position from "./porpreties/position";
@@ -50,18 +50,16 @@ export default function ComponentsEditBar({
   moveComponentToChildLevel,
   updateComponentName,
   updateComponentStyle,
-  updateComponentContent,
   deleteComponentAndChildren,
 }: {
   selectedComponent: TreeComponentItem | undefined;
   activeId: number;
-  addComponentTo: (parentId: number) => void;
+  addComponentTo: (parentId: number, type: ComponentContentType) => void;
   rearrangeComponent: (id: number, direction: "up" | "down") => void;
   moveComponentToParentLevel: (id: number) => void;
   moveComponentToChildLevel: (id: number) => void;
   updateComponentName: (id: number, name: string) => void;
   updateComponentStyle: (id: number, style: React.CSSProperties) => void;
-  updateComponentContent: (id: number, content: any) => void;
   deleteComponentAndChildren: (id: number) => void;
 }) {
   return (
@@ -76,98 +74,19 @@ export default function ComponentsEditBar({
       />
 
       {/* button to add a new child component */}
-      <TooltipButton
-        variant="default"
-        onClick={() => addComponentTo(activeId)}
-        tooltipText="Add a new child component to the selected component"
-      >
-        <PlusIcon className="mr-2 h-4 w-4" />
-        Add Child
-      </TooltipButton>
+      {/* <TooltipButton */}
+      {/*   variant="default" */}
+      {/*   onClick={() => addComponentTo(activeId)} */}
+      {/*   tooltipText="Add a new child component to the selected component" */}
+      {/* > */}
+      {/*   <PlusIcon className="mr-2 h-4 w-4" /> */}
+      {/*   Add Child */}
+      {/* </TooltipButton> */}
 
       <Accordion type="single" collapsible>
         <AccordionItem value="Edit Content">
           <AccordionTrigger>Content</AccordionTrigger>
-          <AccordionContent>
-            {/* input to change the content type of a component */}
-            {/* <PropritySelector */}
-            {/*   label="Content Type" */}
-            {/*   value={selectedComponent?.content?.type || "none"} */}
-            {/*   onValueChange={(type: any) => */}
-            {/*     updateComponentContent(activeId, { */}
-            {/*       ...selectedComponent?.content, */}
-            {/*       type, */}
-            {/*     }) */}
-            {/*   } */}
-            {/*   proprities={ComponentPropritiesOptions.contentTypes} */}
-            {/* /> */}
-            {/* options if the content is a tect */}
-            {selectedComponent?.content?.type === "text" && (
-              <>
-                {/* input to change the text of a component */}
-                <InputWithLabel
-                  label="Text"
-                  placeholder="Text"
-                  type="text"
-                  value={selectedComponent?.content?.text || ""}
-                  onChange={(e) =>
-                    updateComponentContent(activeId, {
-                      ...selectedComponent?.content,
-                      text: e.target.value,
-                    })
-                  }
-                />
-                {/* input to change the font family of a component */}
-                <PropritySelector
-                  label="Font Family"
-                  value={selectedComponent?.style?.fontFamily || "sans-serif"}
-                  onValueChange={(fontFamily: any) =>
-                    updateComponentContent(activeId, {
-                      ...selectedComponent?.content,
-                      style: {
-                        ...selectedComponent?.style,
-                        fontFamily,
-                      },
-                    })
-                  }
-                  proprities={ComponentPropritiesOptions.fontFamily}
-                />
-                {/* input to change the font size of a component */}
-                <InputWithLabel
-                  type="number"
-                  label="Font Size"
-                  placeholder="Font Size"
-                  value={selectedComponent?.style?.fontSize || 16}
-                  onChange={(e) =>
-                    updateComponentContent(activeId, {
-                      ...selectedComponent?.content,
-                      style: {
-                        ...selectedComponent?.style,
-                        fontSize: Number(e.target.value),
-                      },
-                    })
-                  }
-                />
-                {/* input to change the font weight of a component */}
-                <PropritySelector
-                  label="Font Weight"
-                  value={
-                    String(selectedComponent?.style?.fontWeight) || "normal"
-                  }
-                  onValueChange={(fontWeight: any) =>
-                    updateComponentContent(activeId, {
-                      ...selectedComponent?.content,
-                      style: {
-                        ...selectedComponent?.style,
-                        fontWeight,
-                      },
-                    })
-                  }
-                  proprities={ComponentPropritiesOptions.fontWeight}
-                />
-              </>
-            )}
-          </AccordionContent>
+          <AccordionContent></AccordionContent>
         </AccordionItem>
         <AccordionItem value="Move Component">
           <AccordionTrigger>Position</AccordionTrigger>
@@ -175,7 +94,10 @@ export default function ComponentsEditBar({
             <Position
               styles={selectedComponent?.style}
               setStyles={(atr: any, value: any) =>
-                updateComponentStyle(activeId, { ...selectedComponent?.style, [atr]: value })
+                updateComponentStyle(activeId, {
+                  ...selectedComponent?.style,
+                  [atr]: value,
+                })
               }
             />
 
@@ -429,7 +351,9 @@ export default function ComponentsEditBar({
           <AccordionContent>
             <Layout
               styles={selectedComponent?.style}
-              setStyles={(atr: string, value: any) => updateComponentStyle(activeId, { [atr]: value })}
+              setStyles={(atr: string, value: any) =>
+                updateComponentStyle(activeId, { [atr]: value })
+              }
             />
           </AccordionContent>
         </AccordionItem>

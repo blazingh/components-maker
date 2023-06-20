@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowRight, Dot } from "lucide-react";
-import { TreeComponentItem } from "@/types/types";
+import { ComponentContentType, ComponentsTree } from "@/types/types";
 
 interface ComponentsFileTreeProps {
-  components: TreeComponentItem[];
-  addComponentTo: (parentId: number) => void;
+  components: ComponentsTree;
+  addComponentTo: (parentId: number, type: ComponentContentType) => void;
   activeId: number;
   id: number;
   setActiveId: (id: number) => void;
@@ -20,7 +20,7 @@ export function ComponentsFileTree({
 }: ComponentsFileTreeProps) {
   const [open, setOpen] = React.useState(false);
 
-  const component = components.find((c) => c.id === id);
+  const component = components[id];
 
   if (!component) return null;
 
