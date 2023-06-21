@@ -355,8 +355,8 @@ export function PropritySelector({
       <Label htmlFor="justify-content" className="text-sm">
         {label}
       </Label>
-      <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger>
+      <Select value={value} onValueChange={onValueChange} >
+        <SelectTrigger className="bg-white">
           <SelectValue placeholder="Justify Content" />
         </SelectTrigger>
         <SelectContent>
