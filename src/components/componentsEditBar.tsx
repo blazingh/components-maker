@@ -137,6 +137,7 @@ export default function ComponentsEditBar({
           {/* </TooltipButton> */}
 
           <Accordion type="single" collapsible>
+            {/* input to change the position of a component */}
             <AccordionItem value="Move Component">
               <AccordionTrigger>Position</AccordionTrigger>
               <AccordionContent>
@@ -148,6 +149,20 @@ export default function ComponentsEditBar({
                 />
               </AccordionContent>
             </AccordionItem>
+
+            {/* input to change the layout of a component */}
+            <AccordionItem value="Layout">
+              <AccordionTrigger>Layout</AccordionTrigger>
+              <AccordionContent>
+                <Layout
+                  styles={selectedComponent?.style}
+                  setStyles={(atr: any, value: any) =>
+                    containerUtils.updateContainerStyle(activeId, atr, value)
+                  }
+                />
+              </AccordionContent>
+            </AccordionItem>
+
             {/* input to change the width and height of a component */}
             <AccordionItem value="Component Size">
               <AccordionTrigger>Size</AccordionTrigger>
@@ -159,8 +174,8 @@ export default function ComponentsEditBar({
                     label="Width"
                     value={
                       typeof selectedComponent?.style?.width === "number"
-                        ? "static"
-                        : selectedComponent?.style?.width || "static"
+                        ? "input"
+                        : selectedComponent?.style?.width || "input"
                     }
                     onValueChange={(value) =>
                       containerUtils.updateContainerStyle(
@@ -176,8 +191,8 @@ export default function ComponentsEditBar({
                     label="Height"
                     value={
                       typeof selectedComponent?.style?.height === "number"
-                        ? "static"
-                        : selectedComponent?.style?.height || "static"
+                        ? "input"
+                        : selectedComponent?.style?.height || "input"
                     }
                     onValueChange={(value) =>
                       containerUtils.updateContainerStyle(

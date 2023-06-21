@@ -72,14 +72,14 @@ export function FlexLayout({ styles, setStyles }: FlexLayoutProps) {
       {/* input to set the row-gap of the element */}
       <InputWithUnit
         label="Row Gap"
-        placeholder=""
+        placeholder="0"
         value={styles?.rowGap || "initial"}
         onChange={(value: string) => setStyles("rowGap", value || "initial")}
       />
       {/* input to set the column-gap of the element */}
       <InputWithUnit
         label="Column Gap"
-        placeholder=""
+        placeholder="0"
         value={styles?.columnGap || "initial"}
         onChange={(value: string) => setStyles("columnGap", value || "initial")}
       />

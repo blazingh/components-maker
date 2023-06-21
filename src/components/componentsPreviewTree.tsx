@@ -72,8 +72,8 @@ export default function ComponentsPreviewTree({
           <ComponentsPreviewTree
             data={data}
             activeId={activeId}
-            key={child.id}
-            id={child.id}
+            key={child}
+            id={child}
             components={components}
           />
         ))}

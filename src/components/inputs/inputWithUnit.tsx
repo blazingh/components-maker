@@ -46,12 +46,15 @@ export default function InputWithUnit({
           type="number"
           placeholder={placeholder}
           className="bg-white w-full"
-          value={number}
+          value={number || 0}
           onChange={onChangeNumber}
         />
-        <Select value={unit} onValueChange={onChangeUnit}>
+        <Select
+          value={units.indexOf(unit) > -1 ? unit : "unset"}
+          onValueChange={onChangeUnit}
+        >
           <SelectTrigger>
-            <SelectValue placeholder={unit} />
+            <SelectValue placeholder={units.indexOf(unit) > -1 ? unit : ""} />
           </SelectTrigger>
           <SelectContent>
             {units.map((proprity, index) => (
