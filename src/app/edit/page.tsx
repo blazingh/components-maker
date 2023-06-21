@@ -7,9 +7,28 @@ import { initialComponents } from "@/initialTestComponents";
 import ComponentsEditBar from "@/components/componentsEditBar";
 import {
   ComponentContentType,
+  ComponentItem,
   ComponentsTree,
   ContainerComponentItem,
+  TextComponentItem,
 } from "@/types/types";
+
+export interface ContainerUtils {
+  addContainer: (parentId: string) => void;
+  removeContainer: (id: string) => void;
+  updateContainerName: (id: string, name: string) => void;
+  updateContainerStyle: (id: string, attr: string, value: any) => void;
+  changeChildPosition: (id: string, delta: number) => void;
+  removeChild: (id: string) => void;
+}
+
+export interface TextUtils {
+  addText: (parentId: string) => void;
+  removeText: (id: string) => void;
+  updateText: (id: string, text: string) => void;
+  updateTextStyle: (id: string, attr: string, value: any) => void;
+  updateTextName: (id: string, name: string) => void;
+}
 
 export default function Demo() {
   // Define state for components and activeId
@@ -17,160 +36,157 @@ export default function Demo() {
     React.useState<ComponentsTree>(initialComponents);
   const [activeId, setActiveId] = React.useState<string>("1");
 
-  // Function to add a new component as a child to a given parent
-  const addComponentTo = (parentId: string, type: ComponentContentType) => {
-    // Create a new component
-    if (type === ComponentContentType.Container) {
+  const ContainerUtils: ContainerUtils = {
+    // Function to add a container component
+    addContainer: (parentId: string) => {
       const newComponent: ContainerComponentItem = {
         id: String(Math.random()),
         name: "New Container",
         type: ComponentContentType.Container,
-        children: [],
         style: {},
+        children: [],
+        parent: parentId,
       };
 
+      const parent = components[parentId] as ContainerComponentItem;
+
       // update the components
-      components[parentId].children.push(newComponent);
-      components[newComponent.id] = newComponent;
+      parent.children.push(newComponent.id);
 
       // update the state
+      setComponents({
+        ...components,
+        [newComponent.id]: newComponent,
+        [parentId]: parent,
+      });
+    },
+
+    // Function to remove a container component
+    removeContainer: (id: string) => {
+      const component = components[id] as ContainerComponentItem;
+      // Delete children recursively
+      for (const child of component.children) {
+        ContainerUtils.removeContainer(child);
+      }
+
+      const parent = components[component.parent] as ContainerComponentItem;
+
+      // Delete the component from its parent's children array
+      const index = parent.children.indexOf(id);
+      parent.children.splice(index, 1);
+
+      // Delete the component from the components object
+      delete components[id];
+
+      // Update the state
+      setComponents({ ...components, [parent.id]: parent });
+    },
+
+    // Function to update the name of a container component
+    updateContainerName: (id: string, name: string) => {
+      components[id].name = name;
       setComponents({ ...components });
-    }
+    },
+
+    // function to update the style of a container component
+    updateContainerStyle: (id: string, attr: string, value: any) => {
+      components[id].style = { ...components[id].style, [attr]: value };
+      setComponents({ ...components });
+    },
+
+    // Function to change a child's position in the children array
+    changeChildPosition: (id: string, delta: number) => {
+      const parent = components[
+        components[id].parent
+      ] as ContainerComponentItem;
+      const index = parent.children.indexOf(id);
+      const newIndex = index + delta;
+
+      // Check if the new index is valid
+      if (newIndex < 0 || newIndex >= parent.children.length) {
+        return;
+      }
+
+      // Swap the child with the child in the new index
+      const temp = parent.children[newIndex];
+      parent.children[newIndex] = id;
+      parent.children[index] = temp;
+
+      // Update the state
+      setComponents({ ...components, [parent.id]: parent });
+    },
+
+    // Function to remove a child from a container children array
+    removeChild: (id: string) => {
+      const parent = components[
+        components[id].parent
+      ] as ContainerComponentItem;
+
+      // Delete the component from its parent's children array
+      const index = parent.children.indexOf(id);
+      parent.children.splice(index, 1);
+
+      setComponents({ ...components, [parent.id]: parent });
+    },
   };
 
-  // Recursive function to delete a component and its children
-  const deleteComponentAndChildren = (id: string) => {
-    // Delete children recursively
-    for (const child of components[id].children) {
-      deleteComponentAndChildren(child.id);
-    }
+  const TextUtils: TextUtils = {
+    // Function to add a text component
+    addText: (parentId: string) => {
+      const newComponent: TextComponentItem = {
+        id: String(Math.random()),
+        name: "New Text",
+        type: ComponentContentType.Text,
+        text: "New Text",
+        style: {},
+        parent: parentId,
+      };
 
-    // Delete the component from its parent's children array
-    const parentId = components[id].parent;
-    if (parentId) {
-      const index = components[parentId].children.findIndex(
-        (child) => child.id === id
-      );
-      components[parentId].children.splice(index, 1);
-    }
+      const parent = components[parentId] as ContainerComponentItem;
 
-    // Delete the component from the components object
-    delete components[id];
+      // update the components
+      parent.children.push(newComponent.id);
 
-    // Update the state
-    setComponents({ ...components });
-  };
+      // update the state
+      setComponents({
+        ...components,
+        [newComponent.id]: newComponent,
+        [parentId]: parent,
+      });
+    },
 
-  // function to update the name of a component
-  const updateComponentName = (id: string, name: string) => {
-    components[id].name = name;
-    setComponents({ ...components });
-  };
+    // Function to remove a text component
+    removeText: (id: string) => {
+      // Delete the component from its parent's children array
+      ContainerUtils.removeChild(id);
 
-  // function to update the style of a component
-  const updateComponentStyle = (id: string, style: React.CSSProperties) => {
-    components[id].style = { ...components[id].style, ...style };
-    setComponents({ ...components });
-  };
+      // Delete the component from the components object
+      delete components[id];
 
-  // function to rearrange the position of a child component
-  const rearrangeComponent = (id: string, direction: "up" | "down") => {
-    // Find the parent id
-    const parentId = components[id].parent;
+      // Update the state
+      setComponents({ ...components });
+    },
 
-    if (!parentId) return;
+    // Function to update the name of a text component
+    updateTextName: (id: string, name: string) => {
+      components[id].name = name;
+      setComponents({ ...components });
+    },
 
-    // Find the index of the child component
-    const childIndex = components[parentId].children.findIndex(
-      (child) => child.id === id
-    );
-    if (childIndex === -1) return;
+    // function to update the style of a text component
+    updateTextStyle: (id: string, attr: string, value: any) => {
+      components[id].style = { ...components[id].style, [attr]: value };
+      setComponents({ ...components });
+    },
 
-    // move the child component up or down
-    if (direction === "up") {
-      if (childIndex === 0) return;
-      components[parentId].children.splice(
-        childIndex - 1,
-        0,
-        components[parentId].children.splice(childIndex, 1)[0]
-      );
-    } else {
-      if (childIndex === components[parentId].children.length - 1) return;
-      components[parentId].children.splice(
-        childIndex + 1,
-        0,
-        components[parentId].children.splice(childIndex, 1)[0]
-      );
-    }
+    // Function to update the text of a text component
+    updateText: (id: string, text: string) => {
+      const component = components[id] as TextComponentItem;
+      component.text = text;
 
-    // Update the state
-    setComponents({ ...components });
-  };
-
-  // fuction to move a component to the same level as its parent
-  const moveComponentToParentLevel = (id: string) => {
-    // find parent id
-    const parentId = components[id].parent;
-
-    if (!parentId) return;
-
-    // Find the id of the grandparent component
-    const grandParentId = components[parentId].parent;
-
-    if (!grandParentId) return;
-
-    // Find the index of the parent component in the children array of the grandparent component
-    const parentComponentIndex = components[grandParentId].children.findIndex(
-      (child) => child.id === components[parentId].id
-    );
-    if (parentComponentIndex === -1) return;
-
-    // add the component to the children array of the grandparent component above the parent component
-    components[grandParentId].children.splice(
-      parentComponentIndex,
-      0,
-      components[parentId].children.splice(
-        components[parentId].children.findIndex((child) => child.id === id),
-        1
-      )[0]
-    );
-
-    //update the parent of the component
-    components[id].parent = components[grandParentId].id;
-
-    // Update the state
-    setComponents({ ...components });
-  };
-
-  // function to move a component to the level of its first child of its next sibling
-  const moveComponentToChildLevel = (id: string) => {
-    // find parent id
-    const parentId = components[id].parent;
-
-    if (!parentId) return;
-
-    // Find the index of the component in the children array of the parent component
-    const childIndex = components[parentId].children.findIndex(
-      (child) => child.id === id
-    );
-    if (childIndex === -1) return;
-
-    // check if the component is the last child of the parent component
-    if (childIndex === components[parentId].children.length - 1) return;
-
-    // get the next sibling id
-    const nextSiblingId = components[parentId].children[childIndex + 1].id;
-
-    // add the component to the start of children array of the next sibling component
-    components[nextSiblingId].children.unshift(
-      components[parentId].children.splice(childIndex, 1)[0]
-    );
-
-    //update the parent of the component
-    components[id].parent = nextSiblingId;
-
-    // Update the state
-    setComponents({ ...components });
+      // Update the state
+      setComponents({ ...components, [id]: component });
+    },
   };
 
   return (
@@ -182,7 +198,6 @@ export default function Demo() {
         }}
       >
         <ComponentsFileTree
-          addComponentTo={addComponentTo}
           components={components}
           id={"1"}
           activeId={activeId}
@@ -215,13 +230,8 @@ export default function Demo() {
           components={components}
           selectedComponent={components[activeId]}
           activeId={activeId}
-          addComponentTo={addComponentTo}
-          rearrangeComponent={rearrangeComponent}
-          moveComponentToParentLevel={moveComponentToParentLevel}
-          moveComponentToChildLevel={moveComponentToChildLevel}
-          updateComponentName={updateComponentName}
-          updateComponentStyle={updateComponentStyle}
-          deleteComponentAndChildren={deleteComponentAndChildren}
+          containerUtils={ContainerUtils}
+          textUtils={TextUtils}
         />
       </div>
     </div>

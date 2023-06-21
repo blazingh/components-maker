@@ -5,7 +5,6 @@ import {
   ArrowUpFromLine,
   ChevronUp,
   Pipette,
-  PlusIcon,
   Trash,
 } from "lucide-react";
 import {
@@ -23,11 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import {
-  HexAlphaColorPicker,
-  HexColorInput,
-  HexColorPicker,
-} from "react-colorful";
+import { HexAlphaColorPicker, HexColorInput } from "react-colorful";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,302 +34,227 @@ import {
   ComponentContentType,
   ComponentItem,
   ComponentsTree,
-  TreeComponentItem,
 } from "@/types/types";
 import { ComponentStylePropritiesOptions as ComponentPropritiesOptions } from "@/constants/objects";
-import InputWithUnit from "./inputs/inputWithUnit";
 import Position from "./porpreties/position";
 import Layout from "./porpreties/layout";
 import Border from "./porpreties/borber";
 import { Content } from "./porpreties/content";
+import { Typography } from "./porpreties/typography";
+import { ContainerUtils, TextUtils } from "@/app/edit/page";
 
 export default function ComponentsEditBar({
   selectedComponent,
   activeId,
   components,
-  addComponentTo,
-  rearrangeComponent,
-  moveComponentToParentLevel,
-  moveComponentToChildLevel,
-  updateComponentName,
-  updateComponentStyle,
-  deleteComponentAndChildren,
+  containerUtils,
+  textUtils,
 }: {
   selectedComponent: ComponentItem | undefined;
   activeId: string;
   components: ComponentsTree;
-  addComponentTo: (parentId: string, type: ComponentContentType) => void;
-  rearrangeComponent: (id: string, direction: "up" | "down") => void;
-  moveComponentToParentLevel: (id: string) => void;
-  moveComponentToChildLevel: (id: string) => void;
-  updateComponentName: (id: string, name: string) => void;
-  updateComponentStyle: (id: string, style: React.CSSProperties) => void;
-  deleteComponentAndChildren: (id: string) => void;
+  containerUtils: ContainerUtils;
+  textUtils: TextUtils;
 }) {
-  return (
-    <>
-      {/* input to change the name of a component */}
-      <InputWithLabel
-        label="Component Name"
-        placeholder="Component Name"
-        type="text"
-        value={selectedComponent?.name || ""}
-        onChange={(e) => updateComponentName(activeId, e.target.value)}
-      />
+  // if no component is selected, return null
+  if (!selectedComponent) return null;
 
-      {/* button to add a new child component */}
-      {/* <TooltipButton */}
-      {/*   variant="default" */}
-      {/*   onClick={() => addComponentTo(activeId)} */}
-      {/*   tooltipText="Add a new child component to the selected component" */}
-      {/* > */}
-      {/*   <PlusIcon className="mr-2 h-4 w-4" /> */}
-      {/*   Add Child */}
-      {/* </TooltipButton> */}
+  // if the selected component is a text component
+  if (selectedComponent?.type === ComponentContentType.Text) {
+    return (
+      <>
+        {/* input to change the name of a component */}
+        <InputWithLabel
+          label="Component Name"
+          placeholder="Component Name"
+          type="text"
+          value={selectedComponent?.name || ""}
+          onChange={(e: any) =>
+            textUtils.updateTextName(activeId, e.target.value)
+          }
+        />
 
-      <Accordion type="single" collapsible>
-        <AccordionItem value="Edit Content">
-          <AccordionTrigger>Content</AccordionTrigger>
-          <AccordionContent>
-            <Content
-              components={components}
-              selectedComponent={selectedComponent}
-              addComponent={(parent: string, type: ComponentContentType) =>
-                addComponentTo(parent, type)
-              }
-              deleteComponent={(id: string) => deleteComponentAndChildren(id)}
-            />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="Move Component">
-          <AccordionTrigger>Position</AccordionTrigger>
-          <AccordionContent>
-            <Position
-              styles={selectedComponent?.style}
-              setStyles={(atr: any, value: any) =>
-                updateComponentStyle(activeId, {
-                  ...selectedComponent?.style,
-                  [atr]: value,
-                })
-              }
-            />
-
-            <div className="flex justify-around">
-              {/* button to rearrange a component up */}
-              <TooltipButton
-                variant="default"
-                onClick={() => rearrangeComponent(activeId, "up")}
-                tooltipText="Move the selected component up"
-              >
-                <ChevronUp size={16} />
-              </TooltipButton>
-
-              {/* button to rearrange a component down */}
-              <TooltipButton
-                variant="default"
-                onClick={() => rearrangeComponent(activeId, "down")}
-                tooltipText="Move the selected component down"
-              >
-                <ChevronDown size={16} />
-              </TooltipButton>
-
-              {/* button to move a component to the same level as its parent */}
-              <TooltipButton
-                variant="default"
-                onClick={() => moveComponentToParentLevel(activeId)}
-                tooltipText="Move the selected component to the same level as its parent"
-              >
-                <ArrowUpFromLine size={16} />
-              </TooltipButton>
-
-              {/* button to move a component to the level of its first child of its next sibling */}
-              <TooltipButton
-                variant="default"
-                onClick={() => moveComponentToChildLevel(activeId)}
-                tooltipText="Move the selected component into its next sibling"
-              >
-                <ArrowDownFromLine size={16} />
-              </TooltipButton>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        {/* input to change the width and height of a component */}
-        <AccordionItem value="Component Size">
-          <AccordionTrigger>Size</AccordionTrigger>
-          <AccordionContent>
-            {/* select input to choose the width and height of a component */}
-            <div className="flex gap-x-2">
-              {/* select input to choose the width of a component */}
-              <PropritySelector
-                label="Width"
-                value={
-                  typeof selectedComponent?.style?.width === "number"
-                    ? "static"
-                    : selectedComponent?.style?.width || "static"
-                }
-                onValueChange={(value) =>
-                  updateComponentStyle(activeId, {
-                    width: value === "static" ? 100 : value,
-                  })
-                }
-                proprities={ComponentPropritiesOptions.size}
-              />
-              {/* select input to choose the height of a component */}
-              <PropritySelector
-                label="Height"
-                value={
-                  typeof selectedComponent?.style?.height === "number"
-                    ? "static"
-                    : selectedComponent?.style?.height || "static"
-                }
-                onValueChange={(value) =>
-                  updateComponentStyle(activeId, {
-                    height: value === "static" ? 100 : value,
-                  })
-                }
-                proprities={ComponentPropritiesOptions.size}
-              />
-            </div>
-            {/* input to staticly set the width and height of a component */}
-            <div className="flex gap-x-2 mt-2">
-              {/* input to staticly set the width of a component */}
-              <Input
-                disabled={typeof selectedComponent?.style?.width !== "number"}
-                type="number"
-                placeholder="Width"
-                className="bg-white"
-                value={selectedComponent?.style?.width || 0}
-                onChange={(e) =>
-                  updateComponentStyle(activeId, {
-                    width: Number(e.target.value),
-                  })
+        <Accordion type="single" collapsible>
+          <AccordionItem value="Typography">
+            <AccordionTrigger>Typography</AccordionTrigger>
+            <AccordionContent>
+              <Typography
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  textUtils.updateTextStyle(activeId, atr, value)
                 }
               />
-              {/* input to staticly set the height of a component */}
-              <Input
-                disabled={typeof selectedComponent?.style?.height !== "number"}
-                type="number"
-                placeholder="Height"
-                className="bg-white"
-                value={selectedComponent?.style?.height || 0}
-                onChange={(e) =>
-                  updateComponentStyle(activeId, {
-                    height: Number(e.target.value),
-                  })
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </>
+    );
+  }
+
+  if (selectedComponent?.type === ComponentContentType.Container) {
+    return (
+      <>
+        {/* input to change the name of a component */}
+        <InputWithLabel
+          label="Component Name"
+          placeholder="Component Name"
+          type="text"
+          value={selectedComponent?.name || ""}
+          onChange={(e) =>
+            containerUtils.updateContainerName(activeId, e.target.value)
+          }
+        />
+
+        <Accordion type="single" collapsible>
+          <AccordionItem value="Edit Content">
+            <AccordionTrigger>Content</AccordionTrigger>
+            <AccordionContent>
+              <Content
+                components={components}
+                selectedComponent={selectedComponent}
+                addComponent={(parent: string, type: ComponentContentType) => {
+                  if (type === ComponentContentType.Container) {
+                    containerUtils.addContainer(parent);
+                  } else if (type === ComponentContentType.Text) {
+                    textUtils.addText(parent);
+                  }
+                }}
+                deleteComponent={(id: string) =>
+                  containerUtils.removeContainer(id)
                 }
               />
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+            </AccordionContent>
+          </AccordionItem>
 
-        {/* input to change the background and content color of a component */}
-        <AccordionItem value="Component Color">
-          <AccordionTrigger>Color</AccordionTrigger>
-          <AccordionContent>
-            {/* input to change the content color of a component */}
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="color" className="text-sm">
-                Content Color
-              </Label>
-              <div className="flex gap-x-2 w-full">
-                <HexColorInput
-                  className="w-full rounded-md px-2 py-1 border border-gray-200"
-                  color={selectedComponent?.style?.color || "#000"}
-                  onChange={(color) =>
-                    updateComponentStyle(activeId, { color })
+          {/* button to add a new child component */}
+          {/* <TooltipButton */}
+          {/*   variant="default" */}
+          {/*   onClick={() => addComponentTo(activeId)} */}
+          {/*   tooltipText="Add a new child component to the selected component" */}
+          {/* > */}
+          {/*   <PlusIcon className="mr-2 h-4 w-4" /> */}
+          {/*   Add Child */}
+          {/* </TooltipButton> */}
+
+          <Accordion type="single" collapsible>
+            <AccordionItem value="Move Component">
+              <AccordionTrigger>Position</AccordionTrigger>
+              <AccordionContent>
+                <Position
+                  styles={selectedComponent?.style}
+                  setStyles={(atr: any, value: any) =>
+                    containerUtils.updateContainerStyle(activeId, atr, value)
                   }
                 />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <Pipette width={16} height={16} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <HexAlphaColorPicker
-                      color={selectedComponent?.style?.color || "#000"}
-                      onChange={(color) =>
-                        updateComponentStyle(activeId, { color })
-                      }
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-            {/* input to change the background color of a component */}
-            <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-              <Label htmlFor="background-color" className="text-sm">
-                Background Color
-              </Label>
-              <div className="flex gap-x-2 w-full">
-                <HexColorInput
-                  className="w-full rounded-md px-2 py-1 border border-gray-200"
-                  color={selectedComponent?.style?.backgroundColor || "#000"}
-                  onChange={(backgroundColor) =>
-                    updateComponentStyle(activeId, { backgroundColor })
-                  }
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <Pipette width={16} height={16} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <HexAlphaColorPicker
-                      color={
-                        selectedComponent?.style?.backgroundColor || "#000"
-                      }
-                      onChange={(backgroundColor) =>
-                        updateComponentStyle(activeId, { backgroundColor })
-                      }
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+              </AccordionContent>
+            </AccordionItem>
+            {/* input to change the width and height of a component */}
+            <AccordionItem value="Component Size">
+              <AccordionTrigger>Size</AccordionTrigger>
+              <AccordionContent>
+                {/* select input to choose the width and height of a component */}
+                <div className="flex gap-x-2">
+                  {/* select input to choose the width of a component */}
+                  <PropritySelector
+                    label="Width"
+                    value={
+                      typeof selectedComponent?.style?.width === "number"
+                        ? "static"
+                        : selectedComponent?.style?.width || "static"
+                    }
+                    onValueChange={(value) =>
+                      containerUtils.updateContainerStyle(
+                        activeId,
+                        "width",
+                        value === "static" ? 100 : value
+                      )
+                    }
+                    proprities={ComponentPropritiesOptions.size}
+                  />
+                  {/* select input to choose the height of a component */}
+                  <PropritySelector
+                    label="Height"
+                    value={
+                      typeof selectedComponent?.style?.height === "number"
+                        ? "static"
+                        : selectedComponent?.style?.height || "static"
+                    }
+                    onValueChange={(value) =>
+                      containerUtils.updateContainerStyle(
+                        activeId,
+                        "height",
+                        value === "static" ? 100 : value
+                      )
+                    }
+                    proprities={ComponentPropritiesOptions.size}
+                  />
+                </div>
+                {/* input to staticly set the width and height of a component */}
+                <div className="flex gap-x-2 mt-2">
+                  {/* input to staticly set the width of a component */}
+                  <Input
+                    disabled={
+                      typeof selectedComponent?.style?.width !== "number"
+                    }
+                    type="number"
+                    placeholder="Width"
+                    className="bg-white"
+                    value={selectedComponent?.style?.width || 0}
+                    onChange={(e) =>
+                      containerUtils.updateContainerStyle(
+                        activeId,
+                        "width",
+                        Number(e.target.value)
+                      )
+                    }
+                  />
+                  {/* input to staticly set the height of a component */}
+                  <Input
+                    disabled={
+                      typeof selectedComponent?.style?.height !== "number"
+                    }
+                    type="number"
+                    placeholder="Height"
+                    className="bg-white"
+                    value={selectedComponent?.style?.height || 0}
+                    onChange={(e) =>
+                      containerUtils.updateContainerStyle(
+                        activeId,
+                        "height",
+                        Number(e.target.value)
+                      )
+                    }
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-        {/* input to change the border of a component */}
-        <AccordionItem value="Component Border">
-          <AccordionTrigger>Border</AccordionTrigger>
-          <AccordionContent>
-            <Border
-              styles={selectedComponent?.style}
-              setStyles={(atr: string, value: any) =>
-                updateComponentStyle(activeId, { [atr]: value })
-              }
-            />
-          </AccordionContent>
-        </AccordionItem>
+            {/* input to change the background and content color of a component */}
+            <AccordionItem value="Component Color">
+              <AccordionTrigger>Color</AccordionTrigger>
+              <AccordionContent></AccordionContent>
+            </AccordionItem>
 
-        {/* input to change the layout of a component */}
-        <AccordionItem value="Component Layout">
-          <AccordionTrigger>Layout</AccordionTrigger>
-          <AccordionContent>
-            <Layout
-              styles={selectedComponent?.style}
-              setStyles={(atr: string, value: any) =>
-                updateComponentStyle(activeId, { [atr]: value })
-              }
-            />
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+            {/* input to change the border of a component */}
+            <AccordionItem value="Component Border">
+              <AccordionTrigger>Border</AccordionTrigger>
+              <AccordionContent></AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
-      {/* button to delete a component */}
-      <TooltipButton
-        variant="destructive"
-        onClick={() => deleteComponentAndChildren(activeId)}
-        tooltipText="delete the component and all its children"
-      >
-        <Trash className="mr-2 h-4 w-4" />
-        Delete Component
-      </TooltipButton>
-    </>
-  );
+          {/* button to delete a component */}
+          <TooltipButton
+            variant="destructive"
+            onClick={() => containerUtils.removeContainer(activeId)}
+            tooltipText="delete the component and all its children"
+          >
+            <Trash className="mr-2 h-4 w-4" />
+            Delete Component
+          </TooltipButton>
+        </Accordion>
+      </>
+    );
+  }
 }
 
 interface PropritySelectorProps {
@@ -355,7 +275,7 @@ export function PropritySelector({
       <Label htmlFor="justify-content" className="text-sm">
         {label}
       </Label>
-      <Select value={value} onValueChange={onValueChange} >
+      <Select value={value} onValueChange={onValueChange}>
         <SelectTrigger className="bg-white">
           <SelectValue placeholder="Justify Content" />
         </SelectTrigger>

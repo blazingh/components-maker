@@ -5,7 +5,6 @@ import { ComponentContentType, ComponentsTree } from "@/types/types";
 
 interface ComponentsFileTreeProps {
   components: ComponentsTree;
-  addComponentTo: (parentId: string, type: ComponentContentType) => void;
   activeId: string;
   id: string;
   setActiveId: (id: string) => void;
@@ -13,7 +12,6 @@ interface ComponentsFileTreeProps {
 
 export function ComponentsFileTree({
   components,
-  addComponentTo,
   id,
   activeId,
   setActiveId,
@@ -24,7 +22,10 @@ export function ComponentsFileTree({
 
   if (!component) return null;
 
-  const hasChildren = component.children.length > 0;
+  // check if the component is a container type
+  const isContainer = component.type === ComponentContentType.Container;
+
+  const hasChildren = isContainer && component.children.length > 0;
 
   return (
     <div className="relative border-l border-gray-200">
@@ -51,16 +52,16 @@ export function ComponentsFileTree({
         </Button>
       </div>
       <div className={`ml-2 ${open ? "block" : "hidden"}`}>
-        {component.children.map((child) => (
-          <ComponentsFileTree
-            addComponentTo={addComponentTo}
-            key={child.id}
-            id={child.id}
-            components={components}
-            activeId={activeId}
-            setActiveId={setActiveId}
-          />
-        ))}
+        {hasChildren &&
+          component.children.map((child) => (
+            <ComponentsFileTree
+              key={child}
+              id={child}
+              components={components}
+              activeId={activeId}
+              setActiveId={setActiveId}
+            />
+          ))}
       </div>
     </div>
   );

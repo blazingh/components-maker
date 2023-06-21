@@ -14,12 +14,12 @@ export interface TreeComponentItem {
   id: string;
   name: string;
   style: React.CSSProperties;
-  parent?: string;
-  children: { id: string }[];
+  parent: string;
 }
 
 export interface ContainerComponentItem extends TreeComponentItem {
   type: ComponentContentType.Container;
+  children: string[];
 }
 
 export interface TextComponentItem extends TreeComponentItem {
