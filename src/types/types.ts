@@ -27,6 +27,21 @@ export interface TextComponentItem extends TreeComponentItem {
   text: string;
 }
 
+export interface H1ComponentItem extends TreeComponentItem {
+  type: ComponentContentType.H1;
+  text: string;
+}
+
+export interface H2ComponentItem extends TreeComponentItem {
+  type: ComponentContentType.H2;
+  text: string;
+}
+
+export interface H3ComponentItem extends TreeComponentItem {
+  type: ComponentContentType.H3;
+  text: string;
+}
+
 export interface KeyComponentItem extends TreeComponentItem {
   type: ComponentContentType.Key;
   key: string;

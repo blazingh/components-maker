@@ -62,6 +62,15 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         }
         proprities={ComponentStylePropritiesOptions.textDecoration}
       />
+      {/* input to change the overflow */}
+      <PropritySelector
+        label="Overflow"
+        value={styles?.overflow || "initial"}
+        onValueChange={(value: any) =>
+          setStyles("overflow", value || "initial")
+        }
+        proprities={ComponentStylePropritiesOptions.overflow}
+      />
       {/* input to change the text overflow*/}
       <PropritySelector
         label="Text Overflow"

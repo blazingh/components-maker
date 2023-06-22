@@ -42,6 +42,7 @@ import Border from "./porpreties/borber";
 import { Content } from "./porpreties/content";
 import { Typography } from "./porpreties/typography";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
+import Size from "./porpreties/size";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -74,11 +75,35 @@ export default function ComponentsEditBar({
           }
         />
 
+        {/* input to change the text of a component */}
+        <InputWithLabel
+          label="Text"
+          placeholder="Text"
+          type="text"
+          value={selectedComponent?.text || ""}
+          onChange={(e: any) => textUtils.updateText(activeId, e.target.value)}
+        />
+
+        {/* input to change the text style of a component */}
         <Accordion type="single" collapsible>
           <AccordionItem value="Typography">
             <AccordionTrigger>Typography</AccordionTrigger>
             <AccordionContent>
               <Typography
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  textUtils.updateTextStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* input to change the size of a component */}
+          {}
+          <AccordionItem value="Component Size">
+            <AccordionTrigger>Size</AccordionTrigger>
+            <AccordionContent>
+              <Size
                 styles={selectedComponent?.style}
                 setStyles={(atr: any, value: any) =>
                   textUtils.updateTextStyle(activeId, atr, value)
@@ -167,80 +192,12 @@ export default function ComponentsEditBar({
             <AccordionItem value="Component Size">
               <AccordionTrigger>Size</AccordionTrigger>
               <AccordionContent>
-                {/* select input to choose the width and height of a component */}
-                <div className="flex gap-x-2">
-                  {/* select input to choose the width of a component */}
-                  <PropritySelector
-                    label="Width"
-                    value={
-                      typeof selectedComponent?.style?.width === "number"
-                        ? "input"
-                        : selectedComponent?.style?.width || "input"
-                    }
-                    onValueChange={(value) =>
-                      containerUtils.updateContainerStyle(
-                        activeId,
-                        "width",
-                        value === "static" ? 100 : value
-                      )
-                    }
-                    proprities={ComponentPropritiesOptions.size}
-                  />
-                  {/* select input to choose the height of a component */}
-                  <PropritySelector
-                    label="Height"
-                    value={
-                      typeof selectedComponent?.style?.height === "number"
-                        ? "input"
-                        : selectedComponent?.style?.height || "input"
-                    }
-                    onValueChange={(value) =>
-                      containerUtils.updateContainerStyle(
-                        activeId,
-                        "height",
-                        value === "static" ? 100 : value
-                      )
-                    }
-                    proprities={ComponentPropritiesOptions.size}
-                  />
-                </div>
-                {/* input to staticly set the width and height of a component */}
-                <div className="flex gap-x-2 mt-2">
-                  {/* input to staticly set the width of a component */}
-                  <Input
-                    disabled={
-                      typeof selectedComponent?.style?.width !== "number"
-                    }
-                    type="number"
-                    placeholder="Width"
-                    className="bg-white"
-                    value={selectedComponent?.style?.width || 0}
-                    onChange={(e) =>
-                      containerUtils.updateContainerStyle(
-                        activeId,
-                        "width",
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                  {/* input to staticly set the height of a component */}
-                  <Input
-                    disabled={
-                      typeof selectedComponent?.style?.height !== "number"
-                    }
-                    type="number"
-                    placeholder="Height"
-                    className="bg-white"
-                    value={selectedComponent?.style?.height || 0}
-                    onChange={(e) =>
-                      containerUtils.updateContainerStyle(
-                        activeId,
-                        "height",
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                </div>
+                <Size
+                  styles={selectedComponent?.style}
+                  setStyles={(atr: any, value: any) =>
+                    containerUtils.updateContainerStyle(activeId, atr, value)
+                  }
+                />
               </AccordionContent>
             </AccordionItem>
 
