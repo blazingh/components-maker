@@ -4,11 +4,12 @@ import {
   ComponentTextType,
   ComponentTextWrapper,
   ComponentsTree,
+  Locales,
 } from "@/types/types";
 import React from "react";
 import { InputWithLabel, PropritySelector } from "../componentsEditBar";
 import TooltipButton from "../ui/tooltipButton";
-import { PlusIcon } from "lucide-react";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import { Label } from "../ui/label";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
 
@@ -30,6 +31,12 @@ const textWrappers = Object.keys(ComponentTextWrapper).map((key) => ({
   value: ComponentTextWrapper[key as keyof typeof ComponentTextWrapper],
 }));
 
+// get the localized text from LOcales
+const locales = Object.keys(Locales).map((key) => ({
+  label: key,
+  value: Locales[key as keyof typeof Locales],
+}));
+
 interface ContentProps {
   components: ComponentsTree;
   selectedComponent?: ComponentItem;
@@ -45,6 +52,10 @@ export function Content({
 }: ContentProps) {
   const [selectedType, setSelectedType] = React.useState<ComponentContentType>(
     contentTypes[0].value
+  );
+
+  const [selectedLocale, setSelectedLocale] = React.useState<Locales>(
+    Locales.En
   );
 
   if (!selectedComponent) {
@@ -75,16 +86,81 @@ export function Content({
           proprities={textTypes}
         />
 
-        {/* input to change the text of a component */}
-        <InputWithLabel
-          label={selectedComponent?.textType || "Text"}
-          placeholder={selectedComponent?.textType || "Text"}
-          type="text"
-          value={selectedComponent?.text || ""}
-          onChange={(e: any) =>
-            textUtils.updateTextContent(selectedComponent.id, e.target.value)
-          }
-        />
+        {/* if the text is not local variable*/}
+        {selectedComponent?.textType !== ComponentTextType.Localized && (
+          <InputWithLabel
+            label={selectedComponent?.textType || "Text"}
+            placeholder={selectedComponent?.textType || "Text"}
+            type="text"
+            value={selectedComponent?.text || ""}
+            onChange={(e: any) =>
+              textUtils.updateTextContent(selectedComponent.id, e.target.value)
+            }
+          />
+        )}
+
+        {/* add a new localized text */}
+        {selectedComponent?.textType === ComponentTextType.Localized && (
+          <div className="flex items-end justify-end gap-x-2">
+            <PropritySelector
+              label="Add Locale"
+              value={selectedLocale}
+              onValueChange={(value) => {
+                setSelectedLocale(value as Locales);
+              }}
+              proprities={locales}
+            />
+            <TooltipButton
+              onClick={() => {
+                if (selectedLocale) {
+                  textUtils.addLocalizedText(
+                    selectedComponent.id,
+                    selectedLocale
+                  );
+                }
+              }}
+              tooltipText="add a new localized text"
+            >
+              <PlusIcon className="h-4 w-4" />
+            </TooltipButton>
+          </div>
+        )}
+
+        {/* if the text is a local variable*/}
+        {selectedComponent?.textType === ComponentTextType.Localized &&
+          Object.keys(selectedComponent?.localizedText || {}).map(
+            (locale, index) => (
+              <div key={index} className="flex items-end gap-x-2">
+                <InputWithLabel
+                  label={locale}
+                  placeholder={locale}
+                  type="text"
+                  value={
+                    selectedComponent?.localizedText[locale as Locales] || ""
+                  }
+                  onChange={(e: any) =>
+                    textUtils.updateLocalizedTextContent(
+                      selectedComponent.id,
+                      locale as Locales,
+                      e.target.value
+                    )
+                  }
+                />
+                <TooltipButton
+                  onClick={() =>
+                    textUtils.removeLocalizedText(
+                      selectedComponent.id,
+                      locale as Locales
+                    )
+                  }
+                  tooltipText="remove localized text"
+                >
+                  <MinusIcon className="h-4 w-4" />
+                </TooltipButton>
+              </div>
+            )
+          )}
+
       </div>
     );
   }

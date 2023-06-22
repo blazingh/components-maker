@@ -11,6 +11,7 @@ import {
   ComponentTextWrapper,
   ComponentsTree,
   ContainerComponentItem,
+  Locales,
   TextComponentItem,
 } from "@/types/types";
 
@@ -31,6 +32,13 @@ export interface TextUtils {
   updateTextWrapper: (id: string, wrapper: ComponentTextWrapper) => void;
   updateTextStyle: (id: string, attr: string, value: any) => void;
   updateTextType: (id: string, type: ComponentTextType) => void;
+  addLocalizedText: (id: string, locale: Locales) => void;
+  removeLocalizedText: (id: string, locale: Locales) => void;
+  updateLocalizedTextContent: (
+    id: string,
+    locale: Locales,
+    text: string
+  ) => void;
 }
 
 export default function Demo() {
@@ -211,6 +219,45 @@ export default function Demo() {
       // Update the state
       setComponents({ ...components, [id]: component });
     },
+
+    // function to add localized text
+    addLocalizedText: (id: string, locale: Locales) => {
+      const component = components[id] as TextComponentItem;
+
+      if (!component.localizedText) component.localizedText = {};
+
+      // check if the locale already exists
+      if (component.localizedText?.[locale]) return;
+
+      component.localizedText[locale] = "";
+
+      // Update the state
+      setComponents({ ...components, [id]: component });
+    },
+
+    // function to remove localized text
+    removeLocalizedText: (id: string, locale: Locales) => {
+      const component = components[id] as TextComponentItem;
+      // check if the locale exists
+      if (!component.localizedText) return;
+
+      delete component.localizedText[locale];
+
+      // Update the state
+      setComponents({ ...components, [id]: component });
+    },
+
+    // function to update localized text
+    updateLocalizedTextContent: (id: string, locale: Locales, text: string) => {
+      const component = components[id] as TextComponentItem;
+      // check if the locale exists
+      if (!component.localizedText) return;
+
+      component.localizedText[locale] = text;
+
+      // Update the state
+      setComponents({ ...components, [id]: component });
+    },
   };
 
   return (
@@ -239,6 +286,12 @@ export default function Demo() {
           components={components}
           id={"1"}
           activeId={activeId}
+          data={{
+            locale: "en",
+            random: "random tect",
+            rando: "randttttom tect",
+            rand: "randoct",
+          }}
         />
       </div>
 

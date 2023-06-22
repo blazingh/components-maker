@@ -3,6 +3,7 @@ import {
   ComponentTextType,
   ComponentTextWrapper,
   ComponentsTree,
+  Locales,
 } from "@/types/types";
 
 interface ComponentsPreviewTreeProps {
@@ -34,8 +35,10 @@ export default function ComponentsPreviewTree({
     if (component.textType === ComponentTextType.Key)
       content = data?.[component.text] || component.text;
 
-    if (component.textType === ComponentTextType.Localized)
-      content = component.data?.[data?.locale || "en"] || component.text;
+    if (component.textType === ComponentTextType.Localized) {
+      const locale = (data?.locale as Locales) || ("en" as Locales);
+      content = component.localizedText?.[locale] || component.text;
+    }
 
     if (component.wrapper === ComponentTextWrapper.Div)
       return <div {...props}>{content}</div>;

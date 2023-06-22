@@ -15,6 +15,12 @@ export enum ComponentTextWrapper {
   H3 = "h3",
 }
 
+export enum Locales {
+  En = "en",
+  Tr = "tr",
+  Ar = "ar",
+}
+
 export enum ComponentTextType {
   Text = "text",
   Key = "key",
@@ -38,7 +44,9 @@ export interface TextComponentItem extends TreeComponentItem {
   wrapper: ComponentTextWrapper;
   textType: ComponentTextType;
   text: string;
-  data?: { [key: string]: any };
+  localizedText: {
+    [key in Locales]?: string;
+  };
 }
 
 export interface ImageComponentItem extends TreeComponentItem {
