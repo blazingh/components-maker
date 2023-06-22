@@ -38,6 +38,8 @@ import { ContainerUtils, TextUtils } from "@/app/edit/page";
 import Size from "./porpreties/size";
 import Border from "./porpreties/borber";
 import Background from "./porpreties/background";
+import Padding from "./porpreties/padding";
+import Margin from "./porpreties/margin";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -117,6 +119,19 @@ export default function ComponentsEditBar({
               />
             </AccordionContent>
           </AccordionItem>
+
+          {/* input to change the background of a component */}
+          <AccordionItem value="Component Color">
+            <AccordionTrigger>Background</AccordionTrigger>
+            <AccordionContent>
+              <Background
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  textUtils.updateTextStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
       </>
     );
@@ -182,6 +197,32 @@ export default function ComponentsEditBar({
               <AccordionTrigger>Size</AccordionTrigger>
               <AccordionContent>
                 <Size
+                  styles={selectedComponent?.style}
+                  setStyles={(atr: any, value: any) =>
+                    containerUtils.updateContainerStyle(activeId, atr, value)
+                  }
+                />
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* input to change the  margin of a component */}
+            <AccordionItem value="Component Margin">
+              <AccordionTrigger>Margin</AccordionTrigger>
+              <AccordionContent>
+                <Margin
+                  styles={selectedComponent?.style}
+                  setStyles={(atr: any, value: any) =>
+                    containerUtils.updateContainerStyle(activeId, atr, value)
+                  }
+                />
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* input to change the padding of a component */}
+            <AccordionItem value="Component Padding">
+              <AccordionTrigger>Padding</AccordionTrigger>
+              <AccordionContent>
+                <Padding
                   styles={selectedComponent?.style}
                   setStyles={(atr: any, value: any) =>
                     containerUtils.updateContainerStyle(activeId, atr, value)

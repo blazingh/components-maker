@@ -287,6 +287,7 @@ export default function Demo() {
           id={"1"}
           activeId={activeId}
           data={{
+            "user_name": "John Doe",
             locale: "en",
             random: "random tect",
             rando: "randttttom tect",

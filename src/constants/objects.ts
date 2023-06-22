@@ -16,6 +16,7 @@ export const ComponentStylePropritiesOptions = {
     { value: "auto", label: "Auto" },
   ],
   borderStyle: [
+    { value: "initial", label: "initial" },
     { value: "none", label: "None" },
     { value: "solid", label: "Solid" },
     { value: "dashed", label: "Dashed" },
