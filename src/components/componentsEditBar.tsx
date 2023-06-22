@@ -37,6 +37,18 @@ import { Typography } from "./porpreties/typography";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
 import Size from "./porpreties/size";
 
+// get texttypes from ComponentTextType
+const textTypes = Object.keys(ComponentTextType).map((key) => ({
+  label: key,
+  value: ComponentTextType[key as keyof typeof ComponentTextType],
+}));
+
+// get text wrappers from ComponentTextWrapper
+const textWrappers = Object.keys(ComponentTextWrapper).map((key) => ({
+  label: key,
+  value: ComponentTextWrapper[key as keyof typeof ComponentTextWrapper],
+}));
+
 export default function ComponentsEditBar({
   selectedComponent,
   activeId,
@@ -55,20 +67,6 @@ export default function ComponentsEditBar({
 
   // if the selected component is a text component
   if (selectedComponent?.type === ComponentContentType.Text) {
-    // get proprities for text component from ComponentTextType
-    const textProprities = Object.values(ComponentTextType).map((value) => ({
-      value,
-      label: value,
-    }));
-
-    // get proprities for text wrapper from ComponentTextWrapper
-    const textWrapperProprities = Object.values(ComponentTextWrapper).map(
-      (value) => ({
-        value,
-        label: value,
-      })
-    );
-
     return (
       <>
         {/* input to change the name of a component */}
@@ -82,36 +80,25 @@ export default function ComponentsEditBar({
           }
         />
 
-        {/* input to change the text wrapper of a component */}
+        {/* input to change the text wrappers of a component */}
         <PropritySelector
           label="Text Wrapper"
-          value={selectedComponent?.wrapper || ""}
-          onValueChange={(e: any) => {
-            const value = e.target.value as ComponentTextWrapper;
-            textUtils.updateTextWrapper(activeId, value)
-          }}
-          proprities={textWrapperProprities}
-        />
-
-
-        {/* input to change the text type of a component */}
-        <PropritySelector
-          label="Text Type"
-          value={selectedComponent?.textType || ""}
-          onValueChange={(e: any) => {
-            const value = e.target.value as ComponentTextType;
-            textUtils.updateTextType(activeId, value)
-          }}
-          proprities={textProprities}
+          value={selectedComponent?.wrapper || textWrappers[0].value}
+          onValueChange={(e: any) =>
+            textUtils.updateTextWrapper(activeId, e.target.value)
+          }
+          proprities={textWrappers}
         />
 
         {/* input to change the text of a component */}
         <InputWithLabel
-          label={selectedComponent?.textType || "Text"}
+          label="Text"
           placeholder="Text"
           type="text"
           value={selectedComponent?.text || ""}
-          onChange={(e: any) => textUtils.updateTextContent(activeId, e.target.value)}
+          onChange={(e: any) =>
+            textUtils.updateTextContent(activeId, e.target.value)
+          }
         />
 
         {/* input to change the text style of a component */}
@@ -129,6 +116,7 @@ export default function ComponentsEditBar({
           </AccordionItem>
 
           {/* input to change the size of a component */}
+          {}
           <AccordionItem value="Component Size">
             <AccordionTrigger>Size</AccordionTrigger>
             <AccordionContent>
@@ -145,19 +133,7 @@ export default function ComponentsEditBar({
     );
   }
 
-  // if the selected component is a key component
-  if (selectedComponent?.type === ComponentContentType.Key) {
-    return (
-      <>
-        {/* input to change the name of a component */}
-        <InputWithLabel
-          label="Component Name"
-          placeholder="Component Name"
-          type="text"
-          value={selectedComponent?.name || ""}
-          onChange={(e: any) =>
-
-
+  // if the selected component is a container component
   if (selectedComponent?.type === ComponentContentType.Container) {
     return (
       <>
@@ -192,16 +168,6 @@ export default function ComponentsEditBar({
               />
             </AccordionContent>
           </AccordionItem>
-
-          {/* button to add a new child component */}
-          {/* <TooltipButton */}
-          {/*   variant="default" */}
-          {/*   onClick={() => addComponentTo(activeId)} */}
-          {/*   tooltipText="Add a new child component to the selected component" */}
-          {/* > */}
-          {/*   <PlusIcon className="mr-2 h-4 w-4" /> */}
-          {/*   Add Child */}
-          {/* </TooltipButton> */}
 
           <Accordion type="single" collapsible>
             {/* input to change the position of a component */}
