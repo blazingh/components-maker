@@ -89,6 +89,15 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         }
         proprities={ComponentStylePropritiesOptions.whiteSpace}
       />
+      {/* input to change the text transform*/}
+      <PropritySelector
+        label="Text Transform"
+        value={styles?.textTransform || "initial"}
+        onValueChange={(value: any) =>
+          setStyles("textTransform", value || "initial")
+        }
+        proprities={ComponentStylePropritiesOptions.textTransform}
+      />
     </div>
   );
 }

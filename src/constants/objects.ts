@@ -92,6 +92,13 @@ export const ComponentStylePropritiesOptions = {
     { value: "overline", label: "Overline" },
     { value: "line-through", label: "Line Through" },
   ],
+  textTransform: [
+    { value: "initial", label: "Initial" },
+    { value: "none", label: "None" },
+    { value: "capitalize", label: "Capitalize" },
+    { value: "uppercase", label: "Uppercase" },
+    { value: "lowercase", label: "Lowercase" },
+  ],
   textAlign: [
     { value: "initial", label: "Initial" },
     { value: "left", label: "Left" },

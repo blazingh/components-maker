@@ -261,7 +261,7 @@ export function PropritySelector({
 }: PropritySelectorProps) {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label htmlFor="justify-content" className="text-sm">
+      <Label htmlFor="justify-content" className="text-sm capitalize">
         {label}
       </Label>
       <Select value={value} onValueChange={onValueChange}>
@@ -297,7 +297,7 @@ export function InputWithLabel({
 }: InputWithLabelProps) {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label htmlFor="border-radius" className="text-sm">
+      <Label htmlFor="border-radius" className="text-sm capitalize">
         {label}
       </Label>
       <Input
