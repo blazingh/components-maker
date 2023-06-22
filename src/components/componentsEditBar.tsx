@@ -84,16 +84,26 @@ export default function ComponentsEditBar({
         <PropritySelector
           label="Text Wrapper"
           value={selectedComponent?.wrapper || textWrappers[0].value}
-          onValueChange={(e: any) =>
-            textUtils.updateTextWrapper(activeId, e.target.value)
+          onValueChange={(e: ComponentTextWrapper) =>
+            textUtils.updateTextWrapper(activeId, e)
           }
           proprities={textWrappers}
         />
 
+        {/* input to change the text type of a component */}
+        <PropritySelector
+          label="Text Type"
+          value={selectedComponent?.textType || textTypes[0].value}
+          onValueChange={(e: ComponentTextType) =>
+            textUtils.updateTextType(activeId, e)
+          }
+          proprities={textTypes}
+        />
+
         {/* input to change the text of a component */}
         <InputWithLabel
-          label="Text"
-          placeholder="Text"
+          label={selectedComponent?.textType || "Text"}
+          placeholder={selectedComponent?.textType || "Text"}
           type="text"
           value={selectedComponent?.text || ""}
           onChange={(e: any) =>

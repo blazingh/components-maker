@@ -1,4 +1,9 @@
-import { ComponentContentType, ComponentsTree } from "@/types/types";
+import {
+  ComponentContentType,
+  ComponentTextType,
+  ComponentTextWrapper,
+  ComponentsTree,
+} from "@/types/types";
 
 interface ComponentsPreviewTreeProps {
   components: ComponentsTree;
@@ -19,30 +24,32 @@ export default function ComponentsPreviewTree({
 
   // when component is a text
   if (component.type === ComponentContentType.Text) {
-    return (
-      <p
-        style={component.style}
-        className={
-          activeId === id ? "outline outline-primary outline-thin " : ""
-        }
-      >
-        {component.text}
-      </p>
-    );
-  }
+    const props = {
+      style: component.style,
+      className: activeId === id ? "outline outline-primary outline-thin " : "",
+    };
 
-  // when component is a key data value
-  if (component.type === ComponentContentType.Key) {
-    return (
-      <p
-        style={component.style}
-        className={
-          activeId === id ? "outline outline-primary outline-thin " : ""
-        }
-      >
-        {data?.[component.key]}
-      </p>
-    );
+    const content =
+      component.textType === ComponentTextType.Key
+        ? data?.[component.text] || component.text
+        : component.text;
+
+    if (component.wrapper === ComponentTextWrapper.Div)
+      return <div {...props}>{content}</div>;
+
+    if (component.wrapper === ComponentTextWrapper.Span)
+      return <span {...props}>{content}</span>;
+
+    if (component.wrapper === ComponentTextWrapper.H1)
+      return <h1 {...props}>{content}</h1>;
+
+    if (component.wrapper === ComponentTextWrapper.H2)
+      return <h2 {...props}>{content}</h2>;
+
+    if (component.wrapper === ComponentTextWrapper.H3)
+      return <h3 {...props}>{content}</h3>;
+
+    return <p {...props}>{content}</p>;
   }
 
   // when component is a localized text
