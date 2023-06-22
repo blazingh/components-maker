@@ -154,6 +154,7 @@ export default function Demo() {
         wrapper: ComponentTextWrapper.P,
         style: {},
         parent: parentId,
+        localizedText: {},
       };
 
       const parent = components[parentId] as ContainerComponentItem;
