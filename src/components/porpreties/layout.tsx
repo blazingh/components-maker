@@ -10,6 +10,15 @@ interface LayoutProps {
 export default function Layout({ styles, setStyles }: LayoutProps) {
   return (
     <div>
+      {/* input to set the overflow of the element */}
+      <PropritySelector
+        label="Overflow"
+        value={styles?.overflow || "initial"}
+        onValueChange={(value: any) =>
+          setStyles("overflow", value || "initial")
+        }
+        proprities={ComponentStylePropritiesOptions.overflow}
+      />
       {/* input to set the display of the element */}
       <PropritySelector
         label="display"

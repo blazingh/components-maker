@@ -69,7 +69,8 @@ export default function Demo() {
       const component = components[id] as ContainerComponentItem;
       // Delete children recursively
       for (const child of component.children) {
-        ContainerUtils.removeContainer(child);
+        if (components[child].type === ComponentContentType.Container)
+          ContainerUtils.removeContainer(child);
       }
 
       const parent = components[component.parent] as ContainerComponentItem;

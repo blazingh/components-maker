@@ -14,7 +14,7 @@ export default function Border({ styles, setStyles }: BorderProps) {
       {/* input to set the border of the element */}
       <PropritySelector
         label="Border Style"
-        value={styles?.border || "initial"}
+        value={styles?.borderStyle || "initial"}
         onValueChange={(value: any) =>
           setStyles("borderStyle", value || "initial")
         }

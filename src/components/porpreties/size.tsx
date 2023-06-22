@@ -21,7 +21,7 @@ export default function Size({ styles, setStyles }: SizeProps) {
               : styles?.width || "input"
           }
           onValueChange={(value) =>
-            setStyles("width", value === "static" ? 100 : value)
+            setStyles("width", value === "input" ? 100 : value)
           }
           proprities={ComponentStylePropritiesOptions.size}
         />
@@ -34,7 +34,7 @@ export default function Size({ styles, setStyles }: SizeProps) {
               : styles?.height || "input"
           }
           onValueChange={(value) =>
-            setStyles("height", value === "static" ? 100 : value)
+            setStyles("height", value === "input" ? 100 : value)
           }
           proprities={ComponentStylePropritiesOptions.size}
         />

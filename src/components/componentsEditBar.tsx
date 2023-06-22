@@ -36,6 +36,7 @@ import { Content } from "./porpreties/content";
 import { Typography } from "./porpreties/typography";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
 import Size from "./porpreties/size";
+import Border from "./porpreties/borber";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -197,7 +198,14 @@ export default function ComponentsEditBar({
             {/* input to change the border of a component */}
             <AccordionItem value="Component Border">
               <AccordionTrigger>Border</AccordionTrigger>
-              <AccordionContent></AccordionContent>
+              <AccordionContent>
+                <Border
+                  styles={selectedComponent?.style}
+                  setStyles={(atr: any, value: any) =>
+                    containerUtils.updateContainerStyle(activeId, atr, value)
+                  }
+                />
+              </AccordionContent>
             </AccordionItem>
           </Accordion>
 

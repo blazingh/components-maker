@@ -10,7 +10,7 @@ export const ComponentStylePropritiesOptions = {
   ],
   size: [
     { value: "initial", label: "Initial" },
-    { value: "input", label: "Custom" },
+    { value: "input", label: "Custome" },
     { value: "100%", label: "Fill" },
     { value: "max-content", label: "Content" },
     { value: "auto", label: "Auto" },
