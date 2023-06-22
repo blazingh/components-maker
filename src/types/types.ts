@@ -2,12 +2,8 @@ export enum ComponentContentType {
   Container = "Container",
   Text = "Text",
   Key = "Key",
-  Localized = "Localized",
   Image = "Image",
   Component = "Component",
-  H1 = "Header1",
-  H2 = "Header2",
-  H3 = "Header3",
 }
 
 export enum ComponentTextWrapper {
@@ -22,6 +18,7 @@ export enum ComponentTextWrapper {
 export enum ComponentTextType {
   Text = "text",
   Key = "key",
+  Localized = "localized",
 }
 
 export interface TreeComponentItem {
@@ -44,11 +41,6 @@ export interface TextComponentItem extends TreeComponentItem {
   data?: { [key: string]: any };
 }
 
-export interface LocalizedComponentItem extends TreeComponentItem {
-  type: ComponentContentType.Localized;
-  data: { [key: string]: any };
-}
-
 export interface ImageComponentItem extends TreeComponentItem {
   type: ComponentContentType.Image;
   src: string;
@@ -63,7 +55,6 @@ export interface ComponentComponentItem extends TreeComponentItem {
 export type ComponentItem =
   | ContainerComponentItem
   | TextComponentItem
-  | LocalizedComponentItem
   | ImageComponentItem
   | ComponentComponentItem;
 

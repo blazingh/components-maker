@@ -29,10 +29,13 @@ export default function ComponentsPreviewTree({
       className: activeId === id ? "outline outline-primary outline-thin " : "",
     };
 
-    const content =
-      component.textType === ComponentTextType.Key
-        ? data?.[component.text] || component.text
-        : component.text;
+    let content = component.text;
+
+    if (component.textType === ComponentTextType.Key)
+      content = data?.[component.text] || component.text;
+
+    if (component.textType === ComponentTextType.Localized)
+      content = component.data?.[data?.locale || "en"] || component.text;
 
     if (component.wrapper === ComponentTextWrapper.Div)
       return <div {...props}>{content}</div>;
@@ -50,20 +53,6 @@ export default function ComponentsPreviewTree({
       return <h3 {...props}>{content}</h3>;
 
     return <p {...props}>{content}</p>;
-  }
-
-  // when component is a localized text
-  if (component.type === ComponentContentType.Localized) {
-    return (
-      <p
-        style={component.style}
-        className={
-          activeId === id ? "outline outline-primary outline-thin " : ""
-        }
-      >
-        {component.data[data?.locale || "en"]}
-      </p>
-    );
   }
 
   // when component is a container
