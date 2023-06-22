@@ -126,7 +126,6 @@ export default function ComponentsEditBar({
           </AccordionItem>
 
           {/* input to change the size of a component */}
-          {}
           <AccordionItem value="Component Size">
             <AccordionTrigger>Size</AccordionTrigger>
             <AccordionContent>
