@@ -1,6 +1,7 @@
 import { ComponentStylePropritiesOptions } from "@/constants/objects";
 import { PropritySelector } from "../componentsEditBar";
 import InputWithUnit from "../inputs/inputWithUnit";
+import InputWithColor from "../inputs/inputWithColor";
 
 interface TypographyProps {
   styles: any;
@@ -43,6 +44,12 @@ export function Typography({ styles, setStyles }: TypographyProps) {
           setStyles("fontStyle", value || "initial")
         }
         proprities={ComponentStylePropritiesOptions.fontStyle}
+      />
+      {/* input to change the text color*/}
+      <InputWithColor
+        label="Text Color"
+        value={styles?.color || "initial"}
+        onChange={(value: any) => setStyles("color", value || "initial")}
       />
       {/* input to change the text align*/}
       <PropritySelector

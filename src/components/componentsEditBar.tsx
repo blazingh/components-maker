@@ -37,6 +37,7 @@ import { Typography } from "./porpreties/typography";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
 import Size from "./porpreties/size";
 import Border from "./porpreties/borber";
+import Background from "./porpreties/background";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -189,10 +190,17 @@ export default function ComponentsEditBar({
               </AccordionContent>
             </AccordionItem>
 
-            {/* input to change the background and content color of a component */}
+            {/* input to change the background of a component */}
             <AccordionItem value="Component Color">
-              <AccordionTrigger>Color</AccordionTrigger>
-              <AccordionContent></AccordionContent>
+              <AccordionTrigger>Background</AccordionTrigger>
+              <AccordionContent>
+                <Background
+                  styles={selectedComponent?.style}
+                  setStyles={(atr: any, value: any) =>
+                    containerUtils.updateContainerStyle(activeId, atr, value)
+                  }
+                />
+              </AccordionContent>
             </AccordionItem>
 
             {/* input to change the border of a component */}
