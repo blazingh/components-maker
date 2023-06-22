@@ -64,7 +64,7 @@ export default function ComponentsPreviewTree({
       <div
         style={component.style}
         className={
-          activeId === id ? "outline outline-primary outline-thin " : ""
+          activeId === id ? "inverted-outline " : ""
         }
       >
         {component.children.map((child) => (

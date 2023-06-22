@@ -38,14 +38,14 @@ export default function InputWithUnit({
 
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label htmlFor="border-radius" className="text-sm">
+      <Label htmlFor="border-radius" className="text-sm capitalize" >
         {label}
       </Label>
-      <div className="flex">
+      <div className="flex gap-x-2 w-full">
         <Input
           type="number"
           placeholder={placeholder}
-          className="bg-white w-full"
+          className="w-full "
           value={number || 0}
           onChange={onChangeNumber}
         />

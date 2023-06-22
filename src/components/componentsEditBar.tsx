@@ -1,19 +1,12 @@
 import { Input } from "./ui/input";
 import TooltipButton from "./ui/tooltipButton";
-import {
-  ArrowDownFromLine,
-  ArrowUpFromLine,
-  ChevronUp,
-  Pipette,
-  Trash,
-} from "lucide-react";
+import { } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { ChevronDown } from "lucide-react";
 import { Label } from "./ui/label";
 import {
   Select,
@@ -26,8 +19,6 @@ import React from "react";
 import {
   ComponentContentType,
   ComponentItem,
-  ComponentTextType,
-  ComponentTextWrapper,
   ComponentsTree,
 } from "@/types/types";
 import Position from "./porpreties/position";
@@ -40,6 +31,7 @@ import Border from "./porpreties/borber";
 import Background from "./porpreties/background";
 import Padding from "./porpreties/padding";
 import Margin from "./porpreties/margin";
+import { Trash } from "lucide-react";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -288,11 +280,11 @@ export function PropritySelector({
 }: PropritySelectorProps) {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label htmlFor="justify-content" className="text-sm capitalize">
+      <Label htmlFor="justify-content" className="text-sm capitalize ">
         {label}
       </Label>
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="bg-white">
+        <SelectTrigger>
           <SelectValue placeholder="Justify Content" />
         </SelectTrigger>
         <SelectContent>
@@ -324,13 +316,15 @@ export function InputWithLabel({
 }: InputWithLabelProps) {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label htmlFor="border-radius" className="text-sm capitalize">
+      <Label
+        htmlFor="border-radius"
+        className="text-sm capitalize "
+      >
         {label}
       </Label>
       <Input
         type={type}
         placeholder={placeholder}
-        className="bg-white"
         value={value}
         onChange={onChange}
       />

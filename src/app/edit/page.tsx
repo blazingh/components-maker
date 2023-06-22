@@ -261,8 +261,9 @@ export default function Demo() {
   };
 
   return (
-    <div className="flex w-full h-screen">
+    <div className="flex w-full h-screen class ">
       <div
+        className=" h-full flex flex-col bg-zinc-800"
         style={{
           maxWidth: 200,
           minWidth: "200px",
@@ -277,7 +278,7 @@ export default function Demo() {
       </div>
 
       <div
-        className="w-full h-full flex items-center justify-center p-6"
+        className="w-full h-full flex items-center justify-center p-6 bg-zinc-900"
         style={{
           maxWidth: "calc(100% - 425px)",
         }}
@@ -287,7 +288,7 @@ export default function Demo() {
           id={"1"}
           activeId={activeId}
           data={{
-            "user_name": "John Doe",
+            user_name: "John Doe",
             locale: "en",
             random: "random tect",
             rando: "randttttom tect",
@@ -297,7 +298,7 @@ export default function Demo() {
       </div>
 
       <div
-        className="flex flex-col flex-1 p-2 bg-gray-100 gap-y-2 overflow-y-scroll"
+        className="flex flex-col flex-1 p-2 bg-zinc-800 gap-y-2 overflow-y-scroll"
         style={{
           maxWidth: "225px",
           minWidth: "225px",

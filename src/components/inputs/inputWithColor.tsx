@@ -21,7 +21,7 @@ export default function InputWithColor({
 }: InputWithColorProps) {
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
-      <Label htmlFor="color" className="text-sm">
+      <Label htmlFor="color" className="text-sm capitalize text-zinc-300">
         {label}
       </Label>
       <div className="flex gap-x-2 w-full">

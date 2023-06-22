@@ -170,7 +170,6 @@ export function Content({
     return (
       <div className="flex flex-col w-full h-full gap-y-2">
         {/* list all the children of the selected component */}
-        <Label>Children</Label>
         {selectedComponent.children.map((child) => {
           const component = components[child];
           return (
