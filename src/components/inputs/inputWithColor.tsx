@@ -26,7 +26,7 @@ export default function InputWithColor({
       </Label>
       <div className="flex gap-x-2 w-full">
         <HexColorInput
-          className="w-full rounded-md px-2 py-1 border border-gray-200"
+          className="w-full rounded-md px-2 py-1 border border-gray-200 bg-transparent"
           color={value}
           onChange={(color) => onChange(color)}
         />
@@ -36,7 +36,7 @@ export default function InputWithColor({
               <Pipette width={16} height={16} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
+          <DropdownMenuContent className="bg-zinc-700 shadow-lg rounded-md p-2">
             <HexAlphaColorPicker
               color={value}
               onChange={(color) => onChange(color)}
