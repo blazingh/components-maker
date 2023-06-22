@@ -37,18 +37,6 @@ import { Typography } from "./porpreties/typography";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
 import Size from "./porpreties/size";
 
-// get texttypes from ComponentTextType
-const textTypes = Object.keys(ComponentTextType).map((key) => ({
-  label: key,
-  value: ComponentTextType[key as keyof typeof ComponentTextType],
-}));
-
-// get text wrappers from ComponentTextWrapper
-const textWrappers = Object.keys(ComponentTextWrapper).map((key) => ({
-  label: key,
-  value: ComponentTextWrapper[key as keyof typeof ComponentTextWrapper],
-}));
-
 export default function ComponentsEditBar({
   selectedComponent,
   activeId,
@@ -65,6 +53,13 @@ export default function ComponentsEditBar({
   // if no component is selected, return null
   if (!selectedComponent) return null;
 
+  const addComponent = (parent: string, type: ComponentContentType) => {
+    if (type === ComponentContentType.Text) textUtils.addText(parent);
+
+    if (type === ComponentContentType.Container)
+      containerUtils.addContainer(parent);
+  };
+
   // if the selected component is a text component
   if (selectedComponent?.type === ComponentContentType.Text) {
     return (
@@ -80,39 +75,22 @@ export default function ComponentsEditBar({
           }
         />
 
-        {/* input to change the text wrappers of a component */}
-        <PropritySelector
-          label="Text Wrapper"
-          value={selectedComponent?.wrapper || textWrappers[0].value}
-          onValueChange={(e: ComponentTextWrapper) =>
-            textUtils.updateTextWrapper(activeId, e)
-          }
-          proprities={textWrappers}
-        />
-
-        {/* input to change the text type of a component */}
-        <PropritySelector
-          label="Text Type"
-          value={selectedComponent?.textType || textTypes[0].value}
-          onValueChange={(e: ComponentTextType) =>
-            textUtils.updateTextType(activeId, e)
-          }
-          proprities={textTypes}
-        />
-
-        {/* input to change the text of a component */}
-        <InputWithLabel
-          label={selectedComponent?.textType || "Text"}
-          placeholder={selectedComponent?.textType || "Text"}
-          type="text"
-          value={selectedComponent?.text || ""}
-          onChange={(e: any) =>
-            textUtils.updateTextContent(activeId, e.target.value)
-          }
-        />
-
         {/* input to change the text style of a component */}
         <Accordion type="single" collapsible>
+          {/* input to change the content of a component */}
+          <AccordionItem value="Edit Content">
+            <AccordionTrigger>Content</AccordionTrigger>
+            <AccordionContent>
+              <Content
+                components={components}
+                selectedComponent={selectedComponent}
+                textUtils={textUtils}
+                addComponent={addComponent}
+              />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* input to change the text style of a component */}
           <AccordionItem value="Typography">
             <AccordionTrigger>Typography</AccordionTrigger>
             <AccordionContent>
@@ -163,17 +141,9 @@ export default function ComponentsEditBar({
             <AccordionContent>
               <Content
                 components={components}
+                textUtils={textUtils}
                 selectedComponent={selectedComponent}
-                addComponent={(parent: string, type: ComponentContentType) => {
-                  if (type === ComponentContentType.Container) {
-                    containerUtils.addContainer(parent);
-                  } else if (type === ComponentContentType.Text) {
-                    textUtils.addText(parent);
-                  }
-                }}
-                deleteComponent={(id: string) =>
-                  containerUtils.removeContainer(id)
-                }
+                addComponent={addComponent}
               />
             </AccordionContent>
           </AccordionItem>
