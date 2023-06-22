@@ -7,7 +7,8 @@ import { initialComponents } from "@/initialTestComponents";
 import ComponentsEditBar from "@/components/componentsEditBar";
 import {
   ComponentContentType,
-  ComponentItem,
+  ComponentTextType,
+  ComponentTextWrapper,
   ComponentsTree,
   ContainerComponentItem,
   TextComponentItem,
@@ -25,9 +26,11 @@ export interface ContainerUtils {
 export interface TextUtils {
   addText: (parentId: string) => void;
   removeText: (id: string) => void;
-  updateText: (id: string, text: string) => void;
-  updateTextStyle: (id: string, attr: string, value: any) => void;
   updateTextName: (id: string, name: string) => void;
+  updateTextContent: (id: string, text: string) => void;
+  updateTextWrapper: (id: string, wrapper: ComponentTextWrapper) => void;
+  updateTextStyle: (id: string, attr: string, value: any) => void;
+  updateTextType: (id: string, type: ComponentTextType) => void;
 }
 
 export default function Demo() {
@@ -138,6 +141,8 @@ export default function Demo() {
         name: "New Text",
         type: ComponentContentType.Text,
         text: "New Text",
+        textType: ComponentTextType.Text,
+        wrapper: ComponentTextWrapper.P,
         style: {},
         parent: parentId,
       };
@@ -180,9 +185,27 @@ export default function Demo() {
     },
 
     // Function to update the text of a text component
-    updateText: (id: string, text: string) => {
+    updateTextContent: (id: string, text: string) => {
       const component = components[id] as TextComponentItem;
       component.text = text;
+
+      // Update the state
+      setComponents({ ...components, [id]: component });
+    },
+
+    // Function to update the wrapper of a text component
+    updateTextWrapper: (id: string, wrapper: ComponentTextWrapper) => {
+      const component = components[id] as TextComponentItem;
+      component.wrapper = wrapper;
+
+      // Update the state
+      setComponents({ ...components, [id]: component });
+    },
+
+    // Function to update the type of a text component
+    updateTextType: (id: string, type: ComponentTextType) => {
+      const component = components[id] as TextComponentItem;
+      component.textType = type;
 
       // Update the state
       setComponents({ ...components, [id]: component });

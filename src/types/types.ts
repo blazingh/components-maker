@@ -10,6 +10,20 @@ export enum ComponentContentType {
   H3 = "Header3",
 }
 
+export enum ComponentTextWrapper {
+  P = "p",
+  Span = "span",
+  Div = "div",
+  H1 = "h1",
+  H2 = "h2",
+  H3 = "h3",
+}
+
+export enum ComponentTextType {
+  Text = "text",
+  Key = "key",
+}
+
 export interface TreeComponentItem {
   id: string;
   name: string;
@@ -24,28 +38,10 @@ export interface ContainerComponentItem extends TreeComponentItem {
 
 export interface TextComponentItem extends TreeComponentItem {
   type: ComponentContentType.Text;
+  wrapper: ComponentTextWrapper;
+  textType: ComponentTextType;
   text: string;
-}
-
-export interface H1ComponentItem extends TreeComponentItem {
-  type: ComponentContentType.H1;
-  text: string;
-}
-
-export interface H2ComponentItem extends TreeComponentItem {
-  type: ComponentContentType.H2;
-  text: string;
-}
-
-export interface H3ComponentItem extends TreeComponentItem {
-  type: ComponentContentType.H3;
-  text: string;
-}
-
-export interface KeyComponentItem extends TreeComponentItem {
-  type: ComponentContentType.Key;
-  key: string;
-  data: { [key: string]: any };
+  data?: { [key: string]: any };
 }
 
 export interface LocalizedComponentItem extends TreeComponentItem {
@@ -67,7 +63,6 @@ export interface ComponentComponentItem extends TreeComponentItem {
 export type ComponentItem =
   | ContainerComponentItem
   | TextComponentItem
-  | KeyComponentItem
   | LocalizedComponentItem
   | ImageComponentItem
   | ComponentComponentItem;

@@ -22,23 +22,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { HexAlphaColorPicker, HexColorInput } from "react-colorful";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
 import React from "react";
 import {
   ComponentContentType,
   ComponentItem,
+  ComponentTextType,
+  ComponentTextWrapper,
   ComponentsTree,
 } from "@/types/types";
-import { ComponentStylePropritiesOptions as ComponentPropritiesOptions } from "@/constants/objects";
 import Position from "./porpreties/position";
 import Layout from "./porpreties/layout";
-import Border from "./porpreties/borber";
 import { Content } from "./porpreties/content";
 import { Typography } from "./porpreties/typography";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
@@ -62,6 +55,20 @@ export default function ComponentsEditBar({
 
   // if the selected component is a text component
   if (selectedComponent?.type === ComponentContentType.Text) {
+    // get proprities for text component from ComponentTextType
+    const textProprities = Object.values(ComponentTextType).map((value) => ({
+      value,
+      label: value,
+    }));
+
+    // get proprities for text wrapper from ComponentTextWrapper
+    const textWrapperProprities = Object.values(ComponentTextWrapper).map(
+      (value) => ({
+        value,
+        label: value,
+      })
+    );
+
     return (
       <>
         {/* input to change the name of a component */}
@@ -75,13 +82,36 @@ export default function ComponentsEditBar({
           }
         />
 
+        {/* input to change the text wrapper of a component */}
+        <PropritySelector
+          label="Text Wrapper"
+          value={selectedComponent?.wrapper || ""}
+          onValueChange={(e: any) => {
+            const value = e.target.value as ComponentTextWrapper;
+            textUtils.updateTextWrapper(activeId, value)
+          }}
+          proprities={textWrapperProprities}
+        />
+
+
+        {/* input to change the text type of a component */}
+        <PropritySelector
+          label="Text Type"
+          value={selectedComponent?.textType || ""}
+          onValueChange={(e: any) => {
+            const value = e.target.value as ComponentTextType;
+            textUtils.updateTextType(activeId, value)
+          }}
+          proprities={textProprities}
+        />
+
         {/* input to change the text of a component */}
         <InputWithLabel
-          label="Text"
+          label={selectedComponent?.textType || "Text"}
           placeholder="Text"
           type="text"
           value={selectedComponent?.text || ""}
-          onChange={(e: any) => textUtils.updateText(activeId, e.target.value)}
+          onChange={(e: any) => textUtils.updateTextContent(activeId, e.target.value)}
         />
 
         {/* input to change the text style of a component */}
@@ -99,7 +129,6 @@ export default function ComponentsEditBar({
           </AccordionItem>
 
           {/* input to change the size of a component */}
-          {}
           <AccordionItem value="Component Size">
             <AccordionTrigger>Size</AccordionTrigger>
             <AccordionContent>
@@ -115,6 +144,19 @@ export default function ComponentsEditBar({
       </>
     );
   }
+
+  // if the selected component is a key component
+  if (selectedComponent?.type === ComponentContentType.Key) {
+    return (
+      <>
+        {/* input to change the name of a component */}
+        <InputWithLabel
+          label="Component Name"
+          placeholder="Component Name"
+          type="text"
+          value={selectedComponent?.name || ""}
+          onChange={(e: any) =>
+
 
   if (selectedComponent?.type === ComponentContentType.Container) {
     return (
