@@ -9,7 +9,7 @@ export const initialComponents: ComponentsTree = {
     style: {
       width: 500,
       height: 500,
-      backgroundColor: "red",
+      backgroundColor: "#fff",
     },
     parent: "rott",
     children: ["2", "3"],
@@ -21,7 +21,7 @@ export const initialComponents: ComponentsTree = {
     style: {
       width: 50,
       height: 50,
-      backgroundColor: "blue",
+      backgroundColor: "#000",
     },
     parent: "1",
     children: [],
@@ -31,9 +31,7 @@ export const initialComponents: ComponentsTree = {
     type: ComponentContentType.Container,
     name: "logo",
     style: {
-      width: 50,
-      height: 50,
-      backgroundColor: "green",
+      backgroundColor: "#4a4a4a",
     },
     parent: "1",
     children: ["4", "5"],
@@ -45,7 +43,7 @@ export const initialComponents: ComponentsTree = {
     style: {
       width: 50,
       height: 50,
-      backgroundColor: "tan",
+      backgroundColor: "#f5e",
     },
     parent: "3",
     children: [],
@@ -57,7 +55,7 @@ export const initialComponents: ComponentsTree = {
     style: {
       width: 50,
       height: 50,
-      backgroundColor: "navy",
+      backgroundColor: "#0f6",
     },
     parent: "3",
     children: [],

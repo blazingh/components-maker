@@ -69,10 +69,15 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "hue-rotate": {
+          from: { filter: "hue-rotate(0deg)" },
+          to: { filter: "hue-rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "hue-rotate": "hue-rotate 5s linear infinite",
       },
     },
   },

@@ -286,7 +286,7 @@ export default function Demo() {
       <ViewHeader settings={settings} settingsUtils={settingsUtils} />
       <div className="flex w-full h-full ">
         <div
-          className=" h-full flex flex-col bg-zinc-800"
+          className=" h-full flex flex-col bg-zinc-800 pt-4"
           style={{
             maxWidth: 200,
             minWidth: "200px",
@@ -322,7 +322,7 @@ export default function Demo() {
         </div>
 
         <div
-          className="flex flex-col flex-1 p-2 bg-zinc-800 gap-y-2 overflow-y-scroll"
+          className="flex flex-col flex-1 p-2 bg-zinc-800 gap-y-2 overflow-y-scroll align-center"
           style={{
             maxWidth: "225px",
             minWidth: "225px",
