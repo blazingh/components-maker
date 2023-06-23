@@ -14,6 +14,15 @@ import {
   Locales,
   TextComponentItem,
 } from "@/types/types";
+import ViewHeader from "@/components/viewHeader";
+
+export interface Settings {
+  showOutline: boolean;
+}
+
+export interface SettingsUtils {
+  toggleOutline: (vale?: boolean) => void;
+}
 
 export interface ContainerUtils {
   addContainer: (parentId: string) => void;
@@ -46,6 +55,17 @@ export default function Demo() {
   const [components, setComponents] =
     React.useState<ComponentsTree>(initialComponents);
   const [activeId, setActiveId] = React.useState<string>("1");
+
+  const [settings, setSettings] = React.useState<Settings>({
+    showOutline: true,
+  });
+
+  const settingsUtils: SettingsUtils = {
+    toggleOutline: (value?: boolean) => {
+      if (value !== undefined) setSettings({ ...settings, showOutline: value });
+      else setSettings({ ...settings, showOutline: !settings.showOutline });
+    },
+  };
 
   const ContainerUtils: ContainerUtils = {
     // Function to add a container component
@@ -262,57 +282,61 @@ export default function Demo() {
   };
 
   return (
-    <div className="flex w-full h-screen class ">
-      <div
-        className=" h-full flex flex-col bg-zinc-800"
-        style={{
-          maxWidth: 200,
-          minWidth: "200px",
-        }}
-      >
-        <ComponentsFileTree
-          components={components}
-          id={"1"}
-          activeId={activeId}
-          setActiveId={setActiveId}
-        />
-      </div>
-
-      <div
-        className="w-full h-full flex items-center justify-center p-6 bg-zinc-900"
-        style={{
-          maxWidth: "calc(100% - 425px)",
-        }}
-      >
-        <ComponentsPreviewTree
-          components={components}
-          id={"1"}
-          activeId={activeId}
-          data={{
-            user_name: "John Doe",
-            locale: "en",
-            random: "random tect",
-            rando: "randttttom tect",
-            rand: "randoct",
+    <div className="flex flex-col w-full h-screen ">
+      <ViewHeader settings={settings} settingsUtils={settingsUtils} />
+      <div className="flex w-full h-full ">
+        <div
+          className=" h-full flex flex-col bg-zinc-800"
+          style={{
+            maxWidth: 200,
+            minWidth: "200px",
           }}
-        />
-      </div>
+        >
+          <ComponentsFileTree
+            components={components}
+            id={"1"}
+            activeId={activeId}
+            setActiveId={setActiveId}
+          />
+        </div>
 
-      <div
-        className="flex flex-col flex-1 p-2 bg-zinc-800 gap-y-2 overflow-y-scroll"
-        style={{
-          maxWidth: "225px",
-          minWidth: "225px",
-          maxHeight: "100%",
-        }}
-      >
-        <ComponentsEditBar
-          components={components}
-          selectedComponent={components[activeId]}
-          activeId={activeId}
-          containerUtils={ContainerUtils}
-          textUtils={TextUtils}
-        />
+        <div
+          className="w-full h-full flex items-center justify-center p-6 bg-zinc-900"
+          style={{
+            maxWidth: "calc(100% - 425px)",
+          }}
+        >
+          <ComponentsPreviewTree
+            showOutline={settings.showOutline}
+            components={components}
+            id={"1"}
+            activeId={activeId}
+            data={{
+              user_name: "John Doe",
+              locale: "en",
+              random: "random tect",
+              rando: "randttttom tect",
+              rand: "randoct",
+            }}
+          />
+        </div>
+
+        <div
+          className="flex flex-col flex-1 p-2 bg-zinc-800 gap-y-2 overflow-y-scroll"
+          style={{
+            maxWidth: "225px",
+            minWidth: "225px",
+            maxHeight: "100%",
+          }}
+        >
+          <ComponentsEditBar
+            components={components}
+            selectedComponent={components[activeId]}
+            activeId={activeId}
+            containerUtils={ContainerUtils}
+            textUtils={TextUtils}
+          />
+        </div>
       </div>
     </div>
   );

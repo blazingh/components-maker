@@ -11,6 +11,7 @@ interface ComponentsPreviewTreeProps {
   id: string;
   activeId: string;
   data?: { [key: string]: any };
+  showOutline: boolean;
 }
 
 export default function ComponentsPreviewTree({
@@ -18,6 +19,7 @@ export default function ComponentsPreviewTree({
   id,
   activeId,
   data,
+  showOutline,
 }: ComponentsPreviewTreeProps) {
   const component = components[id];
 
@@ -58,17 +60,24 @@ export default function ComponentsPreviewTree({
     return <p {...props}>{content}</p>;
   }
 
+  const withOutlineStyle = {
+    ...component.style,
+    outlineColor: "white",
+    outlineWidth: "1px",
+    outlineStyle: "solid",
+  };
+
   // when component is a container
   if (component.type === ComponentContentType.Container) {
     return (
       <div
-        style={component.style}
-        className={
-          activeId === id ? "inverted-outline " : ""
+        style={
+          activeId === id && showOutline ? withOutlineStyle : component.style
         }
       >
         {component.children.map((child) => (
           <ComponentsPreviewTree
+            showOutline={showOutline}
             data={data}
             activeId={activeId}
             key={child}
