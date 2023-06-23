@@ -1,6 +1,7 @@
 import { ComponentStylePropritiesOptions } from "@/constants/objects";
 import { Input } from "../ui/input";
 import { InputSelection } from "../inputs/inputSelection";
+import InputWithUnit from "../inputs/inputWithUnit";
 
 interface SizeProps {
   styles: any;
@@ -8,56 +9,79 @@ interface SizeProps {
 }
 
 export default function Size({ styles, setStyles }: SizeProps) {
+  // { value: "input", label: "input" },
+  const hasComponentWidth = ComponentStylePropritiesOptions.size.find(
+    (item) => item.value === styles?.width
+  );
+
+  const hasComponentHeight = ComponentStylePropritiesOptions.size.find(
+    (item) => item.value === styles?.height
+  );
+
   return (
-    <div>
-      {/* select input to choose the width and height of a component */}
-      <div className="flex gap-x-2">
+    <div className="flex flex-col gap-2">
+      <div>
         {/* select input to choose the width of a component */}
         <InputSelection
           label="Width"
           value={
-            typeof styles?.width === "number"
-              ? "input"
-              : styles?.width || "input"
+            hasComponentWidth
+              ? styles?.width
+              : ComponentStylePropritiesOptions.size[1].value
           }
           onValueChange={(value) =>
-            setStyles("width", value === "input" ? 100 : value)
+            setStyles(
+              "width",
+              value === ComponentStylePropritiesOptions.size[0].value
+                ? "100px"
+                : value
+            )
           }
           proprities={ComponentStylePropritiesOptions.size}
         />
+        {/* input to set the width of a component */}
+        <InputWithUnit
+          placeholder="width"
+          value={styles?.width || ComponentStylePropritiesOptions.size[0].value}
+          onChange={(value: string) =>
+            setStyles(
+              "width",
+              value || ComponentStylePropritiesOptions.size[0].value
+            )
+          }
+        />
+      </div>
+      <div>
         {/* select input to choose the height of a component */}
         <InputSelection
           label="Height"
           value={
-            typeof styles?.height === "number"
-              ? "input"
-              : styles?.height || "input"
+            hasComponentHeight
+              ? styles?.height
+              : ComponentStylePropritiesOptions.size[1].value
           }
           onValueChange={(value) =>
-            setStyles("height", value === "input" ? 100 : value)
+            setStyles(
+              "height",
+              value === ComponentStylePropritiesOptions.size[0].value
+                ? "100px"
+                : value
+            )
           }
           proprities={ComponentStylePropritiesOptions.size}
         />
-      </div>
-      {/* input to staticly set the width and height of a component */}
-      <div className="flex gap-x-2 mt-2">
-        {/* input to staticly set the width of a component */}
-        <Input
-          disabled={typeof styles?.width !== "number"}
-          type="number"
-          placeholder="Width"
-          className="bg-white"
-          value={styles?.width || 0}
-          onChange={(e) => setStyles("width", Number(e.target.value))}
-        />
-        {/* input to staticly set the height of a component */}
-        <Input
-          disabled={typeof styles?.height !== "number"}
-          type="number"
-          placeholder="Height"
-          className="bg-white"
-          value={styles?.height || 0}
-          onChange={(e) => setStyles("height", Number(e.target.value))}
+        {/* input to set the height of a component */}
+        <InputWithUnit
+          placeholder="height"
+          value={
+            styles?.height || ComponentStylePropritiesOptions.size[0].value
+          }
+          onChange={(value: string) =>
+            setStyles(
+              "height",
+              value || ComponentStylePropritiesOptions.size[0].value
+            )
+          }
         />
       </div>
     </div>

@@ -9,7 +9,7 @@ import {
 } from "../ui/select";
 
 interface InputWithUnitProps {
-  label: string;
+  label?: string;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
@@ -23,8 +23,8 @@ export default function InputWithUnit({
 }: InputWithUnitProps) {
   const units = ["unset", "px", "%", "em", "rem", "vw", "vh"];
 
-  const number = value.replace(/[^0-9]/g, "");
-  const unit = value.slice(number.length);
+  const number = String(value).replace(/[^0-9]/g, "");
+  const unit = String(value).slice(number.length);
 
   const onChangeNumber = (e: any) => {
     onChange(e?.target?.value + unit);
@@ -38,9 +38,11 @@ export default function InputWithUnit({
 
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label htmlFor="border-radius" className="text-sm capitalize" >
-        {label}
-      </Label>
+      {label && (
+        <Label htmlFor="border-radius" className="text-sm capitalize">
+          {label}
+        </Label>
+      )}
       <div className="flex gap-x-2 w-full">
         <Input
           type="number"

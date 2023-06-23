@@ -7,8 +7,8 @@ export const initialComponents: ComponentsTree = {
     name: "root",
     type: ComponentContentType.Container,
     style: {
-      width: 500,
-      height: 500,
+      width: "500px",
+      height: "500px",
       backgroundColor: "#fff",
     },
     parent: "rott",
@@ -19,8 +19,8 @@ export const initialComponents: ComponentsTree = {
     name: "header",
     type: ComponentContentType.Container,
     style: {
-      width: 50,
-      height: 50,
+      width: "50px",
+      height: "50px",
       backgroundColor: "#000",
     },
     parent: "1",
@@ -41,8 +41,8 @@ export const initialComponents: ComponentsTree = {
     type: ComponentContentType.Container,
     name: "logo",
     style: {
-      width: 50,
-      height: 50,
+      width: "50px",
+      height: "50px",
       backgroundColor: "#f5e",
     },
     parent: "3",
