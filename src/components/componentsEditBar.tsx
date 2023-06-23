@@ -1,4 +1,3 @@
-import { Input } from "./ui/input";
 import TooltipButton from "./ui/tooltipButton";
 import { } from "lucide-react";
 import {
@@ -7,14 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { Label } from "./ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import React from "react";
 import {
   ComponentContentType,
@@ -32,6 +23,7 @@ import Background from "./porpreties/background";
 import Padding from "./porpreties/padding";
 import Margin from "./porpreties/margin";
 import { Trash } from "lucide-react";
+import { InputWithLabel } from "./inputs/inputWithLabel";
 
 export default function ComponentsEditBar({
   selectedComponent,
@@ -263,71 +255,4 @@ export default function ComponentsEditBar({
       </>
     );
   }
-}
-
-interface PropritySelectorProps {
-  label: string;
-  value: string;
-  onValueChange: (value: any) => void;
-  proprities: { label: string; value: string }[];
-}
-
-export function PropritySelector({
-  label,
-  value,
-  onValueChange,
-  proprities,
-}: PropritySelectorProps) {
-  return (
-    <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label htmlFor="justify-content" className="text-sm capitalize ">
-        {label}
-      </Label>
-      <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger>
-          <SelectValue placeholder="Justify Content" />
-        </SelectTrigger>
-        <SelectContent>
-          {proprities.map((proprity, index) => (
-            <SelectItem key={index} value={proprity.value}>
-              {proprity.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
-}
-
-interface InputWithLabelProps {
-  label: string;
-  value: string | number;
-  placeholder: string;
-  type: string;
-  onChange: (value: any) => void;
-}
-
-export function InputWithLabel({
-  label,
-  value,
-  onChange,
-  placeholder,
-  type,
-}: InputWithLabelProps) {
-  return (
-    <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
-      <Label
-        htmlFor="border-radius"
-        className="text-sm capitalize "
-      >
-        {label}
-      </Label>
-      <Input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
-    </div>
-  );
 }

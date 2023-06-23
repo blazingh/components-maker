@@ -1,7 +1,7 @@
 import { ComponentStylePropritiesOptions } from "@/constants/objects";
-import { PropritySelector } from "../componentsEditBar";
 import InputWithUnit from "../inputs/inputWithUnit";
 import InputWithColor from "../inputs/inputWithColor";
+import { InputSelection } from "../inputs/inputSelection";
 
 interface TypographyProps {
   styles: any;
@@ -12,7 +12,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
   return (
     <div>
       {/* input to change the font family*/}
-      <PropritySelector
+      <InputSelection
         label="Font Family"
         value={styles?.fontFamily || "initial"}
         onValueChange={(value: any) =>
@@ -28,7 +28,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         onChange={(value: string) => setStyles("fontSize", value || "initial")}
       />
       {/* input to change the font weight*/}
-      <PropritySelector
+      <InputSelection
         label="Font Weight"
         value={styles?.fontWeight || "initial"}
         onValueChange={(value: any) =>
@@ -37,7 +37,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         proprities={ComponentStylePropritiesOptions.fontWeight}
       />
       {/* input to change the font style*/}
-      <PropritySelector
+      <InputSelection
         label="Font Style"
         value={styles?.fontStyle || "initial"}
         onValueChange={(value: any) =>
@@ -52,7 +52,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         onChange={(value: any) => setStyles("color", value || "initial")}
       />
       {/* input to change the text align*/}
-      <PropritySelector
+      <InputSelection
         label="Text Align"
         value={styles?.textAlign || "initial"}
         onValueChange={(value: any) =>
@@ -61,7 +61,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         proprities={ComponentStylePropritiesOptions.textAlign}
       />
       {/* input to change the text decoration*/}
-      <PropritySelector
+      <InputSelection
         label="Text Decoration"
         value={styles?.textDecoration || "initial"}
         onValueChange={(value: any) =>
@@ -70,7 +70,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         proprities={ComponentStylePropritiesOptions.textDecoration}
       />
       {/* input to change the overflow */}
-      <PropritySelector
+      <InputSelection
         label="Overflow"
         value={styles?.overflow || "initial"}
         onValueChange={(value: any) =>
@@ -79,7 +79,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         proprities={ComponentStylePropritiesOptions.overflow}
       />
       {/* input to change the text overflow*/}
-      <PropritySelector
+      <InputSelection
         label="Text Overflow"
         value={styles?.textOverflow || "initial"}
         onValueChange={(value: any) =>
@@ -88,7 +88,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         proprities={ComponentStylePropritiesOptions.textOverflow}
       />
       {/* input to change the white space*/}
-      <PropritySelector
+      <InputSelection
         label="White Space"
         value={styles?.whiteSpace || "initial"}
         onValueChange={(value: any) =>
@@ -97,7 +97,7 @@ export function Typography({ styles, setStyles }: TypographyProps) {
         proprities={ComponentStylePropritiesOptions.whiteSpace}
       />
       {/* input to change the text transform*/}
-      <PropritySelector
+      <InputSelection
         label="Text Transform"
         value={styles?.textTransform || "initial"}
         onValueChange={(value: any) =>

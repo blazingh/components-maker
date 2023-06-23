@@ -1,6 +1,6 @@
 import { ComponentStylePropritiesOptions } from "@/constants/objects";
-import { PropritySelector } from "../componentsEditBar";
 import { Input } from "../ui/input";
+import { InputSelection } from "../inputs/inputSelection";
 
 interface SizeProps {
   styles: any;
@@ -13,7 +13,7 @@ export default function Size({ styles, setStyles }: SizeProps) {
       {/* select input to choose the width and height of a component */}
       <div className="flex gap-x-2">
         {/* select input to choose the width of a component */}
-        <PropritySelector
+        <InputSelection
           label="Width"
           value={
             typeof styles?.width === "number"
@@ -26,7 +26,7 @@ export default function Size({ styles, setStyles }: SizeProps) {
           proprities={ComponentStylePropritiesOptions.size}
         />
         {/* select input to choose the height of a component */}
-        <PropritySelector
+        <InputSelection
           label="Height"
           value={
             typeof styles?.height === "number"

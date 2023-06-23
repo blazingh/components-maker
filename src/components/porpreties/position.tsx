@@ -1,6 +1,6 @@
 import { ComponentStylePropritiesOptions } from "@/constants/objects";
-import { PropritySelector } from "../componentsEditBar";
 import InputWithUnit from "../inputs/inputWithUnit";
+import { InputSelection } from "../inputs/inputSelection";
 
 interface PositionProps {
   styles: any;
@@ -11,7 +11,7 @@ export default function Position({ styles, setStyles }: PositionProps) {
   return (
     <div>
       {/* input to set the position of the element */}
-      <PropritySelector
+      <InputSelection
         label="position"
         value={styles?.position || "initial"}
         onValueChange={(value: any) =>

@@ -1,6 +1,6 @@
 import { ComponentStylePropritiesOptions } from "@/constants/objects";
-import { InputWithLabel, PropritySelector } from "../componentsEditBar";
 import InputWithUnit from "../inputs/inputWithUnit";
+import { InputSelection } from "../inputs/inputSelection";
 
 interface LayoutProps {
   styles: any;
@@ -11,7 +11,7 @@ export default function Layout({ styles, setStyles }: LayoutProps) {
   return (
     <div>
       {/* input to set the overflow of the element */}
-      <PropritySelector
+      <InputSelection
         label="Overflow"
         value={styles?.overflow || "initial"}
         onValueChange={(value: any) =>
@@ -20,7 +20,7 @@ export default function Layout({ styles, setStyles }: LayoutProps) {
         proprities={ComponentStylePropritiesOptions.overflow}
       />
       {/* input to set the display of the element */}
-      <PropritySelector
+      <InputSelection
         label="display"
         value={styles?.display || "initial"}
         onValueChange={(value: any) => setStyles("display", value || "initial")}
@@ -43,7 +43,7 @@ export function FlexLayout({ styles, setStyles }: FlexLayoutProps) {
   return (
     <div>
       {/* input to set the flex-direction of the element */}
-      <PropritySelector
+      <InputSelection
         label="Flex Direction"
         value={styles?.flexDirection || "initial"}
         onValueChange={(value: any) =>
@@ -52,7 +52,7 @@ export function FlexLayout({ styles, setStyles }: FlexLayoutProps) {
         proprities={ComponentStylePropritiesOptions.flexDirection}
       />
       {/* input to set the flex-wrap of the element */}
-      <PropritySelector
+      <InputSelection
         label="Flex Wrap"
         value={styles?.flexWrap || "initial"}
         onValueChange={(value: any) =>
@@ -61,7 +61,7 @@ export function FlexLayout({ styles, setStyles }: FlexLayoutProps) {
         proprities={ComponentStylePropritiesOptions.flexWrap}
       />
       {/* input to set the justify-content of the element */}
-      <PropritySelector
+      <InputSelection
         label="Justify Content"
         value={styles?.justifyContent || "initial"}
         onValueChange={(value: any) =>
@@ -70,7 +70,7 @@ export function FlexLayout({ styles, setStyles }: FlexLayoutProps) {
         proprities={ComponentStylePropritiesOptions.justifyContent}
       />
       {/* input to set the align-items of the element */}
-      <PropritySelector
+      <InputSelection
         label="Align Items"
         value={styles?.alignItems || "initial"}
         onValueChange={(value: any) =>

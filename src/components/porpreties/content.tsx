@@ -7,11 +7,12 @@ import {
   Locales,
 } from "@/types/types";
 import React from "react";
-import { InputWithLabel, PropritySelector } from "../componentsEditBar";
 import TooltipButton from "../ui/tooltipButton";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { Label } from "../ui/label";
 import { ContainerUtils, TextUtils } from "@/app/edit/page";
+import { InputSelection } from "../inputs/inputSelection";
+import { InputWithLabel } from "../inputs/inputWithLabel";
 
 // get proprities from ComponentContentType
 const contentTypes = Object.keys(ComponentContentType).map((key) => ({
@@ -67,7 +68,7 @@ export function Content({
     return (
       <div className="flex flex-col w-full h-full gap-y-2">
         {/* input to change the text wrappers of a component */}
-        <PropritySelector
+        <InputSelection
           label="Text Wrapper"
           value={selectedComponent?.wrapper || textWrappers[0].value}
           onValueChange={(e: ComponentTextWrapper) =>
@@ -77,7 +78,7 @@ export function Content({
         />
 
         {/* input to change the text type of a component */}
-        <PropritySelector
+        <InputSelection
           label="Text Type"
           value={selectedComponent?.textType || textTypes[0].value}
           onValueChange={(e: ComponentTextType) =>
@@ -102,7 +103,7 @@ export function Content({
         {/* add a new localized text */}
         {selectedComponent?.textType === ComponentTextType.Localized && (
           <div className="flex items-end justify-end gap-x-2">
-            <PropritySelector
+            <InputSelection
               label="Add Locale"
               value={selectedLocale}
               onValueChange={(value) => {
@@ -160,7 +161,6 @@ export function Content({
               </div>
             )
           )}
-
       </div>
     );
   }
@@ -176,11 +176,9 @@ export function Content({
             <div
               key={component.id}
               className="w-full flex flex-col items-start gap-x-1
-            bg-white rounded-md p-2"
+            bg-secondary rounded-md p-2"
             >
-              <div className="text-xs font-bold text-gray-500">
-                {component?.type}
-              </div>
+              <div className="text-xs font-bold">{component?.type}</div>
               <div className="whitespace-nowrap overflow-hidden overflow-ellipsis w-full">
                 {component?.name}
               </div>
@@ -189,7 +187,7 @@ export function Content({
         })}
         {/* add a new component */}
         <div className="flex items-end justify-end gap-x-2">
-          <PropritySelector
+          <InputSelection
             label="Add a new child"
             value={selectedType}
             onValueChange={(value) => {

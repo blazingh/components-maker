@@ -1,7 +1,7 @@
 import { ComponentStylePropritiesOptions } from "@/constants/objects";
-import { PropritySelector } from "../componentsEditBar";
 import InputWithUnit from "../inputs/inputWithUnit";
 import InputWithColor from "../inputs/inputWithColor";
+import { InputSelection } from "../inputs/inputSelection";
 
 interface BorderProps {
   styles: any;
@@ -12,7 +12,7 @@ export default function Border({ styles, setStyles }: BorderProps) {
   return (
     <div>
       {/* input to set the border of the element */}
-      <PropritySelector
+      <InputSelection
         label="Border Style"
         value={styles?.borderStyle || "initial"}
         onValueChange={(value: any) =>
