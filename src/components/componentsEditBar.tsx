@@ -117,6 +117,16 @@ export default function ComponentsEditBar({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+
+        {/* button to delete a component */}
+        <TooltipButton
+          variant="destructive"
+          onClick={() => textUtils.removeText(activeId)}
+          tooltipText="delete the component"
+        >
+          <Trash className="mr-2 h-4 w-4" />
+          Delete Component
+        </TooltipButton>
       </>
     );
   }
@@ -149,109 +159,107 @@ export default function ComponentsEditBar({
             </AccordionContent>
           </AccordionItem>
 
-          <Accordion type="single" collapsible>
-            {/* input to change the position of a component */}
-            <AccordionItem value="Move Component">
-              <AccordionTrigger>Position</AccordionTrigger>
-              <AccordionContent>
-                <Position
-                  styles={selectedComponent?.style}
-                  setStyles={(atr: any, value: any) =>
-                    containerUtils.updateContainerStyle(activeId, atr, value)
-                  }
-                />
-              </AccordionContent>
-            </AccordionItem>
+          {/* input to change the position of a component */}
+          <AccordionItem value="Move Component">
+            <AccordionTrigger>Position</AccordionTrigger>
+            <AccordionContent>
+              <Position
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  containerUtils.updateContainerStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
 
-            {/* input to change the layout of a component */}
-            <AccordionItem value="Layout">
-              <AccordionTrigger>Layout</AccordionTrigger>
-              <AccordionContent>
-                <Layout
-                  styles={selectedComponent?.style}
-                  setStyles={(atr: any, value: any) =>
-                    containerUtils.updateContainerStyle(activeId, atr, value)
-                  }
-                />
-              </AccordionContent>
-            </AccordionItem>
+          {/* input to change the layout of a component */}
+          <AccordionItem value="Layout">
+            <AccordionTrigger>Layout</AccordionTrigger>
+            <AccordionContent>
+              <Layout
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  containerUtils.updateContainerStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
 
-            {/* input to change the width and height of a component */}
-            <AccordionItem value="Component Size">
-              <AccordionTrigger>Size</AccordionTrigger>
-              <AccordionContent>
-                <Size
-                  styles={selectedComponent?.style}
-                  setStyles={(atr: any, value: any) =>
-                    containerUtils.updateContainerStyle(activeId, atr, value)
-                  }
-                />
-              </AccordionContent>
-            </AccordionItem>
+          {/* input to change the width and height of a component */}
+          <AccordionItem value="Component Size">
+            <AccordionTrigger>Size</AccordionTrigger>
+            <AccordionContent>
+              <Size
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  containerUtils.updateContainerStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
 
-            {/* input to change the  margin of a component */}
-            <AccordionItem value="Component Margin">
-              <AccordionTrigger>Margin</AccordionTrigger>
-              <AccordionContent>
-                <Margin
-                  styles={selectedComponent?.style}
-                  setStyles={(atr: any, value: any) =>
-                    containerUtils.updateContainerStyle(activeId, atr, value)
-                  }
-                />
-              </AccordionContent>
-            </AccordionItem>
+          {/* input to change the  margin of a component */}
+          <AccordionItem value="Component Margin">
+            <AccordionTrigger>Margin</AccordionTrigger>
+            <AccordionContent>
+              <Margin
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  containerUtils.updateContainerStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
 
-            {/* input to change the padding of a component */}
-            <AccordionItem value="Component Padding">
-              <AccordionTrigger>Padding</AccordionTrigger>
-              <AccordionContent>
-                <Padding
-                  styles={selectedComponent?.style}
-                  setStyles={(atr: any, value: any) =>
-                    containerUtils.updateContainerStyle(activeId, atr, value)
-                  }
-                />
-              </AccordionContent>
-            </AccordionItem>
+          {/* input to change the padding of a component */}
+          <AccordionItem value="Component Padding">
+            <AccordionTrigger>Padding</AccordionTrigger>
+            <AccordionContent>
+              <Padding
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  containerUtils.updateContainerStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
 
-            {/* input to change the background of a component */}
-            <AccordionItem value="Component Color">
-              <AccordionTrigger>Background</AccordionTrigger>
-              <AccordionContent>
-                <Background
-                  styles={selectedComponent?.style}
-                  setStyles={(atr: any, value: any) =>
-                    containerUtils.updateContainerStyle(activeId, atr, value)
-                  }
-                />
-              </AccordionContent>
-            </AccordionItem>
+          {/* input to change the background of a component */}
+          <AccordionItem value="Component Color">
+            <AccordionTrigger>Background</AccordionTrigger>
+            <AccordionContent>
+              <Background
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  containerUtils.updateContainerStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
 
-            {/* input to change the border of a component */}
-            <AccordionItem value="Component Border">
-              <AccordionTrigger>Border</AccordionTrigger>
-              <AccordionContent>
-                <Border
-                  styles={selectedComponent?.style}
-                  setStyles={(atr: any, value: any) =>
-                    containerUtils.updateContainerStyle(activeId, atr, value)
-                  }
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          {/* button to delete a component */}
-          <TooltipButton
-            variant="destructive"
-            onClick={() => containerUtils.removeContainer(activeId)}
-            tooltipText="delete the component and all its children"
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Delete Component
-          </TooltipButton>
+          {/* input to change the border of a component */}
+          <AccordionItem value="Component Border">
+            <AccordionTrigger>Border</AccordionTrigger>
+            <AccordionContent>
+              <Border
+                styles={selectedComponent?.style}
+                setStyles={(atr: any, value: any) =>
+                  containerUtils.updateContainerStyle(activeId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
+
+        {/* button to delete a component */}
+        <TooltipButton
+          variant="destructive"
+          onClick={() => containerUtils.removeContainer(activeId)}
+          tooltipText="delete the component and all its children"
+        >
+          <Trash className="mr-2 h-4 w-4" />
+          Delete Component
+        </TooltipButton>
       </>
     );
   }
