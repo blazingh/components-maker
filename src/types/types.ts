@@ -103,3 +103,21 @@ export interface TextUtils {
     text: string
   ) => void;
 }
+
+export interface DtoComponentItem {
+  id: string;
+  name: string;
+}
+
+export interface DtoVersionItem {
+  id: string;
+  version: number;
+  component: string;
+  data: ComponentItem;
+}
+
+export interface DtoEnabled {
+  component: string;
+  demo: string;
+  live: string;
+}
