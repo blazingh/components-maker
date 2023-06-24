@@ -11,44 +11,14 @@ import {
   ComponentTextWrapper,
   ComponentsTree,
   ContainerComponentItem,
+  ContainerUtils,
   Locales,
+  Settings,
+  SettingsUtils,
   TextComponentItem,
+  TextUtils,
 } from "@/types/types";
 import ViewHeader from "@/components/viewHeader";
-
-export interface Settings {
-  showOutline: boolean;
-}
-
-export interface SettingsUtils {
-  toggleOutline: (vale?: boolean) => void;
-}
-
-export interface ContainerUtils {
-  addContainer: (parentId: string) => void;
-  removeContainer: (id: string) => void;
-  updateContainerName: (id: string, name: string) => void;
-  updateContainerStyle: (id: string, attr: string, value: any) => void;
-  changeChildPosition: (id: string, delta: number) => void;
-  removeChild: (id: string) => void;
-}
-
-export interface TextUtils {
-  addText: (parentId: string) => void;
-  removeText: (id: string) => void;
-  updateTextName: (id: string, name: string) => void;
-  updateTextContent: (id: string, text: string) => void;
-  updateTextWrapper: (id: string, wrapper: ComponentTextWrapper) => void;
-  updateTextStyle: (id: string, attr: string, value: any) => void;
-  updateTextType: (id: string, type: ComponentTextType) => void;
-  addLocalizedText: (id: string, locale: Locales) => void;
-  removeLocalizedText: (id: string, locale: Locales) => void;
-  updateLocalizedTextContent: (
-    id: string,
-    locale: Locales,
-    text: string
-  ) => void;
-}
 
 export default function Demo() {
   // Define state for components and activeId

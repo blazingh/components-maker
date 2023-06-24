@@ -5,12 +5,11 @@ import {
   ComponentTextWrapper,
   ComponentsTree,
   Locales,
+  TextUtils,
 } from "@/types/types";
 import React from "react";
 import TooltipButton from "../ui/tooltipButton";
 import { MinusIcon, PlusIcon } from "lucide-react";
-import { Label } from "../ui/label";
-import { ContainerUtils, TextUtils } from "@/app/edit/page";
 import { InputSelection } from "../inputs/inputSelection";
 import { InputWithLabel } from "../inputs/inputWithLabel";
 

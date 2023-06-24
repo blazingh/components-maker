@@ -11,12 +11,13 @@ import {
   ComponentContentType,
   ComponentItem,
   ComponentsTree,
+  ContainerUtils,
+  TextUtils,
 } from "@/types/types";
 import Position from "./porpreties/position";
 import Layout from "./porpreties/layout";
 import { Content } from "./porpreties/content";
 import { Typography } from "./porpreties/typography";
-import { ContainerUtils, TextUtils } from "@/app/edit/page";
 import Size from "./porpreties/size";
 import Border from "./porpreties/borber";
 import Background from "./porpreties/background";

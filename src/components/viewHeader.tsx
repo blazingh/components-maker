@@ -1,4 +1,4 @@
-import { Settings, SettingsUtils } from "@/app/edit/page";
+import { Settings, SettingsUtils } from "@/types/types";
 import { BoneIcon, SettingsIcon } from "lucide-react";
 import {
   DropdownMenu,
