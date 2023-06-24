@@ -28,7 +28,7 @@ export function ComponentsFileTree({
   const hasChildren = isContainer && component.children.length > 0;
 
   return (
-    <div className="relative border-l border-gray-200">
+    <div className="relative border-l border-gray-200 w-full">
       <div className="flex items-center bg-secondary">
         <Button
           className="px-0 w-6 rounded-none"
@@ -51,7 +51,7 @@ export function ComponentsFileTree({
           {component.name}
         </Button>
       </div>
-      <div className={`ml-2 ${open ? "block" : "hidden"}`}>
+      <div className={`pl-2 w-full  ${open ? "block" : "hidden"}`}>
         {hasChildren &&
           component.children.map((child) => (
             <ComponentsFileTree

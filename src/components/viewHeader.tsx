@@ -21,7 +21,7 @@ export default function ViewHeader({
   settingsUtils,
 }: ViewHeaderProps) {
   return (
-    <div className="flex justify-between items-center w-full px-4 py-2 bg-zinc-800 relative shadow-md">
+    <div className="flex justify-between items-center w-full h-full  px-4 py-2 bg-zinc-800 relative shadow-md">
       {/* logo */}
       <div className="flex items-center space-x-2 animate-hue-rotate relative">
         <Image

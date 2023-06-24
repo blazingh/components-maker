@@ -53,8 +53,8 @@ export const initialComponents: ComponentsTree = {
     type: ComponentContentType.Container,
     name: "logo",
     style: {
-      width: 50,
-      height: 50,
+      width: "50px",
+      height: "40px",
       backgroundColor: "#0f6",
     },
     parent: "3",

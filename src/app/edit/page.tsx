@@ -253,15 +253,11 @@ export default function Demo() {
 
   return (
     <div className="flex flex-col w-full h-screen ">
-      <ViewHeader settings={settings} settingsUtils={settingsUtils} />
-      <div className="flex w-full h-full ">
-        <div
-          className=" h-full flex flex-col bg-zinc-800 pt-4"
-          style={{
-            maxWidth: 200,
-            minWidth: "200px",
-          }}
-        >
+      <div className="w-full h-14 ">
+        <ViewHeader settings={settings} settingsUtils={settingsUtils} />
+      </div>
+      <div className="flex w-full h-full">
+        <div className="flex flex-col bg-zinc-800 pt-4 w-52">
           <ComponentsFileTree
             components={components}
             id={"1"}
@@ -270,12 +266,7 @@ export default function Demo() {
           />
         </div>
 
-        <div
-          className="w-full h-full flex items-center justify-center p-6 bg-zinc-900"
-          style={{
-            maxWidth: "calc(100% - 425px)",
-          }}
-        >
+        <div className="w-full flex items-center justify-center p-6 bg-zinc-900">
           <ComponentsPreviewTree
             showOutline={settings.showOutline}
             components={components}
@@ -292,12 +283,8 @@ export default function Demo() {
         </div>
 
         <div
-          className="flex flex-col flex-1 p-2 bg-zinc-800 gap-y-2 overflow-y-scroll align-center"
-          style={{
-            maxWidth: "225px",
-            minWidth: "225px",
-            maxHeight: "100%",
-          }}
+          className="flex flex-col p-2 bg-zinc-800 gap-y-2 overflow-y-scroll align-center w-60 h-full"
+          style={{ maxHeight: "calc(100vh - 3.5rem)" }}
         >
           <ComponentsEditBar
             components={components}
