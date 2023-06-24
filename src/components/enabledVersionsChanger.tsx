@@ -1,6 +1,5 @@
 "use client";
 
-import { DtoEnabled } from "@/types/types";
 import {
   Select,
   SelectContent,
@@ -11,19 +10,21 @@ import {
 import { Label } from "./ui/label";
 
 interface EnabledVersionsChangerProps {
-  enabled: DtoEnabled | undefined;
+  live_version?: string;
+  demo_version?: string;
   porperties: { label: any; value: string }[];
 }
 
 export default function EnabledVersionsChanger({
-  enabled,
+  live_version,
+  demo_version,
   porperties,
 }: EnabledVersionsChangerProps) {
   return (
     <div className="flex flex-row justify-between w-full">
       <div className="flex flex-row items-center gap-x-2">
         <Label className="w-24">Demo Version </Label>
-        <Select value={enabled?.demo} onValueChange={(versionId: string) => { }}>
+        <Select value={demo_version} onValueChange={(versionId: string) => { }}>
           <SelectTrigger className="w-20 h-8">
             <SelectValue placeholder="0" />
           </SelectTrigger>
@@ -38,7 +39,7 @@ export default function EnabledVersionsChanger({
       </div>
       <div className="flex flex-row items-center gap-x-2">
         <Label>Live Version </Label>
-        <Select value={enabled?.live} onValueChange={(versionId: string) => { }}>
+        <Select value={live_version} onValueChange={(versionId: string) => { }}>
           <SelectTrigger className="w-20 h-8">
             <SelectValue placeholder="0" />
           </SelectTrigger>

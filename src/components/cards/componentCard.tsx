@@ -30,6 +30,7 @@ export default function ComponentCard({
         <Label className="text-xs">
           Latest Version : {latestVersion?.version || 0}
         </Label>
+        {versions?.length}
       </div>
       <EnabledVersionsChanger
         porperties={versionPropreties || []}

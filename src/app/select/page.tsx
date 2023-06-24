@@ -9,7 +9,10 @@ export default async function Page() {
   const versions = await supabase
     .from("version")
     .select("id, component, version");
-  const enabled = await supabase.from("enabled").select();
+
+  console.log("components", components);
+  console.log("versions", versions);
+  console.log("enabled", enabled);
 
   return (
     <div className="grid gap-4 ">

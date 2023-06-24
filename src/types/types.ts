@@ -107,6 +107,8 @@ export interface TextUtils {
 export interface DtoComponentItem {
   id: string;
   name: string;
+  live_version: number;
+  demo_version: number;
 }
 
 export interface DtoVersionItem {
@@ -114,10 +116,4 @@ export interface DtoVersionItem {
   version: number;
   component: string;
   data: ComponentItem;
-}
-
-export interface DtoEnabled {
-  component: string;
-  demo: string;
-  live: string;
 }
