@@ -1,6 +1,6 @@
 import ComponentCard from "@/components/cards/componentCard";
 import supabase from "@/lib/supabase";
-import { DtoComponentItem, DtoEnabled, DtoVersionItem } from "@/types/types";
+import { DtoComponentItem, DtoVersionItem } from "@/types/types";
 
 export const revalidate = 0;
 
@@ -12,7 +12,6 @@ export default async function Page() {
 
   console.log("components", components);
   console.log("versions", versions);
-  console.log("enabled", enabled);
 
   return (
     <div className="grid gap-4 ">
@@ -22,16 +21,11 @@ export default async function Page() {
           (version) => version.component === component.id
         );
 
-        const enabledVersions = enabled.data?.find(
-          (item) => item.component === component.id
-        );
-
         return (
           <ComponentCard
             key={component.id}
             component={component as DtoComponentItem}
             versions={componentVersions as DtoVersionItem[]}
-            enabled={enabledVersions as DtoEnabled}
           />
         );
       })}
