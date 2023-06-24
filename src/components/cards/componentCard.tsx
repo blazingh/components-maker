@@ -13,10 +13,6 @@ export default function ComponentCard({
 }: ComponentCardProps) {
   const latestVersion = versions && versions[versions.length - 1];
 
-  const getVersion = (id: number) => {
-    return versions && versions.find((version) => version.id === id);
-  };
-
   const versionPropreties = versions?.map((version) => {
     return { label: version.version, value: version.id };
   });
@@ -28,9 +24,9 @@ export default function ComponentCard({
         <Label className="text-xs">
           Latest Version : {latestVersion?.version || 0}
         </Label>
-        {versions?.length}
       </div>
       <EnabledVersionsChanger
+        component={component}
         porperties={versionPropreties || []}
         demo_version={component.demo_version}
         live_version={component.live_version}

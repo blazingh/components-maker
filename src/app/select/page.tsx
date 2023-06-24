@@ -14,7 +14,7 @@ export default async function Page() {
   console.log("versions", versions);
 
   return (
-    <div className="grid gap-4 ">
+    <div className="flex flex-wrap gap-4 justify-center items-center w-full pt-4">
       {components.data?.map((component) => {
         const componentVersions = versions.data?.filter(
           (version) => version.component === component.id
