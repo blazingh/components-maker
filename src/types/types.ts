@@ -105,15 +105,15 @@ export interface TextUtils {
 }
 
 export interface DtoComponentItem {
-  id: string;
+  id: number;
   name: string;
   live_version: number;
   demo_version: number;
 }
 
 export interface DtoVersionItem {
-  id: string;
+  id: number;
   version: number;
-  component: string;
+  component: number;
   data: ComponentItem;
 }

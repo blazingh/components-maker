@@ -1,21 +1,19 @@
-import { DtoComponentItem, DtoEnabled, DtoVersionItem } from "@/types/types";
+import { DtoComponentItem, DtoVersionItem } from "@/types/types";
 import { Label } from "../ui/label";
 import EnabledVersionsChanger from "../enabledVersionsChanger";
 
 interface ComponentCardProps {
   component: DtoComponentItem;
   versions?: DtoVersionItem[];
-  enabled?: DtoEnabled;
 }
 
 export default function ComponentCard({
   component,
   versions,
-  enabled,
 }: ComponentCardProps) {
   const latestVersion = versions && versions[versions.length - 1];
 
-  const getVersion = (id: string) => {
+  const getVersion = (id: number) => {
     return versions && versions.find((version) => version.id === id);
   };
 
@@ -34,7 +32,8 @@ export default function ComponentCard({
       </div>
       <EnabledVersionsChanger
         porperties={versionPropreties || []}
-        enabled={enabled as DtoEnabled}
+        demo_version={component.demo_version}
+        live_version={component.live_version}
       />
     </div>
   );

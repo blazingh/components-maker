@@ -16,7 +16,6 @@ export default async function Page() {
   return (
     <div className="grid gap-4 ">
       {components.data?.map((component) => {
-        // array of versions for this component
         const componentVersions = versions.data?.filter(
           (version) => version.component === component.id
         );
