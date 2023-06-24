@@ -252,48 +252,43 @@ export default function Demo() {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen ">
-      <div className="w-full h-14 ">
-        <ViewHeader settings={settings} settingsUtils={settingsUtils} />
+    <div className="flex w-full h-full">
+      <div className="flex flex-col bg-zinc-800 pt-4 w-52">
+        <ComponentsFileTree
+          components={components}
+          id={"1"}
+          activeId={activeId}
+          setActiveId={setActiveId}
+        />
       </div>
-      <div className="flex w-full h-full">
-        <div className="flex flex-col bg-zinc-800 pt-4 w-52">
-          <ComponentsFileTree
-            components={components}
-            id={"1"}
-            activeId={activeId}
-            setActiveId={setActiveId}
-          />
-        </div>
 
-        <div className="w-full flex items-center justify-center p-6 bg-zinc-900">
-          <ComponentsPreviewTree
-            showOutline={settings.showOutline}
-            components={components}
-            id={"1"}
-            activeId={activeId}
-            data={{
-              user_name: "John Doe",
-              locale: "en",
-              random: "random tect",
-              rando: "randttttom tect",
-              rand: "randoct",
-            }}
-          />
-        </div>
+      <div className="w-full flex items-center justify-center p-6 bg-zinc-900">
+        <ComponentsPreviewTree
+          showOutline={settings.showOutline}
+          components={components}
+          id={"1"}
+          activeId={activeId}
+          data={{
+            user_name: "John Doe",
+            locale: "en",
+            random: "random tect",
+            rando: "randttttom tect",
+            rand: "randoct",
+          }}
+        />
+      </div>
 
-        <div
-          className="flex flex-col p-2 bg-zinc-800 gap-y-2 overflow-y-scroll align-center w-60 h-full"
-          style={{ maxHeight: "calc(100vh - 3.5rem)" }}
-        >
-          <ComponentsEditBar
-            components={components}
-            selectedComponent={components[activeId]}
-            activeId={activeId}
-            containerUtils={ContainerUtils}
-            textUtils={TextUtils}
-          />
-        </div>
+      <div
+        className="flex flex-col p-2 bg-zinc-800 gap-y-2 overflow-y-scroll align-center w-60 h-full"
+        style={{ height: "calc(100vh - 3.5rem)" }}
+      >
+        <ComponentsEditBar
+          components={components}
+          selectedComponent={components[activeId]}
+          activeId={activeId}
+          containerUtils={ContainerUtils}
+          textUtils={TextUtils}
+        />
       </div>
     </div>
   );

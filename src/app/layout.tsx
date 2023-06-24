@@ -1,3 +1,4 @@
+import ViewHeader from "@/components/viewHeader";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -15,7 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="w-full h-14 ">
+          <ViewHeader />
+        </div>
+        <div className="w-full h-full">{children}</div>
+      </body>
     </html>
   );
 }
