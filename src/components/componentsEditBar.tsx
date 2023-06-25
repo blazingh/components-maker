@@ -123,10 +123,10 @@ export default function ComponentsEditBar({
         <TooltipButton
           variant="destructive"
           onClick={() => textUtils.removeText(activeBlockId)}
-          tooltipText="delete the component"
+          tooltipText="delete the block"
         >
           <Trash className="mr-2 h-4 w-4" />
-          Delete Component
+          Delete Block
         </TooltipButton>
       </>
     );
@@ -256,10 +256,10 @@ export default function ComponentsEditBar({
         <TooltipButton
           variant="destructive"
           onClick={() => containerUtils.removeContainer(activeBlockId)}
-          tooltipText="delete the component and all its children"
+          tooltipText="delete the block and all its children"
         >
           <Trash className="mr-2 h-4 w-4" />
-          Delete Component
+          Delete Block
         </TooltipButton>
       </>
     );
