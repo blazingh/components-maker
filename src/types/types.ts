@@ -76,11 +76,20 @@ export interface Settings {
   selectedVersion: number;
 }
 
+export interface VersionUtils {
+  addVersion: (versionNumber: number, fromVersionId: number) => Promise<void>;
+  deleteVersion: (versionId: number) => Promise<void>;
+  updateVersionNumber: (
+    versionId: number,
+    versionNumber: number
+  ) => Promise<void>;
+  updateVersionData: (versionId: number, data: ComponentsTree) => Promise<void>;
+}
+
 export interface SettingsUtils {
   toggleOutline: (vale?: boolean) => void;
   setActiveId: (id: string) => void;
   setSelectedVersion: (version: number) => void;
-  saveSelectedVersion: () => void;
 }
 
 export interface ContainerUtils {

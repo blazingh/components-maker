@@ -10,21 +10,25 @@ import ComponentEditSettings from "./componentEditSettings";
 interface ComponentEditPageProps {
   component: DtoComponentItem;
   versions: DtoVersionItem[];
-  version: DtoVersionItem;
 }
 
 export default function ComponentEditPage({
   component,
   versions,
-  version,
 }: ComponentEditPageProps) {
-  const { components, ContainerUtils, TextUtils, settings, settingsUtils } =
-    VersionEditor({
-      initialVersion: version,
-      versions: versions || [],
-    });
+  const {
+    blocks,
+    ContainerUtils,
+    TextUtils,
+    settings,
+    settingsUtils,
+    versionUtils,
+  } = VersionEditor({
+    _component: component,
+    _componentversions: versions,
+  });
 
-  if (!components) return <div>Components data problem</div>;
+  const [components, setComponents] = useState(blocks);
 
   return (
     <div className="flex w-full h-full">
@@ -34,6 +38,7 @@ export default function ComponentEditPage({
           versions={versions}
           settings={settings}
           settingsUtils={settingsUtils}
+          versionUtils={versionUtils}
         />
         <ComponentsFileTree
           components={components}

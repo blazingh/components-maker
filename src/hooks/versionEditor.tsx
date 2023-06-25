@@ -9,48 +9,173 @@ import {
   ComponentsTree,
   ContainerComponentItem,
   ContainerUtils,
+  DtoComponentItem,
   DtoVersionItem,
   Locales,
   Settings,
   SettingsUtils,
   TextComponentItem,
   TextUtils,
+  VersionUtils,
 } from "@/types/types";
 import { useEffect, useState } from "react";
 
 interface VersionEditorProps {
-  versions: DtoVersionItem[];
-  initialVersion: DtoVersionItem;
+  _component: DtoComponentItem;
+  _componentversions: DtoVersionItem[];
 }
 
 interface VersionEditorReturn {
-  components?: ComponentsTree;
+  blocks: ComponentsTree;
   ContainerUtils: ContainerUtils;
   TextUtils: TextUtils;
+  versionUtils: VersionUtils;
   settings: Settings;
   settingsUtils: SettingsUtils;
 }
 
+
 export default function VersionEditor({
-  versions,
-  initialVersion,
+  _component,
+  _componentversions,
 }: VersionEditorProps): VersionEditorReturn {
   const { toast } = useToast();
 
-  const [allVersions, setAllVersions] = useState<DtoVersionItem[]>(versions);
+  const [component, setComponent] = useState<DtoComponentItem>(_component);
 
-  const [components, setComponents] = useState<ComponentsTree>({});
+  const [componentversions, setComponentversions] =
+    useState<DtoVersionItem[]>(_componentversions);
+
+  const [selectedVersion, setSelectedVersion] = useState<DtoVersionItem>(
+    _componentversions[0]
+  );
+
+  const [blocks, setBlocks] = useState<ComponentsTree>(
+    selectedVersion.data as ComponentsTree
+  );
 
   const [settings, setSettings] = useState<Settings>({
     showOutline: true,
-    activeId: Object.keys(initialVersion.data)[0],
-    selectedVersion: initialVersion.id,
+    activeId: Object.keys(_componentversions[0].data)[0],
+    selectedVersion: _componentversions[0].id,
   });
 
   useEffect(() => {
-    const version = allVersions.find((v) => v.id === settings.selectedVersion);
-    if (version) setComponents(version.data);
-  }, [settings.selectedVersion, allVersions]);
+    setSelectedVersion(
+      componentversions.find(
+        (v) => v.id === settings.selectedVersion
+      ) as DtoVersionItem
+    );
+  }, [settings.selectedVersion, componentversions]);
+
+  useEffect(() => {
+    setBlocks(selectedVersion.data as ComponentsTree);
+  }, [selectedVersion]);
+
+  const versionUtils: VersionUtils = {
+    addVersion: async (versionNumber: number, fromVersionId?: number) => {
+      let copyVersion: DtoVersionItem | undefined;
+
+      if (fromVersionId)
+        copyVersion = componentversions.find(
+          (v) => v.id === fromVersionId
+        ) as DtoVersionItem;
+
+      const { data, error } = await supabase
+        .from("version")
+        .insert({
+          component: component.id,
+          number: versionNumber,
+          data: copyVersion ? copyVersion.data : {},
+        })
+        .select();
+
+      if (error)
+        toast({
+          variant: "destructive",
+          description: "Error creating version",
+        });
+      else if (data) {
+        setComponentversions([...componentversions, data[0]]);
+        setSettings({ ...settings, selectedVersion: data[0].id });
+        toast({
+          description: "Version created",
+        });
+      }
+    },
+
+    deleteVersion: async (versionId: number) => {
+      const { data, error } = await supabase
+        .from("version")
+        .delete()
+        .eq("id", versionId)
+        .select();
+
+      if (error)
+        toast({
+          variant: "destructive",
+          description: "Error deleting version",
+        });
+      else if (data) {
+        setComponentversions(
+          componentversions.filter((v) => v.id !== versionId)
+        );
+        setSettings({ ...settings, selectedVersion: componentversions[0].id });
+        toast({
+          description: "Version deleted",
+        });
+      }
+    },
+
+    updateVersionNumber: async (versionId: number, versionNumber: number) => {
+      const { data, error } = await supabase
+        .from("version")
+        .update({ number: versionNumber })
+        .eq("id", versionId)
+        .select();
+
+      if (error)
+        toast({
+          variant: "destructive",
+          description: "Error updating version number",
+        });
+      else if (data) {
+        setComponentversions(
+          componentversions.map((v) => {
+            if (v.id === versionId) return data[0];
+            else return v;
+          })
+        );
+        toast({
+          description: "Version number updated",
+        });
+      }
+    },
+
+    updateVersionData: async (versionId: number, data: ComponentsTree) => {
+      const { error } = await supabase
+        .from("version")
+        .update({ data })
+        .eq("id", versionId);
+
+      if (error)
+        toast({
+          variant: "destructive",
+          description: "Error updating version data",
+        });
+      else {
+        setComponentversions(
+          componentversions.map((v) => {
+            if (v.id === versionId) return { ...v, data };
+            else return v;
+          })
+        );
+        toast({
+          description: "Version data updated",
+        });
+      }
+    },
+  };
 
   const settingsUtils: SettingsUtils = {
     toggleOutline: (value?: boolean) => {
@@ -62,33 +187,6 @@ export default function VersionEditor({
     },
     setSelectedVersion: (id: number) => {
       setSettings({ ...settings, selectedVersion: id });
-    },
-    saveSelectedVersion: async () => {
-      setAllVersions(
-        allVersions.map((v) => {
-          if (v.id === settings.selectedVersion) {
-            return {
-              ...v,
-              data: components as ComponentsTree,
-            };
-          }
-          return v;
-        })
-      );
-      const res = await supabase.from("version").upsert({
-        id: settings.selectedVersion,
-        data: components as ComponentsTree,
-      });
-
-      if (res.error)
-        toast({
-          variant: "destructive",
-          description: "Error saving version",
-        });
-      else
-        toast({
-          description: "Version saved",
-        });
     },
   };
 
@@ -104,14 +202,14 @@ export default function VersionEditor({
         parent: parentId,
       };
 
-      const parent = components[parentId] as ContainerComponentItem;
+      const parent = blocks[parentId] as ContainerComponentItem;
 
       // update the components
       parent.children.push(newComponent.id);
 
       // update the state
-      setComponents({
-        ...components,
+      setBlocks({
+        ...blocks,
         [newComponent.id]: newComponent,
         [parentId]: parent,
       });
@@ -119,43 +217,41 @@ export default function VersionEditor({
 
     // Function to remove a container component
     removeContainer: (id: string) => {
-      const component = components[id] as ContainerComponentItem;
+      const component = blocks[id] as ContainerComponentItem;
       // Delete children recursively
       for (const child of component.children) {
-        if (components[child].type === ComponentContentType.Container)
+        if (blocks[child].type === ComponentContentType.Container)
           ContainerUtils.removeContainer(child);
       }
 
-      const parent = components[component.parent] as ContainerComponentItem;
+      const parent = blocks[component.parent] as ContainerComponentItem;
 
       // Delete the component from its parent's children array
       const index = parent.children.indexOf(id);
       parent.children.splice(index, 1);
 
       // Delete the component from the components object
-      delete components[id];
+      delete blocks[id];
 
       // Update the state
-      setComponents({ ...components, [parent.id]: parent });
+      setBlocks({ ...blocks, [parent.id]: parent });
     },
 
     // Function to update the name of a container component
     updateContainerName: (id: string, name: string) => {
-      components[id].name = name;
-      setComponents({ ...components });
+      blocks[id].name = name;
+      setBlocks({ ...blocks });
     },
 
     // function to update the style of a container component
     updateContainerStyle: (id: string, attr: string, value: any) => {
-      components[id].style = { ...components[id].style, [attr]: value };
-      setComponents({ ...components });
+      blocks[id].style = { ...blocks[id].style, [attr]: value };
+      setBlocks({ ...blocks });
     },
 
     // Function to change a child's position in the children array
     changeChildPosition: (id: string, delta: number) => {
-      const parent = components[
-        components[id].parent
-      ] as ContainerComponentItem;
+      const parent = blocks[blocks[id].parent] as ContainerComponentItem;
       const index = parent.children.indexOf(id);
       const newIndex = index + delta;
 
@@ -170,20 +266,19 @@ export default function VersionEditor({
       parent.children[index] = temp;
 
       // Update the state
-      setComponents({ ...components, [parent.id]: parent });
+      setBlocks({ ...blocks, [parent.id]: parent });
     },
 
     // Function to remove a child from a container children array
     removeChild: (id: string) => {
-      const parent = components[
-        components[id].parent
-      ] as ContainerComponentItem;
+      const parent = blocks[blocks[id].parent] as ContainerComponentItem;
 
       // Delete the component from its parent's children array
       const index = parent.children.indexOf(id);
       parent.children.splice(index, 1);
 
-      setComponents({ ...components, [parent.id]: parent });
+      // Update the state
+      setBlocks({ ...blocks, [parent.id]: parent });
     },
   };
 
@@ -202,14 +297,14 @@ export default function VersionEditor({
         localizedText: {},
       };
 
-      const parent = components[parentId] as ContainerComponentItem;
+      const parent = blocks[parentId] as ContainerComponentItem;
 
       // update the components
       parent.children.push(newComponent.id);
 
       // update the state
-      setComponents({
-        ...components,
+      setBlocks({
+        ...blocks,
         [newComponent.id]: newComponent,
         [parentId]: parent,
       });
@@ -221,95 +316,96 @@ export default function VersionEditor({
       ContainerUtils.removeChild(id);
 
       // Delete the component from the components object
-      delete components[id];
+      delete blocks[id];
 
       // Update the state
-      setComponents({ ...components });
+      setBlocks({ ...blocks });
     },
 
     // Function to update the name of a text component
     updateTextName: (id: string, name: string) => {
-      components[id].name = name;
-      setComponents({ ...components });
+      blocks[id].name = name;
+      setBlocks({ ...blocks });
     },
 
     // function to update the style of a text component
     updateTextStyle: (id: string, attr: string, value: any) => {
-      components[id].style = { ...components[id].style, [attr]: value };
-      setComponents({ ...components });
+      blocks[id].style = { ...blocks[id].style, [attr]: value };
+      setBlocks({ ...blocks });
     },
 
     // Function to update the text of a text component
     updateTextContent: (id: string, text: string) => {
-      const component = components[id] as TextComponentItem;
-      component.text = text;
+      const block = blocks[id] as TextComponentItem;
+      block.text = text;
 
       // Update the state
-      setComponents({ ...components, [id]: component });
+      setBlocks({ ...blocks, [id]: block });
     },
 
     // Function to update the wrapper of a text component
     updateTextWrapper: (id: string, wrapper: ComponentTextWrapper) => {
-      const component = components[id] as TextComponentItem;
-      component.wrapper = wrapper;
+      const block = blocks[id] as TextComponentItem;
+      block.wrapper = wrapper;
 
       // Update the state
-      setComponents({ ...components, [id]: component });
+      setBlocks({ ...blocks, [id]: block });
     },
 
     // Function to update the type of a text component
     updateTextType: (id: string, type: ComponentTextType) => {
-      const component = components[id] as TextComponentItem;
-      component.textType = type;
+      const block = blocks[id] as TextComponentItem;
+      block.textType = type;
 
       // Update the state
-      setComponents({ ...components, [id]: component });
+      setBlocks({ ...blocks, [id]: block });
     },
 
     // function to add localized text
     addLocalizedText: (id: string, locale: Locales) => {
-      const component = components[id] as TextComponentItem;
+      const block = blocks[id] as TextComponentItem;
 
-      if (!component.localizedText) component.localizedText = {};
+      if (!block.localizedText) block.localizedText = {};
 
       // check if the locale already exists
-      if (component.localizedText?.[locale]) return;
+      if (block.localizedText[locale]) return;
 
-      component.localizedText[locale] = "";
+      block.localizedText[locale] = "";
 
       // Update the state
-      setComponents({ ...components, [id]: component });
+      setBlocks({ ...blocks, [id]: block });
     },
 
     // function to remove localized text
     removeLocalizedText: (id: string, locale: Locales) => {
-      const component = components[id] as TextComponentItem;
+      const block = blocks[id] as TextComponentItem;
       // check if the locale exists
-      if (!component.localizedText) return;
+      if (!block.localizedText) return;
 
-      delete component.localizedText[locale];
+      delete block.localizedText[locale];
 
       // Update the state
-      setComponents({ ...components, [id]: component });
+      setBlocks({ ...blocks, [id]: block });
     },
 
     // function to update localized text
     updateLocalizedTextContent: (id: string, locale: Locales, text: string) => {
-      const component = components[id] as TextComponentItem;
+      const block = blocks[id] as TextComponentItem;
       // check if the locale exists
-      if (!component.localizedText) return;
+      if (!block.localizedText) return;
 
-      component.localizedText[locale] = text;
+      block.localizedText[locale] = text;
 
       // Update the state
-      setComponents({ ...components, [id]: component });
+      setBlocks({ ...blocks, [id]: block });
     },
   };
 
   return {
-    components,
+    blocks,
     ContainerUtils,
     TextUtils,
+    versionUtils,
     settings,
     settingsUtils,
   };
