@@ -72,10 +72,15 @@ export interface ComponentsTree {
 
 export interface Settings {
   showOutline: boolean;
+  activeId: string;
+  selectedVersion: number;
 }
 
 export interface SettingsUtils {
   toggleOutline: (vale?: boolean) => void;
+  setActiveId: (id: string) => void;
+  setSelectedVersion: (version: number) => void;
+  saveSelectedVersion: () => void;
 }
 
 export interface ContainerUtils {
@@ -115,5 +120,5 @@ export interface DtoVersionItem {
   id: number;
   version: number;
   component: number;
-  data: ComponentItem;
+  data: ComponentsTree;
 }

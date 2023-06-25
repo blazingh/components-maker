@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Eye, MoreVerticalIcon } from "lucide-react";
+import { Eye, MoreVerticalIcon, Trash } from "lucide-react";
 import { Label } from "./ui/label";
 import { Edit } from "lucide-react";
 
@@ -23,11 +23,15 @@ export default function ComponentCardSettings({ }: ComponentCardSettingsProps) {
       <DropdownMenuContent>
         <DropdownMenuItem>
           <Eye className="w-6 h-6" />
-          <Label className="ml-2">Preview</Label>
+          <Label className="ml-2">View</Label>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <Edit className="w-6 h-6" />
           <Label className="ml-2">Edit</Label>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="text-destructive">
+          <Trash className="w-6 h-6" />
+          <Label className="ml-2">Delete</Label>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -22,29 +22,6 @@ export default function ViewHeader({ }: ViewHeaderProps) {
       <div className="text-zinc-300 text-xl font-semibold absolute left-1/2 transform -translate-x-1/2">
         Not Another CSS Generator
       </div>
-
-      {/* settings */}
-      {/* <DropdownMenu> */}
-      {/*   <DropdownMenuTrigger asChild> */}
-      {/*     <BoneIcon size={36} className="text-zinc-300 cursor-pointer" /> */}
-      {/*   </DropdownMenuTrigger> */}
-      {/*   <DropdownMenuContent className="shadow-lg rounded-md p-4 w-80 flex flex-col gap-4 mx-2"> */}
-      {/*     <div className="grid gap-2"> */}
-      {/*       <div className="flex items-center space-x-2"> */}
-      {/*         <Switch */}
-      {/*           id="show-outline" */}
-      {/*           checked={settings.showOutline} */}
-      {/*           onCheckedChange={(value) => { */}
-      {/*             settingsUtils.toggleOutline(value as boolean); */}
-      {/*           }} */}
-      {/*         /> */}
-      {/*         <Label htmlFor="show-outline">Show outline</Label> */}
-      {/*       </div> */}
-      {/*     </div> */}
-      {/*     <Separator /> */}
-      {/*     <Button onClick={() => { }}>Save Component</Button> */}
-      {/*   </DropdownMenuContent> */}
-      {/* </DropdownMenu> */}
     </div>
   );
 }

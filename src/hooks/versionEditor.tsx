@@ -1,10 +1,7 @@
 "use client";
-import * as React from "react";
 
-import { ComponentsFileTree } from "@/components/componentsFileTree";
-import ComponentsPreviewTree from "@/components/componentsPreviewTree";
-import { initialComponents } from "@/initialTestComponents";
-import ComponentsEditBar from "@/components/componentsEditBar";
+import { useToast } from "@/components/ui/use-toast";
+import supabase from "@/lib/supabase";
 import {
   ComponentContentType,
   ComponentTextType,
@@ -12,28 +9,86 @@ import {
   ComponentsTree,
   ContainerComponentItem,
   ContainerUtils,
+  DtoVersionItem,
   Locales,
   Settings,
   SettingsUtils,
   TextComponentItem,
   TextUtils,
 } from "@/types/types";
-import ViewHeader from "@/components/viewHeader";
+import { useEffect, useState } from "react";
 
-export default function Demo() {
-  // Define state for components and activeId
-  const [components, setComponents] =
-    React.useState<ComponentsTree>(initialComponents);
-  const [activeId, setActiveId] = React.useState<string>("1");
+interface VersionEditorProps {
+  versions: DtoVersionItem[];
+  initialVersion: DtoVersionItem;
+}
 
-  const [settings, setSettings] = React.useState<Settings>({
+interface VersionEditorReturn {
+  components?: ComponentsTree;
+  ContainerUtils: ContainerUtils;
+  TextUtils: TextUtils;
+  settings: Settings;
+  settingsUtils: SettingsUtils;
+}
+
+export default function VersionEditor({
+  versions,
+  initialVersion,
+}: VersionEditorProps): VersionEditorReturn {
+  const { toast } = useToast();
+
+  const [allVersions, setAllVersions] = useState<DtoVersionItem[]>(versions);
+
+  const [components, setComponents] = useState<ComponentsTree>({});
+
+  const [settings, setSettings] = useState<Settings>({
     showOutline: true,
+    activeId: Object.keys(initialVersion.data)[0],
+    selectedVersion: initialVersion.id,
   });
+
+  useEffect(() => {
+    const version = allVersions.find((v) => v.id === settings.selectedVersion);
+    if (version) setComponents(version.data);
+  }, [settings.selectedVersion, allVersions]);
 
   const settingsUtils: SettingsUtils = {
     toggleOutline: (value?: boolean) => {
       if (value !== undefined) setSettings({ ...settings, showOutline: value });
       else setSettings({ ...settings, showOutline: !settings.showOutline });
+    },
+    setActiveId: (id: string) => {
+      setSettings({ ...settings, activeId: id });
+    },
+    setSelectedVersion: (id: number) => {
+      setSettings({ ...settings, selectedVersion: id });
+    },
+    saveSelectedVersion: async () => {
+      setAllVersions(
+        allVersions.map((v) => {
+          if (v.id === settings.selectedVersion) {
+            return {
+              ...v,
+              data: components as ComponentsTree,
+            };
+          }
+          return v;
+        })
+      );
+      const res = await supabase.from("version").upsert({
+        id: settings.selectedVersion,
+        data: components as ComponentsTree,
+      });
+
+      if (res.error)
+        toast({
+          variant: "destructive",
+          description: "Error saving version",
+        });
+      else
+        toast({
+          description: "Version saved",
+        });
     },
   };
 
@@ -251,45 +306,11 @@ export default function Demo() {
     },
   };
 
-  return (
-    <div className="flex w-full h-full">
-      <div className="flex flex-col bg-zinc-800 pt-4 w-52">
-        <ComponentsFileTree
-          components={components}
-          id={"1"}
-          activeId={activeId}
-          setActiveId={setActiveId}
-        />
-      </div>
-
-      <div className="w-full flex items-center justify-center p-6 bg-zinc-900">
-        <ComponentsPreviewTree
-          showOutline={settings.showOutline}
-          components={components}
-          id={"1"}
-          activeId={activeId}
-          data={{
-            user_name: "John Doe",
-            locale: "en",
-            random: "random tect",
-            rando: "randttttom tect",
-            rand: "randoct",
-          }}
-        />
-      </div>
-
-      <div
-        className="flex flex-col p-2 bg-zinc-800 gap-y-2 overflow-y-scroll align-center w-60 h-full"
-        style={{ height: "calc(100vh - 3.5rem)" }}
-      >
-        <ComponentsEditBar
-          components={components}
-          selectedComponent={components[activeId]}
-          activeId={activeId}
-          containerUtils={ContainerUtils}
-          textUtils={TextUtils}
-        />
-      </div>
-    </div>
-  );
+  return {
+    components,
+    ContainerUtils,
+    TextUtils,
+    settings,
+    settingsUtils,
+  };
 }

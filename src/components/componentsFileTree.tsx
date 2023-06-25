@@ -1,7 +1,12 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowRight, Dot } from "lucide-react";
-import { ComponentContentType, ComponentsTree } from "@/types/types";
+import {
+  ComponentContentType,
+  ComponentsTree,
+  Settings,
+  SettingsUtils,
+} from "@/types/types";
 
 interface ComponentsFileTreeProps {
   components: ComponentsTree;
