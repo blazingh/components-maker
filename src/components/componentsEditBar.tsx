@@ -8,9 +8,8 @@ import {
 } from "./ui/accordion";
 import React from "react";
 import {
-  ComponentContentType,
-  ComponentItem,
-  ComponentsTree,
+  BlockContentType,
+  BlocksTree,
   ContainerUtils,
   TextUtils,
 } from "@/types/types";
@@ -27,31 +26,31 @@ import { Trash } from "lucide-react";
 import { InputWithLabel } from "./inputs/inputWithLabel";
 
 export default function ComponentsEditBar({
-  activeId,
-  components,
+  activeBlockId,
+  blocks,
   containerUtils,
   textUtils,
 }: {
-  activeId: string;
-  components: ComponentsTree;
+  activeBlockId: string;
+  blocks: BlocksTree;
   containerUtils: ContainerUtils;
   textUtils: TextUtils;
 }) {
   // get the selected component
-  const selectedComponent = components[activeId];
+  const selectedBlock = blocks[activeBlockId];
 
   // if no component is selected, return null
-  if (!selectedComponent) return <div>No component selected </div>;
+  if (!selectedBlock) return <div>No component selected </div>;
 
-  const addComponent = (parent: string, type: ComponentContentType) => {
-    if (type === ComponentContentType.Text) textUtils.addText(parent);
+  const addBlock = (parent: string, type: BlockContentType) => {
+    if (type === BlockContentType.Text) textUtils.addText(parent);
 
-    if (type === ComponentContentType.Container)
+    if (type === BlockContentType.Container)
       containerUtils.addContainer(parent);
   };
 
   // if the selected component is a text component
-  if (selectedComponent?.type === ComponentContentType.Text) {
+  if (selectedBlock?.type === BlockContentType.Text) {
     return (
       <>
         {/* input to change the name of a component */}
@@ -59,9 +58,9 @@ export default function ComponentsEditBar({
           label="Component Name"
           placeholder="Component Name"
           type="text"
-          value={selectedComponent?.name || ""}
+          value={selectedBlock?.name || ""}
           onChange={(e: any) =>
-            textUtils.updateTextName(activeId, e.target.value)
+            textUtils.updateTextName(activeBlockId, e.target.value)
           }
         />
 
@@ -72,10 +71,10 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Content</AccordionTrigger>
             <AccordionContent>
               <Content
-                components={components}
-                selectedComponent={selectedComponent}
+                blocks={blocks}
+                selectedBlock={selectedBlock}
                 textUtils={textUtils}
-                addComponent={addComponent}
+                addBlock={addBlock}
               />
             </AccordionContent>
           </AccordionItem>
@@ -85,9 +84,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Typography</AccordionTrigger>
             <AccordionContent>
               <Typography
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  textUtils.updateTextStyle(activeId, atr, value)
+                  textUtils.updateTextStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -98,9 +97,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Size</AccordionTrigger>
             <AccordionContent>
               <Size
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  textUtils.updateTextStyle(activeId, atr, value)
+                  textUtils.updateTextStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -111,9 +110,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Background</AccordionTrigger>
             <AccordionContent>
               <Background
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  textUtils.updateTextStyle(activeId, atr, value)
+                  textUtils.updateTextStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -123,7 +122,7 @@ export default function ComponentsEditBar({
         {/* button to delete a component */}
         <TooltipButton
           variant="destructive"
-          onClick={() => textUtils.removeText(activeId)}
+          onClick={() => textUtils.removeText(activeBlockId)}
           tooltipText="delete the component"
         >
           <Trash className="mr-2 h-4 w-4" />
@@ -134,7 +133,7 @@ export default function ComponentsEditBar({
   }
 
   // if the selected component is a container component
-  if (selectedComponent?.type === ComponentContentType.Container) {
+  if (selectedBlock?.type === BlockContentType.Container) {
     return (
       <>
         {/* input to change the name of a component */}
@@ -142,9 +141,9 @@ export default function ComponentsEditBar({
           label="Component Name"
           placeholder="Component Name"
           type="text"
-          value={selectedComponent?.name || ""}
+          value={selectedBlock?.name || ""}
           onChange={(e) =>
-            containerUtils.updateContainerName(activeId, e.target.value)
+            containerUtils.updateContainerName(activeBlockId, e.target.value)
           }
         />
 
@@ -153,10 +152,10 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Content</AccordionTrigger>
             <AccordionContent>
               <Content
-                components={components}
+                blocks={blocks}
                 textUtils={textUtils}
-                selectedComponent={selectedComponent}
-                addComponent={addComponent}
+                selectedBlock={selectedBlock}
+                addBlock={addBlock}
               />
             </AccordionContent>
           </AccordionItem>
@@ -166,9 +165,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Position</AccordionTrigger>
             <AccordionContent>
               <Position
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeId, atr, value)
+                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -179,9 +178,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Layout</AccordionTrigger>
             <AccordionContent>
               <Layout
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeId, atr, value)
+                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -192,9 +191,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Size</AccordionTrigger>
             <AccordionContent>
               <Size
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeId, atr, value)
+                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -205,9 +204,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Margin</AccordionTrigger>
             <AccordionContent>
               <Margin
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeId, atr, value)
+                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -218,9 +217,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Padding</AccordionTrigger>
             <AccordionContent>
               <Padding
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeId, atr, value)
+                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -231,9 +230,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Background</AccordionTrigger>
             <AccordionContent>
               <Background
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeId, atr, value)
+                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -244,9 +243,9 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Border</AccordionTrigger>
             <AccordionContent>
               <Border
-                styles={selectedComponent?.style}
+                styles={selectedBlock?.style}
                 setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeId, atr, value)
+                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
                 }
               />
             </AccordionContent>
@@ -256,7 +255,7 @@ export default function ComponentsEditBar({
         {/* button to delete a component */}
         <TooltipButton
           variant="destructive"
-          onClick={() => containerUtils.removeContainer(activeId)}
+          onClick={() => containerUtils.removeContainer(activeBlockId)}
           tooltipText="delete the component and all its children"
         >
           <Trash className="mr-2 h-4 w-4" />

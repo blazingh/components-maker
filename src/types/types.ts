@@ -1,4 +1,4 @@
-export enum ComponentContentType {
+export enum BlockContentType {
   Container = "Container",
   Text = "Text",
   Key = "Key",
@@ -6,7 +6,7 @@ export enum ComponentContentType {
   Component = "Component",
 }
 
-export enum ComponentTextWrapper {
+export enum TextBlockWrapper {
   P = "p",
   Span = "span",
   Div = "div",
@@ -21,58 +21,57 @@ export enum Locales {
   Ar = "ar",
 }
 
-export enum ComponentTextType {
+export enum TextBlockType {
   Text = "text",
   Key = "key",
   Localized = "localized",
 }
 
-export interface TreeComponentItem {
+export interface BlockTreeItem {
   id: string;
   name: string;
   style: React.CSSProperties;
   parent: string;
 }
 
-export interface ContainerComponentItem extends TreeComponentItem {
-  type: ComponentContentType.Container;
+export interface ContainerBlockItem extends BlockTreeItem {
+  type: BlockContentType.Container;
   children: string[];
 }
 
-export interface TextComponentItem extends TreeComponentItem {
-  type: ComponentContentType.Text;
-  wrapper: ComponentTextWrapper;
-  textType: ComponentTextType;
+export interface TextBlockItem extends BlockTreeItem {
+  type: BlockContentType.Text;
+  wrapper: TextBlockWrapper;
+  textType: TextBlockType;
   text: string;
   localizedText: {
     [key in Locales]?: string;
   };
 }
 
-export interface ImageComponentItem extends TreeComponentItem {
-  type: ComponentContentType.Image;
+export interface ImageBlocktItem extends BlockTreeItem {
+  type: BlockContentType.Image;
   src: string;
   alt: string;
 }
 
-export interface ComponentComponentItem extends TreeComponentItem {
-  type: ComponentContentType.Component;
+export interface ComponentBlockItem extends BlockTreeItem {
+  type: BlockContentType.Component;
   component: string;
 }
 
-export type ComponentItem =
-  | ContainerComponentItem
-  | TextComponentItem
-  | ImageComponentItem
-  | ComponentComponentItem;
+export type BlockItem =
+  | ContainerBlockItem
+  | TextBlockItem
+  | ImageBlocktItem
+  | ComponentBlockItem;
 
-export interface ComponentsTree {
-  [key: string]: ComponentItem;
+export interface BlocksTree {
+  [key: string]: BlockItem;
 }
-
 export interface Settings {
   showOutline: boolean;
-  activeId: string;
+  activeBlockId: string;
   selectedVersion: number;
 }
 
@@ -92,7 +91,7 @@ export interface VersionUtils {
 
 export interface SettingsUtils {
   toggleOutline: (vale?: boolean) => void;
-  setActiveId: (id: string) => void;
+  setActiveBlockId: (id: string) => void;
   setSelectedVersion: (version: number) => void;
 }
 
@@ -110,9 +109,10 @@ export interface TextUtils {
   removeText: (id: string) => void;
   updateTextName: (id: string, name: string) => void;
   updateTextContent: (id: string, text: string) => void;
-  updateTextWrapper: (id: string, wrapper: ComponentTextWrapper) => void;
+  updateTextWrapper: (id: string, wrapper: TextBlockWrapper) => void;
   updateTextStyle: (id: string, attr: string, value: any) => void;
-  updateTextType: (id: string, type: ComponentTextType) => void;
+
+  updateTextType: (id: string, type: TextBlockType) => void;
   addLocalizedText: (id: string, locale: Locales) => void;
   removeLocalizedText: (id: string, locale: Locales) => void;
   updateLocalizedTextContent: (
@@ -133,5 +133,5 @@ export interface DtoVersionItem {
   id: number;
   version: number;
   component: number;
-  data: ComponentsTree;
+  data: BlocksTree;
 }

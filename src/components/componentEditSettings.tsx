@@ -7,20 +7,10 @@ import {
   VersionUtils,
 } from "@/types/types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Copy, MoreVerticalIcon, Plus, Save, Trash } from "lucide-react";
+import { Copy, Plus, Save, Trash } from "lucide-react";
 import { Button } from "./ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
 import { useState } from "react";
-import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { InputWithLabel } from "./inputs/inputWithLabel";
 import { InputSelection } from "./inputs/inputSelection";
 import TooltipButton from "./ui/tooltipButton";

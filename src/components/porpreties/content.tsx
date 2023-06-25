@@ -1,10 +1,10 @@
 import {
-  ComponentContentType,
-  ComponentItem,
-  ComponentTextType,
-  ComponentTextWrapper,
-  ComponentsTree,
+  BlockContentType,
+  BlockItem,
+  BlocksTree,
   Locales,
+  TextBlockType,
+  TextBlockWrapper,
   TextUtils,
 } from "@/types/types";
 import React from "react";
@@ -13,22 +13,22 @@ import { MinusIcon, PlusIcon } from "lucide-react";
 import { InputSelection } from "../inputs/inputSelection";
 import { InputWithLabel } from "../inputs/inputWithLabel";
 
-// get proprities from ComponentContentType
-const contentTypes = Object.keys(ComponentContentType).map((key) => ({
+// get proprities from BlockContentType
+const contentTypes = Object.keys(BlockContentType).map((key) => ({
   label: key,
-  value: ComponentContentType[key as keyof typeof ComponentContentType],
+  value: BlockContentType[key as keyof typeof BlockContentType],
 }));
 
-// get texttypes from ComponentTextType
-const textTypes = Object.keys(ComponentTextType).map((key) => ({
+// get texttypes from TextBlockType
+const textTypes = Object.keys(TextBlockType).map((key) => ({
   label: key,
-  value: ComponentTextType[key as keyof typeof ComponentTextType],
+  value: TextBlockType[key as keyof typeof TextBlockType],
 }));
 
-// get text wrappers from ComponentTextWrapper
-const textWrappers = Object.keys(ComponentTextWrapper).map((key) => ({
+// get text wrappers from TextBlockWrapper
+const textWrappers = Object.keys(TextBlockWrapper).map((key) => ({
   label: key,
-  value: ComponentTextWrapper[key as keyof typeof ComponentTextWrapper],
+  value: TextBlockWrapper[key as keyof typeof TextBlockWrapper],
 }));
 
 // get the localized text from LOcales
@@ -38,19 +38,19 @@ const locales = Object.keys(Locales).map((key) => ({
 }));
 
 interface ContentProps {
-  components: ComponentsTree;
-  selectedComponent?: ComponentItem;
+  blocks: BlocksTree;
+  selectedBlock: BlockItem;
   textUtils: TextUtils;
-  addComponent: (parent: string, type: ComponentContentType) => void;
+  addBlock: (parent: string, type: BlockContentType) => void;
 }
 
 export function Content({
-  components,
-  selectedComponent,
+  blocks,
+  selectedBlock,
   textUtils,
-  addComponent,
+  addBlock,
 }: ContentProps) {
-  const [selectedType, setSelectedType] = React.useState<ComponentContentType>(
+  const [selectedType, setSelectedType] = React.useState<BlockContentType>(
     contentTypes[0].value
   );
 
@@ -58,20 +58,20 @@ export function Content({
     Locales.En
   );
 
-  if (!selectedComponent) {
+  if (!selectedBlock) {
     return <div>select a component</div>;
   }
 
   // if the selected component is a text component
-  if (selectedComponent.type === ComponentContentType.Text) {
+  if (selectedBlock.type === BlockContentType.Text) {
     return (
       <div className="flex flex-col w-full h-full gap-y-2">
         {/* input to change the text wrappers of a component */}
         <InputSelection
           label="Text Wrapper"
-          value={selectedComponent?.wrapper || textWrappers[0].value}
-          onValueChange={(e: ComponentTextWrapper) =>
-            textUtils.updateTextWrapper(selectedComponent.id, e)
+          value={selectedBlock?.wrapper || textWrappers[0].value}
+          onValueChange={(e: TextBlockWrapper) =>
+            textUtils.updateTextWrapper(selectedBlock.id, e)
           }
           proprities={textWrappers}
         />
@@ -79,28 +79,28 @@ export function Content({
         {/* input to change the text type of a component */}
         <InputSelection
           label="Text Type"
-          value={selectedComponent?.textType || textTypes[0].value}
-          onValueChange={(e: ComponentTextType) =>
-            textUtils.updateTextType(selectedComponent.id, e)
+          value={selectedBlock?.textType || textTypes[0].value}
+          onValueChange={(e: TextBlockType) =>
+            textUtils.updateTextType(selectedBlock.id, e)
           }
           proprities={textTypes}
         />
 
         {/* if the text is not local variable*/}
-        {selectedComponent?.textType !== ComponentTextType.Localized && (
+        {selectedBlock?.textType !== TextBlockType.Localized && (
           <InputWithLabel
-            label={selectedComponent?.textType || "Text"}
-            placeholder={selectedComponent?.textType || "Text"}
+            label={selectedBlock?.textType || "Text"}
+            placeholder={selectedBlock?.textType || "Text"}
             type="text"
-            value={selectedComponent?.text || ""}
+            value={selectedBlock?.text || ""}
             onChange={(e: any) =>
-              textUtils.updateTextContent(selectedComponent.id, e.target.value)
+              textUtils.updateTextContent(selectedBlock.id, e.target.value)
             }
           />
         )}
 
         {/* add a new localized text */}
-        {selectedComponent?.textType === ComponentTextType.Localized && (
+        {selectedBlock?.textType === TextBlockType.Localized && (
           <div className="flex items-end justify-end gap-x-2">
             <InputSelection
               label="Add Locale"
@@ -113,10 +113,7 @@ export function Content({
             <TooltipButton
               onClick={() => {
                 if (selectedLocale) {
-                  textUtils.addLocalizedText(
-                    selectedComponent.id,
-                    selectedLocale
-                  );
+                  textUtils.addLocalizedText(selectedBlock.id, selectedLocale);
                 }
               }}
               tooltipText="add a new localized text"
@@ -127,20 +124,18 @@ export function Content({
         )}
 
         {/* if the text is a local variable*/}
-        {selectedComponent?.textType === ComponentTextType.Localized &&
-          Object.keys(selectedComponent?.localizedText || {}).map(
+        {selectedBlock?.textType === TextBlockType.Localized &&
+          Object.keys(selectedBlock?.localizedText || {}).map(
             (locale, index) => (
               <div key={index} className="flex items-end gap-x-2">
                 <InputWithLabel
                   label={locale}
                   placeholder={locale}
                   type="text"
-                  value={
-                    selectedComponent?.localizedText[locale as Locales] || ""
-                  }
+                  value={selectedBlock?.localizedText[locale as Locales] || ""}
                   onChange={(e: any) =>
                     textUtils.updateLocalizedTextContent(
-                      selectedComponent.id,
+                      selectedBlock.id,
                       locale as Locales,
                       e.target.value
                     )
@@ -149,7 +144,7 @@ export function Content({
                 <TooltipButton
                   onClick={() =>
                     textUtils.removeLocalizedText(
-                      selectedComponent.id,
+                      selectedBlock.id,
                       locale as Locales
                     )
                   }
@@ -165,21 +160,21 @@ export function Content({
   }
 
   // if the selected component is a container
-  if (selectedComponent.type === ComponentContentType.Container) {
+  if (selectedBlock.type === BlockContentType.Container) {
     return (
       <div className="flex flex-col w-full h-full gap-y-2">
         {/* list all the children of the selected component */}
-        {selectedComponent.children.map((child) => {
-          const component = components[child];
+        {selectedBlock.children.map((child) => {
+          const block = blocks[child];
           return (
             <div
-              key={component.id}
+              key={block.id}
               className="w-full flex flex-col items-start gap-x-1
             bg-secondary rounded-md p-2"
             >
-              <div className="text-xs font-bold">{component?.type}</div>
+              <div className="text-xs font-bold">{block?.type}</div>
               <div className="whitespace-nowrap overflow-hidden overflow-ellipsis w-full">
-                {component?.name}
+                {block?.name}
               </div>
             </div>
           );
@@ -190,14 +185,14 @@ export function Content({
             label="Add a new child"
             value={selectedType}
             onValueChange={(value) => {
-              setSelectedType(value as ComponentContentType);
+              setSelectedType(value as BlockContentType);
             }}
             proprities={contentTypes}
           />
           <TooltipButton
             onClick={() => {
               if (selectedType) {
-                addComponent(selectedComponent.id, selectedType);
+                addBlock(selectedBlock.id, selectedType);
               }
             }}
             tooltipText="add a new child component to the selected component"

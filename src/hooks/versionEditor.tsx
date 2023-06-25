@@ -3,19 +3,19 @@
 import { useToast } from "@/components/ui/use-toast";
 import supabase from "@/lib/supabase";
 import {
-  ComponentContentType,
-  ComponentTextType,
-  ComponentTextWrapper,
+  BlockContentType,
+  BlocksTree,
   ComponentUtils,
-  ComponentsTree,
-  ContainerComponentItem,
+  ContainerBlockItem,
   ContainerUtils,
   DtoComponentItem,
   DtoVersionItem,
   Locales,
   Settings,
   SettingsUtils,
-  TextComponentItem,
+  TextBlockItem,
+  TextBlockType,
+  TextBlockWrapper,
   TextUtils,
   VersionUtils,
 } from "@/types/types";
@@ -27,7 +27,7 @@ interface VersionEditorProps {
 }
 
 interface VersionEditorReturn {
-  blocks: ComponentsTree;
+  blocks: BlocksTree;
   ContainerUtils: ContainerUtils;
   TextUtils: TextUtils;
   componentUtils: ComponentUtils;
@@ -44,22 +44,22 @@ export default function VersionEditor({
 }: VersionEditorProps): VersionEditorReturn {
   const { toast } = useToast();
 
-  const [component, setComponent] = useState<DtoComponentItem>(_component);
+  const [component, setBlock] = useState<DtoComponentItem>(_component);
 
-  const [componentVersions, setComponentVersions] =
+  const [componentVersions, setBlockVersions] =
     useState<DtoVersionItem[]>(_componentVersions);
 
   const [selectedVersion, setSelectedVersion] = useState<DtoVersionItem>(
     _componentVersions[0]
   );
 
-  const [blocks, setBlocks] = useState<ComponentsTree>(
-    (selectedVersion?.data as ComponentsTree) || {}
+  const [blocks, setBlocks] = useState<BlocksTree>(
+    (selectedVersion?.data as BlocksTree) || {}
   );
 
   const [settings, setSettings] = useState<Settings>({
     showOutline: true,
-    activeId: Object.keys(componentVersions[0].data)[0],
+    activeBlockId: Object.keys(componentVersions[0].data)[0],
     selectedVersion: componentVersions[0].id,
   });
 
@@ -72,7 +72,7 @@ export default function VersionEditor({
   }, [settings.selectedVersion, componentVersions]);
 
   useEffect(() => {
-    setBlocks(selectedVersion.data as ComponentsTree);
+    setBlocks(selectedVersion.data as BlocksTree);
   }, [selectedVersion]);
 
   const componentUtils: ComponentUtils = {
@@ -90,9 +90,9 @@ export default function VersionEditor({
           description: error.message,
         });
       else if (data) {
-        setComponent({ ...component, name });
+        setBlock({ ...component, name });
         toast({
-          description: "Component renamed",
+          description: "Block renamed",
         });
       }
     },
@@ -123,7 +123,7 @@ export default function VersionEditor({
           description: error.message,
         });
       else if (data) {
-        setComponentVersions([...componentVersions, data[0]]);
+        setBlockVersions([...componentVersions, data[0]]);
         setSettings({ ...settings, selectedVersion: data[0].id });
         toast({
           description: "Version created",
@@ -145,13 +145,13 @@ export default function VersionEditor({
           description: error.message,
         });
       else if (data) {
-        const newComponentVersions = componentVersions.filter(
+        const newBlockVersions = componentVersions.filter(
           (v) => v.id !== settings.selectedVersion
         );
-        setComponentVersions(newComponentVersions);
+        setBlockVersions(newBlockVersions);
         setSettings({
           ...settings,
-          selectedVersion: newComponentVersions[0].id,
+          selectedVersion: newBlockVersions[0].id,
         });
         toast({
           description: "Version deleted",
@@ -173,7 +173,7 @@ export default function VersionEditor({
           description: error.message,
         });
       else if (data) {
-        setComponentVersions(
+        setBlockVersions(
           componentVersions.map((v) => {
             if (v.id === versionId) return data[0];
             else return v;
@@ -198,7 +198,7 @@ export default function VersionEditor({
           description: error.message,
         });
       else {
-        setComponentVersions(
+        setBlockVersions(
           componentVersions.map((v) => {
             if (v.id === settings.selectedVersion)
               return { ...v, data: blocks };
@@ -217,8 +217,8 @@ export default function VersionEditor({
       if (value !== undefined) setSettings({ ...settings, showOutline: value });
       else setSettings({ ...settings, showOutline: !settings.showOutline });
     },
-    setActiveId: (id: string) => {
-      setSettings({ ...settings, activeId: id });
+    setActiveBlockId: (id: string) => {
+      setSettings({ ...settings, activeBlockId: id });
     },
     setSelectedVersion: (id: number) => {
       const version = componentVersions.find(
@@ -227,7 +227,7 @@ export default function VersionEditor({
       setSettings({
         ...settings,
         selectedVersion: id,
-        activeId: Object.keys(version.data)[0],
+        activeBlockId: Object.keys(version.data)[0],
       });
     },
   };
@@ -235,38 +235,38 @@ export default function VersionEditor({
   const ContainerUtils: ContainerUtils = {
     // Function to add a container component
     addContainer: (parentId: string) => {
-      const newComponent: ContainerComponentItem = {
+      const newBlock: ContainerBlockItem = {
         id: String(Math.random()),
         name: "New Container",
-        type: ComponentContentType.Container,
+        type: BlockContentType.Container,
         style: {},
         children: [],
         parent: parentId,
       };
 
-      const parent = blocks[parentId] as ContainerComponentItem;
+      const parent = blocks[parentId] as ContainerBlockItem;
 
       // update the components
-      parent.children.push(newComponent.id);
+      parent.children.push(newBlock.id);
 
       // update the state
       setBlocks({
         ...blocks,
-        [newComponent.id]: newComponent,
+        [newBlock.id]: newBlock,
         [parentId]: parent,
       });
     },
 
     // Function to remove a container component
     removeContainer: (id: string) => {
-      const component = blocks[id] as ContainerComponentItem;
+      const component = blocks[id] as ContainerBlockItem;
       // Delete children recursively
       for (const child of component.children) {
-        if (blocks[child].type === ComponentContentType.Container)
+        if (blocks[child].type === BlockContentType.Container)
           ContainerUtils.removeContainer(child);
       }
 
-      const parent = blocks[component.parent] as ContainerComponentItem;
+      const parent = blocks[component.parent] as ContainerBlockItem;
 
       if (!parent) return;
 
@@ -295,7 +295,7 @@ export default function VersionEditor({
 
     // Function to change a child's position in the children array
     changeChildPosition: (id: string, delta: number) => {
-      const parent = blocks[blocks[id].parent] as ContainerComponentItem;
+      const parent = blocks[blocks[id].parent] as ContainerBlockItem;
       const index = parent.children.indexOf(id);
       const newIndex = index + delta;
 
@@ -315,7 +315,7 @@ export default function VersionEditor({
 
     // Function to remove a child from a container children array
     removeChild: (id: string) => {
-      const parent = blocks[blocks[id].parent] as ContainerComponentItem;
+      const parent = blocks[blocks[id].parent] as ContainerBlockItem;
 
       // Delete the component from its parent's children array
       const index = parent.children.indexOf(id);
@@ -329,27 +329,27 @@ export default function VersionEditor({
   const TextUtils: TextUtils = {
     // Function to add a text component
     addText: (parentId: string) => {
-      const newComponent: TextComponentItem = {
+      const newBlock: TextBlockItem = {
         id: String(Math.random()),
         name: "New Text",
-        type: ComponentContentType.Text,
+        type: BlockContentType.Text,
         text: "New Text",
-        textType: ComponentTextType.Text,
-        wrapper: ComponentTextWrapper.P,
+        textType: TextBlockType.Text,
+        wrapper: TextBlockWrapper.P,
         style: {},
         parent: parentId,
         localizedText: {},
       };
 
-      const parent = blocks[parentId] as ContainerComponentItem;
+      const parent = blocks[parentId] as ContainerBlockItem;
 
       // update the components
-      parent.children.push(newComponent.id);
+      parent.children.push(newBlock.id);
 
       // update the state
       setBlocks({
         ...blocks,
-        [newComponent.id]: newComponent,
+        [newBlock.id]: newBlock,
         [parentId]: parent,
       });
     },
@@ -380,7 +380,7 @@ export default function VersionEditor({
 
     // Function to update the text of a text component
     updateTextContent: (id: string, text: string) => {
-      const block = blocks[id] as TextComponentItem;
+      const block = blocks[id] as TextBlockItem;
       block.text = text;
 
       // Update the state
@@ -388,8 +388,8 @@ export default function VersionEditor({
     },
 
     // Function to update the wrapper of a text component
-    updateTextWrapper: (id: string, wrapper: ComponentTextWrapper) => {
-      const block = blocks[id] as TextComponentItem;
+    updateTextWrapper: (id: string, wrapper: TextBlockWrapper) => {
+      const block = blocks[id] as TextBlockItem;
       block.wrapper = wrapper;
 
       // Update the state
@@ -397,8 +397,8 @@ export default function VersionEditor({
     },
 
     // Function to update the type of a text component
-    updateTextType: (id: string, type: ComponentTextType) => {
-      const block = blocks[id] as TextComponentItem;
+    updateTextType: (id: string, type: TextBlockType) => {
+      const block = blocks[id] as TextBlockItem;
       block.textType = type;
 
       // Update the state
@@ -407,7 +407,7 @@ export default function VersionEditor({
 
     // function to add localized text
     addLocalizedText: (id: string, locale: Locales) => {
-      const block = blocks[id] as TextComponentItem;
+      const block = blocks[id] as TextBlockItem;
 
       if (!block.localizedText) block.localizedText = {};
 
@@ -422,7 +422,7 @@ export default function VersionEditor({
 
     // function to remove localized text
     removeLocalizedText: (id: string, locale: Locales) => {
-      const block = blocks[id] as TextComponentItem;
+      const block = blocks[id] as TextBlockItem;
       // check if the locale exists
       if (!block.localizedText) return;
 
@@ -434,7 +434,7 @@ export default function VersionEditor({
 
     // function to update localized text
     updateLocalizedTextContent: (id: string, locale: Locales, text: string) => {
-      const block = blocks[id] as TextComponentItem;
+      const block = blocks[id] as TextBlockItem;
       // check if the locale exists
       if (!block.localizedText) return;
 

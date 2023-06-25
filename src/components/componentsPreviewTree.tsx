@@ -1,88 +1,89 @@
 import {
-  ComponentContentType,
-  ComponentTextType,
-  ComponentTextWrapper,
-  ComponentsTree,
+  BlockContentType,
+  BlocksTree,
   Locales,
+  TextBlockType,
+  TextBlockWrapper,
 } from "@/types/types";
 
-interface ComponentsPreviewTreeProps {
-  components: ComponentsTree;
+interface BlocksPreviewTreeProps {
+  blocks: BlocksTree;
   id: string;
-  activeId: string;
+  activeBlockId: string;
   data?: { [key: string]: any };
   showOutline: boolean;
 }
 
-export default function ComponentsPreviewTree({
-  components,
+export default function BlocksPreviewTree({
+  blocks,
   id,
-  activeId,
+  activeBlockId,
   data,
   showOutline,
-}: ComponentsPreviewTreeProps) {
-  const component = components[id];
+}: BlocksPreviewTreeProps) {
+  const block = blocks[id];
 
-  if (!component) return null;
+  if (!block) return null;
 
-  // when component is a text
-  if (component.type === ComponentContentType.Text) {
+  // when block is a text
+  if (block.type === BlockContentType.Text) {
     const props = {
-      style: component.style,
-      className: activeId === id ? "outline outline-primary outline-thin " : "",
+      style: block.style,
+      className:
+        activeBlockId === id ? "outline outline-primary outline-thin " : "",
     };
 
-    let content = component.text;
+    let content = block.text;
 
-    if (component.textType === ComponentTextType.Key)
-      content = data?.[component.text] || component.text;
+    if (block.textType === TextBlockType.Key)
+      content = data?.[block.text] || block.text;
 
-    if (component.textType === ComponentTextType.Localized) {
+    if (block.textType === TextBlockType.Localized) {
       const locale = (data?.locale as Locales) || ("en" as Locales);
-      content = component.localizedText?.[locale] || component.text;
+      content = block.localizedText?.[locale] || block.text;
     }
 
-    if (component.wrapper === ComponentTextWrapper.Div)
+    if (block.wrapper === TextBlockWrapper.Div)
       return <div {...props}>{content}</div>;
 
-    if (component.wrapper === ComponentTextWrapper.Span)
+    if (block.wrapper === TextBlockWrapper.Span)
       return <span {...props}>{content}</span>;
 
-    if (component.wrapper === ComponentTextWrapper.H1)
+    if (block.wrapper === TextBlockWrapper.H1)
       return <h1 {...props}>{content}</h1>;
 
-    if (component.wrapper === ComponentTextWrapper.H2)
+    if (block.wrapper === TextBlockWrapper.H2)
       return <h2 {...props}>{content}</h2>;
 
-    if (component.wrapper === ComponentTextWrapper.H3)
+    if (block.wrapper === TextBlockWrapper.H3)
       return <h3 {...props}>{content}</h3>;
 
     return <p {...props}>{content}</p>;
   }
 
   const withOutlineStyle = {
-    ...component.style,
+    ...block.style,
     outlineColor: "white",
     outlineWidth: "1px",
     outlineStyle: "solid",
   };
 
-  // when component is a container
-  if (component.type === ComponentContentType.Container) {
+  // when block is a container
+  if (block.type === BlockContentType.Container) {
     return (
       <div
         style={
-          activeId === id && showOutline ? withOutlineStyle : component.style
+          activeBlockId === id && showOutline ? withOutlineStyle : block.style
         }
       >
-        {component.children.map((child) => (
-          <ComponentsPreviewTree
+        {block.children.map((child) => (
+          <BlocksPreviewTree
             showOutline={showOutline}
             data={data}
-            activeId={activeId}
+            activeBlockId={activeBlockId}
             key={child}
             id={child}
-            components={components}
+            blocks={blocks}
           />
         ))}
       </div>

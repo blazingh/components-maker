@@ -1,43 +1,38 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, ArrowRight, Dot } from "lucide-react";
-import {
-  ComponentContentType,
-  ComponentsTree,
-  Settings,
-  SettingsUtils,
-} from "@/types/types";
+import { BlockContentType, BlocksTree } from "@/types/types";
 
-interface ComponentsFileTreeProps {
-  components: ComponentsTree;
-  activeId: string;
+interface BlocksFileTreeProps {
+  blocks: BlocksTree;
+  activeBlockId: string;
   id: string;
-  setActiveId: (id: string) => void;
+  setActiveBlockId: (id: string) => void;
 }
 
-export function ComponentsFileTree({
-  components,
+export function BlocksFileTree({
+  blocks,
   id,
-  activeId,
-  setActiveId,
-}: ComponentsFileTreeProps) {
+  activeBlockId,
+  setActiveBlockId,
+}: BlocksFileTreeProps) {
   const [open, setOpen] = React.useState(false);
 
-  const component = components[id];
+  const block = blocks[id];
 
-  if (!component) return null;
+  if (!block) return null;
 
   // check if the component is a container type
-  const isContainer = component.type === ComponentContentType.Container;
+  const isContainer = block.type === BlockContentType.Container;
 
-  const hasChildren = isContainer && component.children.length > 0;
+  const hasChildren = isContainer && block.children.length > 0;
 
   return (
     <div className="relative border-l border-gray-200 w-full">
       <div className="flex items-center bg-secondary">
         <Button
           className="px-0 w-6 rounded-none"
-          variant={activeId === id ? "default" : "secondary"}
+          variant={activeBlockId === id ? "default" : "secondary"}
           onClick={() => hasChildren && setOpen((prev) => !prev)}
         >
           {!hasChildren ? (
@@ -50,21 +45,21 @@ export function ComponentsFileTree({
         </Button>
         <Button
           className="rounded-none px-2 pl-1 w-full justify-start"
-          variant={activeId === id ? "default" : "secondary"}
-          onClick={() => setActiveId(id === activeId ? "o" : id)}
+          variant={activeBlockId === id ? "default" : "secondary"}
+          onClick={() => setActiveBlockId(id === activeBlockId ? "o" : id)}
         >
-          {component.name}
+          {block.name}
         </Button>
       </div>
       <div className={`pl-2 w-full  ${open ? "block" : "hidden"}`}>
         {hasChildren &&
-          component.children.map((child) => (
-            <ComponentsFileTree
+          block.children.map((child) => (
+            <BlocksFileTree
               key={child}
               id={child}
-              components={components}
-              activeId={activeId}
-              setActiveId={setActiveId}
+              blocks={blocks}
+              activeBlockId={activeBlockId}
+              setActiveBlockId={setActiveBlockId}
             />
           ))}
       </div>

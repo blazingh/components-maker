@@ -1,8 +1,7 @@
 "use client";
 import VersionEditor from "@/hooks/versionEditor";
 import { DtoComponentItem, DtoVersionItem } from "@/types/types";
-import { useState } from "react";
-import { ComponentsFileTree } from "./componentsFileTree";
+import { BlocksFileTree } from "./componentsFileTree";
 import ComponentsPreviewTree from "./componentsPreviewTree";
 import ComponentsEditBar from "./componentsEditBar";
 import ComponentEditSettings from "./componentEditSettings";
@@ -48,11 +47,11 @@ export default function ComponentEditPage({
         />
         <Label className="p-2">Component Blocks Tree</Label>
         <div className="flex flex-col h-full overflow-y-scroll">
-          <ComponentsFileTree
-            components={blocks}
+          <BlocksFileTree
+            blocks={blocks}
             id={"1"}
-            activeId={settings.activeId}
-            setActiveId={settingsUtils.setActiveId}
+            activeBlockId={settings.activeBlockId}
+            setActiveBlockId={settingsUtils.setActiveBlockId}
           />
         </div>
       </div>
@@ -60,9 +59,9 @@ export default function ComponentEditPage({
       <div className="w-full flex items-center justify-center p-6 bg-zinc-900">
         <ComponentsPreviewTree
           showOutline={settings.showOutline}
-          components={blocks}
+          blocks={blocks}
           id={"1"}
-          activeId={settings.activeId}
+          activeBlockId={settings.activeBlockId}
           data={{
             user_name: "John Doe",
             locale: "en",
@@ -78,8 +77,8 @@ export default function ComponentEditPage({
         style={{ height: "calc(100vh - 3.5rem)" }}
       >
         <ComponentsEditBar
-          components={blocks}
-          activeId={settings.activeId}
+          blocks={blocks}
+          activeBlockId={settings.activeBlockId}
           containerUtils={ContainerUtils}
           textUtils={TextUtils}
         />
