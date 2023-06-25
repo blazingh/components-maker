@@ -1,6 +1,7 @@
 "use client";
 
 import { useToast } from "@/components/ui/use-toast";
+import { initialVersionData } from "@/constants/version";
 import supabase from "@/lib/supabase";
 import {
   BlockContentType,
@@ -55,7 +56,7 @@ export default function VersionEditor({
   );
 
   const [blocks, setBlocks] = useState<BlocksTree>(
-    (selectedVersion?.data as BlocksTree) || {}
+    (selectedVersion?.data as BlocksTree) || initialVersionData
   );
 
   const [settings, setSettings] = useState<Settings>({
@@ -113,7 +114,7 @@ export default function VersionEditor({
         .insert({
           component: component.id,
           version_name: versionName,
-          data: copyVersion ? copyVersion.data : {},
+          data: copyVersion ? copyVersion.data : initialVersionData,
         })
         .select();
 

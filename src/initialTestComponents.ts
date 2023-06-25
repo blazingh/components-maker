@@ -1,11 +1,11 @@
-import { ComponentContentType, ComponentsTree } from "./types/types";
+import { BlockContentType, BlocksTree } from "./types/types";
 
 // Define the initial state of components
-export const initialComponents: ComponentsTree = {
+export const initialComponents: BlocksTree = {
   1: {
     id: "1",
     name: "root",
-    type: ComponentContentType.Container,
+    type: BlockContentType.Container,
     style: {
       width: "500px",
       height: "500px",
@@ -17,7 +17,7 @@ export const initialComponents: ComponentsTree = {
   2: {
     id: "2",
     name: "header",
-    type: ComponentContentType.Container,
+    type: BlockContentType.Container,
     style: {
       width: "50px",
       height: "50px",
@@ -28,7 +28,7 @@ export const initialComponents: ComponentsTree = {
   },
   3: {
     id: "3",
-    type: ComponentContentType.Container,
+    type: BlockContentType.Container,
     name: "logo",
     style: {
       backgroundColor: "#4a4a4a",
@@ -38,7 +38,7 @@ export const initialComponents: ComponentsTree = {
   },
   4: {
     id: "4",
-    type: ComponentContentType.Container,
+    type: BlockContentType.Container,
     name: "logo",
     style: {
       width: "50px",
@@ -50,7 +50,7 @@ export const initialComponents: ComponentsTree = {
   },
   5: {
     id: "5",
-    type: ComponentContentType.Container,
+    type: BlockContentType.Container,
     name: "logo",
     style: {
       width: "50px",
