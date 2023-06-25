@@ -55,8 +55,8 @@ export default function ComponentsEditBar({
       <>
         {/* input to change the name of a component */}
         <InputWithLabel
-          label="Component Name"
-          placeholder="Component Name"
+          label="Block Name"
+          placeholder="Block Name"
           type="text"
           value={selectedBlock?.name || ""}
           onChange={(e: any) =>
@@ -138,8 +138,8 @@ export default function ComponentsEditBar({
       <>
         {/* input to change the name of a component */}
         <InputWithLabel
-          label="Component Name"
-          placeholder="Component Name"
+          label="Block Name"
+          placeholder="Block Name"
           type="text"
           value={selectedBlock?.name || ""}
           onChange={(e) =>
