@@ -74,19 +74,19 @@ export default function VersionEditor({
   }, [selectedVersion]);
 
   const versionUtils: VersionUtils = {
-    addVersion: async (versionNumber: number, fromVersionId?: number) => {
+    addVersion: async (versionNumber: number, duplicate?: boolean) => {
       let copyVersion: DtoVersionItem | undefined;
 
-      if (fromVersionId)
+      if (duplicate)
         copyVersion = componentVersions.find(
-          (v) => v.id === fromVersionId
+          (v) => v.id === settings.selectedVersion
         ) as DtoVersionItem;
 
       const { data, error } = await supabase
         .from("version")
         .insert({
           component: component.id,
-          number: versionNumber,
+          version: versionNumber,
           data: copyVersion ? copyVersion.data : {},
         })
         .select();

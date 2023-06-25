@@ -6,6 +6,7 @@ import { ComponentsFileTree } from "./componentsFileTree";
 import ComponentsPreviewTree from "./componentsPreviewTree";
 import ComponentsEditBar from "./componentsEditBar";
 import ComponentEditSettings from "./componentEditSettings";
+import { Label } from "./ui/label";
 
 interface ComponentEditPageProps {
   _component: DtoComponentItem;
@@ -40,6 +41,7 @@ export default function ComponentEditPage({
           settingsUtils={settingsUtils}
           versionUtils={versionUtils}
         />
+        <Label className="p-2">Component Blocks Tree</Label>
         <ComponentsFileTree
           components={blocks}
           id={"1"}

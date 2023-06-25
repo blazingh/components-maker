@@ -77,7 +77,7 @@ export interface Settings {
 }
 
 export interface VersionUtils {
-  addVersion: (versionNumber: number, fromVersionId: number) => Promise<void>;
+  addVersion: (versionNumber: number, duplicati?: boolean) => Promise<void>;
   deleteVersion: () => Promise<void>;
   updateVersionNumber: (
     versionId: number,

@@ -23,6 +23,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { InputWithLabel } from "./inputs/inputWithLabel";
 import { InputSelection } from "./inputs/inputSelection";
 import TooltipButton from "./ui/tooltipButton";
+import { Input } from "./ui/input";
 
 interface ComponentCardSettingsProps {
   component: DtoComponentItem;
@@ -39,11 +40,7 @@ export default function ComponentEditSettings({
   settingsUtils,
   versionUtils,
 }: ComponentCardSettingsProps) {
-  const [saveOtion, setSaveOption] = useState({
-    newVersion: false,
-    versionNumber: 0,
-    versionId: 0,
-  });
+  const [newVersionNumber, setNewVersionNumber] = useState(0);
 
   const versionsProprities = versions?.map((version) => ({
     label: String(version.version),
@@ -76,21 +73,89 @@ export default function ComponentEditSettings({
       <div className="flex flex-col gap-y-2">
         <div className="flex items-center gap-x-2">
           {/* button to duplicate component */}
-          <TooltipButton
-            tooltipText="Duplicate Current Version"
-            className="w-full"
-            onClick={() => { }}
-          >
-            <Copy />
-          </TooltipButton>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-full">
+                <Copy />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium leading-none">
+                    Duplicate Version
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Set a new version number.
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="width">Number</Label>
+                    <Input
+                      id="number"
+                      className="col-span-2 h-8"
+                      type="number"
+                      value={newVersionNumber}
+                      onChange={(e) => {
+                        setNewVersionNumber(parseInt(e.target.value));
+                      }}
+                    />
+                  </div>
+                  <div className="flex w-full justify-end mt-4">
+                    <Button
+                      onClick={() => {
+                        versionUtils.addVersion(newVersionNumber, true);
+                      }}
+                    >
+                      Duplicate Version
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
           {/* button to create new version */}
-          <TooltipButton
-            tooltipText="Create New Version"
-            className="w-full"
-            onClick={() => { }}
-          >
-            <Plus />
-          </TooltipButton>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-full">
+                <Plus />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium leading-none">Create Version</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Set a new version number.
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="width">Number</Label>
+                    <Input
+                      id="number"
+                      className="col-span-2 h-8"
+                      type="number"
+                      value={newVersionNumber}
+                      onChange={(e) => {
+                        setNewVersionNumber(parseInt(e.target.value));
+                      }}
+                    />
+                  </div>
+                  <div className="flex w-full justify-end mt-4">
+                    <Button
+                      onClick={() => {
+                        versionUtils.addVersion(newVersionNumber);
+                      }}
+                    >
+                      Create Version
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="flex items-center gap-x-2">
           {/* button to delete component */}
@@ -116,74 +181,6 @@ export default function ComponentEditSettings({
           </TooltipButton>
         </div>
       </div>
-
-      <Popover>
-        <PopoverTrigger asChild>
-          <MoreVerticalIcon className="w-6 h-6" />
-        </PopoverTrigger>
-        <PopoverContent>
-          <div className="flex flex-col gap-y-2 p-2">
-            <Dialog>
-              <DialogTrigger>
-                <Button className="w-full">Save</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Save version</DialogTitle>
-                </DialogHeader>
-                <div className="flex flex-col gap-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="version-mode"
-                      checked={saveOtion.newVersion}
-                      onCheckedChange={(checked) => {
-                        setSaveOption({ ...saveOtion, newVersion: checked });
-                      }}
-                    />
-                    <Label htmlFor="version-mode">Save As New Version</Label>
-                  </div>
-                  {saveOtion.newVersion ? (
-                    <InputWithLabel
-                      placeholder="Version Number"
-                      label="Version Number"
-                      type="number"
-                      value={saveOtion.versionNumber}
-                      onChange={(e) => {
-                        setSaveOption({
-                          ...saveOtion,
-                          versionNumber: parseInt(e.target.value),
-                        });
-                      }}
-                    />
-                  ) : (
-                    <InputSelection
-                      label="Version"
-                      value={
-                        String(saveOtion.versionId) || String(versions?.[0].id)
-                      }
-                      onValueChange={(value) => {
-                        setSaveOption({
-                          ...saveOtion,
-                          versionId: value,
-                        });
-                      }}
-                      proprities={
-                        versions?.map((version) => ({
-                          label: String(version.version),
-                          value: String(version.id),
-                        })) || []
-                      }
-                    />
-                  )}
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild>role=button</DialogClose>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </PopoverContent>
-      </Popover>
     </div>
   );
 }
