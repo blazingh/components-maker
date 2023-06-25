@@ -34,7 +34,6 @@ interface VersionEditorReturn {
   settingsUtils: SettingsUtils;
 }
 
-
 export default function VersionEditor({
   _component,
   _componentversions,
@@ -152,11 +151,11 @@ export default function VersionEditor({
       }
     },
 
-    updateVersionData: async (versionId: number, data: ComponentsTree) => {
+    updateVersionData: async () => {
       const { error } = await supabase
         .from("version")
-        .update({ data })
-        .eq("id", versionId);
+        .update({ data: blocks })
+        .eq("id", settings.selectedVersion);
 
       if (error)
         toast({
@@ -166,7 +165,8 @@ export default function VersionEditor({
       else {
         setComponentversions(
           componentversions.map((v) => {
-            if (v.id === versionId) return { ...v, data };
+            if (v.id === settings.selectedVersion)
+              return { ...v, data: blocks };
             else return v;
           })
         );
@@ -186,7 +186,14 @@ export default function VersionEditor({
       setSettings({ ...settings, activeId: id });
     },
     setSelectedVersion: (id: number) => {
-      setSettings({ ...settings, selectedVersion: id });
+      const version = componentversions.find(
+        (v) => v.id === id
+      ) as DtoVersionItem;
+      setSettings({
+        ...settings,
+        selectedVersion: id,
+        activeId: Object.keys(version.data)[0],
+      });
     },
   };
 

@@ -27,20 +27,21 @@ import { Trash } from "lucide-react";
 import { InputWithLabel } from "./inputs/inputWithLabel";
 
 export default function ComponentsEditBar({
-  selectedComponent,
   activeId,
   components,
   containerUtils,
   textUtils,
 }: {
-  selectedComponent: ComponentItem | undefined;
   activeId: string;
   components: ComponentsTree;
   containerUtils: ContainerUtils;
   textUtils: TextUtils;
 }) {
+  // get the selected component
+  const selectedComponent = components[activeId];
+
   // if no component is selected, return null
-  if (!selectedComponent) return null;
+  if (!selectedComponent) return <div>No component selected </div>;
 
   const addComponent = (parent: string, type: ComponentContentType) => {
     if (type === ComponentContentType.Text) textUtils.addText(parent);

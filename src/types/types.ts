@@ -83,7 +83,7 @@ export interface VersionUtils {
     versionId: number,
     versionNumber: number
   ) => Promise<void>;
-  updateVersionData: (versionId: number, data: ComponentsTree) => Promise<void>;
+  updateVersionData: () => Promise<void>;
 }
 
 export interface SettingsUtils {

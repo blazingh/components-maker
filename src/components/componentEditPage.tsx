@@ -28,11 +28,9 @@ export default function ComponentEditPage({
     _componentversions: versions,
   });
 
-  const [components, setComponents] = useState(blocks);
-
   return (
     <div className="flex w-full h-full">
-      <div className="flex flex-col bg-zinc-800 pt-4 w-52">
+      <div className="flex flex-col bg-zinc-800 w-80">
         <ComponentEditSettings
           component={component}
           versions={versions}
@@ -41,7 +39,7 @@ export default function ComponentEditPage({
           versionUtils={versionUtils}
         />
         <ComponentsFileTree
-          components={components}
+          components={blocks}
           id={"1"}
           activeId={settings.activeId}
           setActiveId={settingsUtils.setActiveId}
@@ -51,7 +49,7 @@ export default function ComponentEditPage({
       <div className="w-full flex items-center justify-center p-6 bg-zinc-900">
         <ComponentsPreviewTree
           showOutline={settings.showOutline}
-          components={components}
+          components={blocks}
           id={"1"}
           activeId={settings.activeId}
           data={{
@@ -69,8 +67,7 @@ export default function ComponentEditPage({
         style={{ height: "calc(100vh - 3.5rem)" }}
       >
         <ComponentsEditBar
-          components={components}
-          selectedComponent={components[settings.activeId]}
+          components={blocks}
           activeId={settings.activeId}
           containerUtils={ContainerUtils}
           textUtils={TextUtils}
