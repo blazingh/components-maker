@@ -26,6 +26,7 @@ export default function ComponentEditPage({
     settingsUtils,
     versionUtils,
     componentUtils,
+    selectedVersion,
   } = VersionEditor({
     _component: _component,
     _componentVersions: _componentVersions,
@@ -38,6 +39,7 @@ export default function ComponentEditPage({
         style={{ height: "calc(100vh - 3.5rem)" }}
       >
         <ComponentEditSettings
+          selectedVersion={selectedVersion}
           component={component}
           versions={componentVersions}
           settings={settings}

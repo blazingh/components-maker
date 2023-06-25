@@ -80,12 +80,10 @@ export interface ComponentUtils {
 }
 
 export interface VersionUtils {
-  addVersion: (versionNumber: number, duplicati?: boolean) => Promise<void>;
+  addVersion: (versionName: string, duplicati?: boolean) => Promise<void>;
   deleteVersion: () => Promise<void>;
-  updateVersionNumber: (
-    versionId: number,
-    versionNumber: number
-  ) => Promise<void>;
+  updateVersionNumber: (versionNumber: number) => Promise<void>;
+  updateVersionName: (versionName: string) => Promise<void>;
   updateVersionData: () => Promise<void>;
 }
 
@@ -132,6 +130,7 @@ export interface DtoComponentItem {
 export interface DtoVersionItem {
   id: number;
   version: number;
+  version_name: string;
   component: number;
   data: BlocksTree;
 }

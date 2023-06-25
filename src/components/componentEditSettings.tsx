@@ -7,7 +7,7 @@ import {
   VersionUtils,
 } from "@/types/types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Copy, Plus, Save, Trash } from "lucide-react";
+import { Copy, Pen, Plus, Save, Trash } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Label } from "./ui/label";
@@ -15,6 +15,18 @@ import { InputWithLabel } from "./inputs/inputWithLabel";
 import { InputSelection } from "./inputs/inputSelection";
 import TooltipButton from "./ui/tooltipButton";
 import { Input } from "./ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
+import { PopoverClose } from "@radix-ui/react-popover";
 
 interface ComponentCardSettingsProps {
   component: DtoComponentItem;
@@ -23,6 +35,7 @@ interface ComponentCardSettingsProps {
   settingsUtils: SettingsUtils;
   versionUtils: VersionUtils;
   componentUtils: ComponentUtils;
+  selectedVersion: DtoVersionItem;
 }
 
 export default function ComponentEditSettings({
@@ -32,13 +45,14 @@ export default function ComponentEditSettings({
   settingsUtils,
   versionUtils,
   componentUtils,
+  selectedVersion,
 }: ComponentCardSettingsProps) {
-  const [newVersionNumber, setNewVersionNumber] = useState(0);
+  const [newVersionName, setNewVersionName] = useState("");
 
   const [newComponentName, setNewComponentName] = useState(component.name);
 
   const versionsProprities = versions?.map((version) => ({
-    label: String(version.version),
+    label: version.version_name,
     value: String(version.id),
   }));
 
@@ -58,21 +72,27 @@ export default function ComponentEditSettings({
         }}
       />
 
-      {/* input to select component version or create new version */}
-      <InputSelection
-        label="Selected Version"
-        value={String(settings.selectedVersion)}
-        onValueChange={(value) => {
-          settingsUtils.setSelectedVersion(parseInt(value));
-        }}
-        proprities={versionsProprities || []}
-      />
+      <div className="flex flex-row gap-x-2 items-end">
+        {/* input to select component version or create new version */}
+        <InputSelection
+          label="Selected Version"
+          value={String(settings.selectedVersion)}
+          onValueChange={(value) => {
+            settingsUtils.setSelectedVersion(parseInt(value));
+          }}
+          proprities={versionsProprities || []}
+        />
+      </div>
 
       {/* buttons to delete, save, create or duplicate component */}
       <div className="flex flex-col gap-y-2">
         <div className="flex items-center gap-x-2">
           {/* button to duplicate component */}
-          <Popover>
+          <Popover
+            onOpenChange={(isOpen) => {
+              if (isOpen) setNewVersionName(selectedVersion.version_name);
+            }}
+          >
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
                 <Copy />
@@ -85,37 +105,89 @@ export default function ComponentEditSettings({
                     Duplicate Version
                   </h4>
                   <p className="text-sm text-muted-foreground">
-                    Set a new version number.
+                    Set a new version name.
                   </p>
                 </div>
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="width">Number</Label>
+                    <Label htmlFor="width">Name</Label>
                     <Input
                       id="number"
                       className="col-span-2 h-8"
-                      type="number"
-                      value={newVersionNumber}
+                      value={newVersionName}
                       onChange={(e) => {
-                        setNewVersionNumber(parseInt(e.target.value));
+                        setNewVersionName(e.target.value);
                       }}
                     />
                   </div>
                   <div className="flex w-full justify-end mt-4">
-                    <Button
-                      onClick={() => {
-                        versionUtils.addVersion(newVersionNumber, true);
-                      }}
-                    >
-                      Duplicate Version
-                    </Button>
+                    <PopoverClose>
+                      <Button
+                        onClick={() => {
+                          versionUtils.addVersion(newVersionName, true);
+                        }}
+                      >
+                        Duplicate Version
+                      </Button>
+                    </PopoverClose>
                   </div>
                 </div>
               </div>
             </PopoverContent>
           </Popover>
+          {/* button to edit version */}
+          <Popover
+            onOpenChange={(isOpen) => {
+              if (isOpen) setNewVersionName(selectedVersion.version_name);
+            }}
+          >
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-full">
+                <Pen />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium leading-none">Edit Version</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Set a new version name.
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    <Label htmlFor="width">Name</Label>
+                    <Input
+                      id="number"
+                      className="col-span-2 h-8"
+                      value={newVersionName}
+                      onChange={(e) => {
+                        setNewVersionName(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="flex w-full justify-end mt-4">
+                    <PopoverClose>
+                      <Button
+                        onClick={() => {
+                          versionUtils.updateVersionName(newVersionName);
+                        }}
+                      >
+                        Edit Version
+                      </Button>
+                    </PopoverClose>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+
           {/* button to create new version */}
-          <Popover>
+          <Popover
+            onOpenChange={(isOpen) => {
+              if (isOpen) setNewVersionName("");
+            }}
+          >
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full">
                 <Plus />
@@ -126,30 +198,31 @@ export default function ComponentEditSettings({
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Create Version</h4>
                   <p className="text-sm text-muted-foreground">
-                    Set a new version number.
+                    Set a new version name.
                   </p>
                 </div>
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="width">Number</Label>
+                    <Label htmlFor="width">Name</Label>
                     <Input
                       id="number"
                       className="col-span-2 h-8"
-                      type="number"
-                      value={newVersionNumber}
+                      value={newVersionName}
                       onChange={(e) => {
-                        setNewVersionNumber(parseInt(e.target.value));
+                        setNewVersionName(e.target.value);
                       }}
                     />
                   </div>
                   <div className="flex w-full justify-end mt-4">
-                    <Button
-                      onClick={() => {
-                        versionUtils.addVersion(newVersionNumber);
-                      }}
-                    >
-                      Create Version
-                    </Button>
+                    <PopoverClose>
+                      <Button
+                        onClick={() => {
+                          versionUtils.addVersion(newVersionName);
+                        }}
+                      >
+                        Create Version
+                      </Button>
+                    </PopoverClose>
                   </div>
                 </div>
               </div>
@@ -157,17 +230,40 @@ export default function ComponentEditSettings({
           </Popover>
         </div>
         <div className="flex items-center gap-x-2">
-          {/* button to delete component */}
-          <TooltipButton
-            variant="destructive"
-            tooltipText="Delete Current Version"
-            onClick={() => {
-              versionUtils.deleteVersion();
-            }}
-            className="w-full"
-          >
-            <Trash />
-          </TooltipButton>
+          {/* button with dialog to delete component */}
+          <AlertDialog>
+            <AlertDialogTrigger asChild className="w-full">
+              <Button
+                variant="destructive"
+                onClick={() => { }}
+                className="w-full"
+              >
+                <Trash />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  selected version.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      versionUtils.deleteVersion();
+                    }}
+                  >
+                    Delete Version
+                  </Button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           {/* button to save component */}
           <TooltipButton
             tooltipText="Save Current Version"

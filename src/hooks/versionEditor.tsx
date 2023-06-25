@@ -36,6 +36,7 @@ interface VersionEditorReturn {
   settingsUtils: SettingsUtils;
   component: DtoComponentItem;
   componentVersions: DtoVersionItem[];
+  selectedVersion: DtoVersionItem;
 }
 
 export default function VersionEditor({
@@ -99,7 +100,7 @@ export default function VersionEditor({
   };
 
   const versionUtils: VersionUtils = {
-    addVersion: async (versionNumber: number, duplicate?: boolean) => {
+    addVersion: async (versionName: string, duplicate?: boolean) => {
       let copyVersion: DtoVersionItem | undefined;
 
       if (duplicate)
@@ -111,7 +112,7 @@ export default function VersionEditor({
         .from("version")
         .insert({
           component: component.id,
-          version: versionNumber,
+          version_name: versionName,
           data: copyVersion ? copyVersion.data : {},
         })
         .select();
@@ -159,11 +160,11 @@ export default function VersionEditor({
       }
     },
 
-    updateVersionNumber: async (versionId: number, versionNumber: number) => {
+    updateVersionNumber: async (versionNumber: number) => {
       const { data, error } = await supabase
         .from("version")
         .update({ number: versionNumber })
-        .eq("id", versionId)
+        .eq("id", settings.selectedVersion)
         .select();
 
       if (error)
@@ -175,12 +176,38 @@ export default function VersionEditor({
       else if (data) {
         setBlockVersions(
           componentVersions.map((v) => {
-            if (v.id === versionId) return data[0];
+            if (v.id === settings.selectedVersion) return data[0];
             else return v;
           })
         );
         toast({
           description: "Version number updated",
+        });
+      }
+    },
+
+    updateVersionName: async (versionName: string) => {
+      const { data, error } = await supabase
+        .from("version")
+        .update({ version_name: versionName })
+        .eq("id", settings.selectedVersion)
+        .select();
+
+      if (error)
+        toast({
+          variant: "destructive",
+          title: "Error updating version name",
+          description: error.message,
+        });
+      else if (data) {
+        setBlockVersions(
+          componentVersions.map((v) => {
+            if (v.id === settings.selectedVersion) return data[0];
+            else return v;
+          })
+        );
+        toast({
+          description: "Version name updated",
         });
       }
     },
@@ -450,6 +477,7 @@ export default function VersionEditor({
     ContainerUtils,
     TextUtils,
     componentUtils,
+    selectedVersion,
     versionUtils,
     settings,
     settingsUtils,

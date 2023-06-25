@@ -8,6 +8,7 @@ interface InputWithLabelProps {
   type: string;
   onChange: (value: any) => void;
   onBlur?: (value: any) => void;
+  onFocus?: (value: any) => void;
 }
 
 export function InputWithLabel({
@@ -15,6 +16,7 @@ export function InputWithLabel({
   value,
   onChange,
   onBlur,
+  onFocus,
   placeholder,
   type,
 }: InputWithLabelProps) {
@@ -29,6 +31,7 @@ export function InputWithLabel({
         value={value}
         onChange={onChange}
         onBlur={onBlur || onChange}
+        onFocus={onFocus || onChange}
       />
     </div>
   );
