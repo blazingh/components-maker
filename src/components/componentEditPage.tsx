@@ -34,7 +34,10 @@ export default function ComponentEditPage({
 
   return (
     <div className="flex w-full h-full">
-      <div className="flex flex-col bg-zinc-800 w-80">
+      <div
+        className="flex flex-col bg-zinc-800 w-80"
+        style={{ height: "calc(100vh - 3.5rem)" }}
+      >
         <ComponentEditSettings
           component={component}
           versions={componentVersions}
@@ -44,12 +47,14 @@ export default function ComponentEditPage({
           componentUtils={componentUtils}
         />
         <Label className="p-2">Component Blocks Tree</Label>
-        <ComponentsFileTree
-          components={blocks}
-          id={"1"}
-          activeId={settings.activeId}
-          setActiveId={settingsUtils.setActiveId}
-        />
+        <div className="flex flex-col h-full overflow-y-scroll">
+          <ComponentsFileTree
+            components={blocks}
+            id={"1"}
+            activeId={settings.activeId}
+            setActiveId={settingsUtils.setActiveId}
+          />
+        </div>
       </div>
 
       <div className="w-full flex items-center justify-center p-6 bg-zinc-900">
