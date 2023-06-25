@@ -97,7 +97,9 @@ export default function ComponentEditSettings({
           <TooltipButton
             variant="destructive"
             tooltipText="Delete Current Version"
-            onClick={() => { }}
+            onClick={() => {
+              versionUtils.deleteVersion();
+            }}
             className="w-full"
           >
             <Trash />

@@ -29,8 +29,8 @@ export default async function Demo({
 
   return (
     <ComponentEditPage
-      component={component.data as DtoComponentItem}
-      versions={componentVersions.data as DtoVersionItem[]}
+      _component={component.data as DtoComponentItem}
+      _componentVersions={componentVersions.data as DtoVersionItem[]}
     />
   );
 }

@@ -8,24 +8,26 @@ import ComponentsEditBar from "./componentsEditBar";
 import ComponentEditSettings from "./componentEditSettings";
 
 interface ComponentEditPageProps {
-  component: DtoComponentItem;
-  versions: DtoVersionItem[];
+  _component: DtoComponentItem;
+  _componentVersions: DtoVersionItem[];
 }
 
 export default function ComponentEditPage({
-  component,
-  versions,
+  _component,
+  _componentVersions,
 }: ComponentEditPageProps) {
   const {
     blocks,
     ContainerUtils,
+    component,
+    componentVersions,
     TextUtils,
     settings,
     settingsUtils,
     versionUtils,
   } = VersionEditor({
-    _component: component,
-    _componentversions: versions,
+    _component: _component,
+    _componentVersions: _componentVersions,
   });
 
   return (
@@ -33,7 +35,7 @@ export default function ComponentEditPage({
       <div className="flex flex-col bg-zinc-800 w-80">
         <ComponentEditSettings
           component={component}
-          versions={versions}
+          versions={componentVersions}
           settings={settings}
           settingsUtils={settingsUtils}
           versionUtils={versionUtils}

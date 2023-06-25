@@ -22,7 +22,7 @@ import { useEffect, useState } from "react";
 
 interface VersionEditorProps {
   _component: DtoComponentItem;
-  _componentversions: DtoVersionItem[];
+  _componentVersions: DtoVersionItem[];
 }
 
 interface VersionEditorReturn {
@@ -32,40 +32,42 @@ interface VersionEditorReturn {
   versionUtils: VersionUtils;
   settings: Settings;
   settingsUtils: SettingsUtils;
+  component: DtoComponentItem;
+  componentVersions: DtoVersionItem[];
 }
 
 export default function VersionEditor({
   _component,
-  _componentversions,
+  _componentVersions,
 }: VersionEditorProps): VersionEditorReturn {
   const { toast } = useToast();
 
   const [component, setComponent] = useState<DtoComponentItem>(_component);
 
-  const [componentversions, setComponentversions] =
-    useState<DtoVersionItem[]>(_componentversions);
+  const [componentVersions, setComponentVersions] =
+    useState<DtoVersionItem[]>(_componentVersions);
 
   const [selectedVersion, setSelectedVersion] = useState<DtoVersionItem>(
-    _componentversions[0]
+    _componentVersions[0]
   );
 
   const [blocks, setBlocks] = useState<ComponentsTree>(
-    selectedVersion.data as ComponentsTree
+    (selectedVersion?.data as ComponentsTree) || {}
   );
 
   const [settings, setSettings] = useState<Settings>({
     showOutline: true,
-    activeId: Object.keys(_componentversions[0].data)[0],
-    selectedVersion: _componentversions[0].id,
+    activeId: Object.keys(componentVersions[0].data)[0],
+    selectedVersion: componentVersions[0].id,
   });
 
   useEffect(() => {
     setSelectedVersion(
-      componentversions.find(
+      (componentVersions.find(
         (v) => v.id === settings.selectedVersion
-      ) as DtoVersionItem
+      ) as DtoVersionItem) || componentVersions[0]
     );
-  }, [settings.selectedVersion, componentversions]);
+  }, [settings.selectedVersion, componentVersions]);
 
   useEffect(() => {
     setBlocks(selectedVersion.data as ComponentsTree);
@@ -76,7 +78,7 @@ export default function VersionEditor({
       let copyVersion: DtoVersionItem | undefined;
 
       if (fromVersionId)
-        copyVersion = componentversions.find(
+        copyVersion = componentVersions.find(
           (v) => v.id === fromVersionId
         ) as DtoVersionItem;
 
@@ -95,7 +97,7 @@ export default function VersionEditor({
           description: "Error creating version",
         });
       else if (data) {
-        setComponentversions([...componentversions, data[0]]);
+        setComponentVersions([...componentVersions, data[0]]);
         setSettings({ ...settings, selectedVersion: data[0].id });
         toast({
           description: "Version created",
@@ -103,11 +105,11 @@ export default function VersionEditor({
       }
     },
 
-    deleteVersion: async (versionId: number) => {
+    deleteVersion: async () => {
       const { data, error } = await supabase
         .from("version")
         .delete()
-        .eq("id", versionId)
+        .eq("id", settings.selectedVersion)
         .select();
 
       if (error)
@@ -116,10 +118,14 @@ export default function VersionEditor({
           description: "Error deleting version",
         });
       else if (data) {
-        setComponentversions(
-          componentversions.filter((v) => v.id !== versionId)
+        const newComponentVersions = componentVersions.filter(
+          (v) => v.id !== settings.selectedVersion
         );
-        setSettings({ ...settings, selectedVersion: componentversions[0].id });
+        setComponentVersions(newComponentVersions);
+        setSettings({
+          ...settings,
+          selectedVersion: newComponentVersions[0].id,
+        });
         toast({
           description: "Version deleted",
         });
@@ -139,8 +145,8 @@ export default function VersionEditor({
           description: "Error updating version number",
         });
       else if (data) {
-        setComponentversions(
-          componentversions.map((v) => {
+        setComponentVersions(
+          componentVersions.map((v) => {
             if (v.id === versionId) return data[0];
             else return v;
           })
@@ -163,8 +169,8 @@ export default function VersionEditor({
           description: "Error updating version data",
         });
       else {
-        setComponentversions(
-          componentversions.map((v) => {
+        setComponentVersions(
+          componentVersions.map((v) => {
             if (v.id === settings.selectedVersion)
               return { ...v, data: blocks };
             else return v;
@@ -186,7 +192,7 @@ export default function VersionEditor({
       setSettings({ ...settings, activeId: id });
     },
     setSelectedVersion: (id: number) => {
-      const version = componentversions.find(
+      const version = componentVersions.find(
         (v) => v.id === id
       ) as DtoVersionItem;
       setSettings({
@@ -232,6 +238,8 @@ export default function VersionEditor({
       }
 
       const parent = blocks[component.parent] as ContainerComponentItem;
+
+      if (!parent) return;
 
       // Delete the component from its parent's children array
       const index = parent.children.indexOf(id);
@@ -415,5 +423,7 @@ export default function VersionEditor({
     versionUtils,
     settings,
     settingsUtils,
+    component,
+    componentVersions,
   };
 }
