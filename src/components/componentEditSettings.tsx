@@ -1,4 +1,5 @@
 import {
+  ComponentUtils,
   DtoComponentItem,
   DtoVersionItem,
   Settings,
@@ -31,6 +32,7 @@ interface ComponentCardSettingsProps {
   settings: Settings;
   settingsUtils: SettingsUtils;
   versionUtils: VersionUtils;
+  componentUtils: ComponentUtils;
 }
 
 export default function ComponentEditSettings({
@@ -39,8 +41,11 @@ export default function ComponentEditSettings({
   settings,
   settingsUtils,
   versionUtils,
+  componentUtils,
 }: ComponentCardSettingsProps) {
   const [newVersionNumber, setNewVersionNumber] = useState(0);
+
+  const [newComponentName, setNewComponentName] = useState(component.name);
 
   const versionsProprities = versions?.map((version) => ({
     label: String(version.version),
@@ -54,9 +59,13 @@ export default function ComponentEditSettings({
         placeholder="Component Name"
         type="text"
         label="Component Name"
-        value={component.name}
-        onChange={(e) => { }}
-        onBlur={(e) => { }}
+        value={newComponentName}
+        onChange={(e) => {
+          setNewComponentName(e.target.value);
+        }}
+        onBlur={(e) => {
+          componentUtils.renameComponent(e.target.value);
+        }}
       />
 
       {/* input to select component version or create new version */}

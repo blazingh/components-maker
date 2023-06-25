@@ -26,6 +26,7 @@ export default function ComponentEditPage({
     settings,
     settingsUtils,
     versionUtils,
+    componentUtils,
   } = VersionEditor({
     _component: _component,
     _componentVersions: _componentVersions,
@@ -40,6 +41,7 @@ export default function ComponentEditPage({
           settings={settings}
           settingsUtils={settingsUtils}
           versionUtils={versionUtils}
+          componentUtils={componentUtils}
         />
         <Label className="p-2">Component Blocks Tree</Label>
         <ComponentsFileTree

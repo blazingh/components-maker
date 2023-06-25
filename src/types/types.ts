@@ -76,6 +76,10 @@ export interface Settings {
   selectedVersion: number;
 }
 
+export interface ComponentUtils {
+  renameComponent: (name: string) => void;
+}
+
 export interface VersionUtils {
   addVersion: (versionNumber: number, duplicati?: boolean) => Promise<void>;
   deleteVersion: () => Promise<void>;

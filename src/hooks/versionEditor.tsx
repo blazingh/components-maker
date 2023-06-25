@@ -6,6 +6,7 @@ import {
   ComponentContentType,
   ComponentTextType,
   ComponentTextWrapper,
+  ComponentUtils,
   ComponentsTree,
   ContainerComponentItem,
   ContainerUtils,
@@ -29,6 +30,7 @@ interface VersionEditorReturn {
   blocks: ComponentsTree;
   ContainerUtils: ContainerUtils;
   TextUtils: TextUtils;
+  componentUtils: ComponentUtils;
   versionUtils: VersionUtils;
   settings: Settings;
   settingsUtils: SettingsUtils;
@@ -73,6 +75,29 @@ export default function VersionEditor({
     setBlocks(selectedVersion.data as ComponentsTree);
   }, [selectedVersion]);
 
+  const componentUtils: ComponentUtils = {
+    renameComponent: async (name: string) => {
+      const { data, error } = await supabase
+        .from("component")
+        .update({ name })
+        .eq("id", component.id)
+        .select();
+
+      if (error)
+        toast({
+          variant: "destructive",
+          title: "Error renaming component",
+          description: error.message,
+        });
+      else if (data) {
+        setComponent({ ...component, name });
+        toast({
+          description: "Component renamed",
+        });
+      }
+    },
+  };
+
   const versionUtils: VersionUtils = {
     addVersion: async (versionNumber: number, duplicate?: boolean) => {
       let copyVersion: DtoVersionItem | undefined;
@@ -94,7 +119,8 @@ export default function VersionEditor({
       if (error)
         toast({
           variant: "destructive",
-          description: "Error creating version",
+          title: "Error creating version",
+          description: error.message,
         });
       else if (data) {
         setComponentVersions([...componentVersions, data[0]]);
@@ -115,7 +141,8 @@ export default function VersionEditor({
       if (error)
         toast({
           variant: "destructive",
-          description: "Error deleting version",
+          title: "Error deleting version",
+          description: error.message,
         });
       else if (data) {
         const newComponentVersions = componentVersions.filter(
@@ -142,7 +169,8 @@ export default function VersionEditor({
       if (error)
         toast({
           variant: "destructive",
-          description: "Error updating version number",
+          title: "Error updating version number",
+          description: error.message,
         });
       else if (data) {
         setComponentVersions(
@@ -166,7 +194,8 @@ export default function VersionEditor({
       if (error)
         toast({
           variant: "destructive",
-          description: "Error updating version data",
+          title: "Error updating version data",
+          description: error.message,
         });
       else {
         setComponentVersions(
@@ -420,6 +449,7 @@ export default function VersionEditor({
     blocks,
     ContainerUtils,
     TextUtils,
+    componentUtils,
     versionUtils,
     settings,
     settingsUtils,
