@@ -10,7 +10,9 @@ import React from "react";
 import {
   BlockContentType,
   BlocksTree,
+  ButtonUtils,
   ContainerUtils,
+  ImageUtils,
   TextUtils,
 } from "@/types/types";
 import Position from "./porpreties/position";
@@ -30,11 +32,15 @@ export default function ComponentsEditBar({
   blocks,
   containerUtils,
   textUtils,
+  imageUtils,
+  buttonUtils,
 }: {
   activeBlockId: string;
   blocks: BlocksTree;
   containerUtils: ContainerUtils;
   textUtils: TextUtils;
+  imageUtils: ImageUtils;
+  buttonUtils: ButtonUtils;
 }) {
   // get the selected component
   const selectedBlock = blocks[activeBlockId];
@@ -44,6 +50,10 @@ export default function ComponentsEditBar({
 
   const addBlock = (parent: string, type: BlockContentType) => {
     if (type === BlockContentType.Text) textUtils.addText(parent);
+
+    if (type === BlockContentType.Image) imageUtils.addImage(parent);
+
+    if (type === BlockContentType.Button) buttonUtils.addButton(parent);
 
     if (type === BlockContentType.Container)
       containerUtils.addContainer(parent);
@@ -72,6 +82,7 @@ export default function ComponentsEditBar({
             <AccordionContent>
               <Content
                 blocks={blocks}
+                imageUtils={imageUtils}
                 selectedBlock={selectedBlock}
                 textUtils={textUtils}
                 addBlock={addBlock}
@@ -132,6 +143,76 @@ export default function ComponentsEditBar({
     );
   }
 
+  // if the selected component is an image component
+  if (selectedBlock?.type === BlockContentType.Image) {
+    return (
+      <>
+        {/* input to change the name of a component */}
+        <InputWithLabel
+          label="Block Name"
+          placeholder="Block Name"
+          type="text"
+          value={selectedBlock?.name || ""}
+          onChange={(e) =>
+            imageUtils.updateImageName(activeBlockId, e.target.value)
+          }
+        />
+
+        <Accordion type="single" collapsible>
+          {/* input to change the content of a component */}
+          <AccordionItem value="Edit Content">
+            <AccordionTrigger>Content</AccordionTrigger>
+            <AccordionContent>
+              <Content
+                blocks={blocks}
+                selectedBlock={selectedBlock}
+                textUtils={textUtils}
+                addBlock={addBlock}
+                imageUtils={imageUtils}
+              />
+            </AccordionContent>
+          </AccordionItem>
+          {/* input to change the size of a component */}
+          <AccordionItem value="Component Size">
+            <AccordionTrigger>Size</AccordionTrigger>
+            <AccordionContent>
+              <Size
+                styles={selectedBlock?.style}
+                setStyles={(atr: any, value: any) =>
+                  imageUtils.updateImageStyle(activeBlockId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
+          {/* input to change the border of a component */}
+          <AccordionItem value="Component Border">
+            <AccordionTrigger>Border</AccordionTrigger>
+            <AccordionContent>
+              <Border
+                styles={selectedBlock?.style}
+                setStyles={(atr: any, value: any) =>
+                  imageUtils.updateImageStyle(activeBlockId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
+          {/* input to change the background of a component */}
+          <AccordionItem value="Component Color">
+            <AccordionTrigger>Background</AccordionTrigger>
+            <AccordionContent>
+              <Background
+                styles={selectedBlock?.style}
+                setStyles={(atr: any, value: any) =>
+                  imageUtils.updateImageStyle(activeBlockId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </>
+    );
+  }
+
   // if the selected component is a container component
   if (selectedBlock?.type === BlockContentType.Container) {
     return (
@@ -154,6 +235,7 @@ export default function ComponentsEditBar({
               <Content
                 blocks={blocks}
                 textUtils={textUtils}
+                imageUtils={imageUtils}
                 selectedBlock={selectedBlock}
                 addBlock={addBlock}
               />

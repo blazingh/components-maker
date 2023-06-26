@@ -7,6 +7,7 @@ import {
   TextBlockType,
   TextBlockWrapper,
 } from "@/types/types";
+import Image from "next/image";
 
 interface CloudComponentRenderProps {
   component: DtoComponentItem;
@@ -65,6 +66,19 @@ export function BlocksRenderTree({ blocks, id, data }: BlockRenderTreeProps) {
       return <h3 style={block.style}>{content}</h3>;
 
     return <p style={block.style}>{content}</p>;
+  }
+
+  // when block is an image
+  if (block.type === BlockContentType.Image) {
+    return (
+      <Image
+        src={block.src}
+        alt={block.alt}
+        width={block.width || 100}
+        height={block.height || 100}
+        style={block.style}
+      />
+    );
   }
 
   // when block is a container

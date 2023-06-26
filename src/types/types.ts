@@ -4,6 +4,7 @@ export enum BlockContentType {
   Key = "Key",
   Image = "Image",
   Component = "Component",
+  Button = "Button",
 }
 
 export enum TextBlockWrapper {
@@ -49,10 +50,18 @@ export interface TextBlockItem extends BlockTreeItem {
   };
 }
 
-export interface ImageBlocktItem extends BlockTreeItem {
+export interface ImageBlockItem extends BlockTreeItem {
   type: BlockContentType.Image;
   src: string;
   alt: string;
+  width: number;
+  height: number;
+}
+
+export interface ButtonBlockItem extends BlockTreeItem {
+  type: BlockContentType.Button;
+  text: string;
+  onClickFunctionKey: string;
 }
 
 export interface ComponentBlockItem extends BlockTreeItem {
@@ -63,8 +72,9 @@ export interface ComponentBlockItem extends BlockTreeItem {
 export type BlockItem =
   | ContainerBlockItem
   | TextBlockItem
-  | ImageBlocktItem
-  | ComponentBlockItem;
+  | ImageBlockItem
+  | ComponentBlockItem
+  | ButtonBlockItem;
 
 export interface BlocksTree {
   [key: string]: BlockItem;
@@ -109,7 +119,6 @@ export interface TextUtils {
   updateTextContent: (id: string, text: string) => void;
   updateTextWrapper: (id: string, wrapper: TextBlockWrapper) => void;
   updateTextStyle: (id: string, attr: string, value: any) => void;
-
   updateTextType: (id: string, type: TextBlockType) => void;
   addLocalizedText: (id: string, locale: Locales) => void;
   removeLocalizedText: (id: string, locale: Locales) => void;
@@ -118,6 +127,24 @@ export interface TextUtils {
     locale: Locales,
     text: string
   ) => void;
+}
+
+export interface ImageUtils {
+  addImage: (parentId: string) => void;
+  removeImage: (id: string) => void;
+  updateImageName: (id: string, name: string) => void;
+  updateImageSrc: (id: string, src: string) => void;
+  updateImageAlt: (id: string, alt: string) => void;
+  updateImageStyle: (id: string, attr: string, value: any) => void;
+}
+
+export interface ButtonUtils {
+  addButton: (parentId: string) => void;
+  removeButton: (id: string) => void;
+  updateButtonName: (id: string, name: string) => void;
+  updateButtonText: (id: string, text: string) => void;
+  updateButtonStyle: (id: string, attr: string, value: any) => void;
+  updateButtonOnClickFunctionKey: (id: string, key: string) => void;
 }
 
 export interface DtoComponentItem {

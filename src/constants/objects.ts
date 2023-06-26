@@ -127,4 +127,12 @@ export const ComponentStylePropritiesOptions = {
     { value: "scroll", label: "Scroll" },
     { value: "auto", label: "Auto" },
   ],
+  objectFit: [
+    { value: "initial", label: "Initial" },
+    { value: "fill", label: "Fill" },
+    { value: "contain", label: "Contain" },
+    { value: "cover", label: "Cover" },
+    { value: "none", label: "None" },
+    { value: "scale-down", label: "Scale Down" },
+  ],
 };

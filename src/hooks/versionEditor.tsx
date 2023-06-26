@@ -6,11 +6,15 @@ import supabase from "@/lib/supabase";
 import {
   BlockContentType,
   BlocksTree,
+  ButtonBlockItem,
+  ButtonUtils,
   ComponentUtils,
   ContainerBlockItem,
   ContainerUtils,
   DtoComponentItem,
   DtoVersionItem,
+  ImageBlockItem,
+  ImageUtils,
   Locales,
   Settings,
   SettingsUtils,
@@ -31,6 +35,8 @@ interface VersionEditorReturn {
   blocks: BlocksTree;
   ContainerUtils: ContainerUtils;
   TextUtils: TextUtils;
+  buttonUtils: ButtonUtils;
+  imageUtils: ImageUtils;
   componentUtils: ComponentUtils;
   versionUtils: VersionUtils;
   settings: Settings;
@@ -474,11 +480,154 @@ export default function VersionEditor({
     },
   };
 
+  const buttonUtils: ButtonUtils = {
+    // Function to add a button component
+    addButton: (parentId: string) => {
+      const newBlock: ButtonBlockItem = {
+        id: String(Math.random()),
+        name: "New Button",
+        type: BlockContentType.Button,
+        text: "New Button",
+        style: {},
+        parent: parentId,
+        onClickFunctionKey: "",
+      };
+
+      const parent = blocks[parentId] as ContainerBlockItem;
+
+      // update the components
+      parent.children.push(newBlock.id);
+
+      // update the state
+      setBlocks({
+        ...blocks,
+        [newBlock.id]: newBlock,
+        [parentId]: parent,
+      });
+    },
+
+    // Function to remove a button component
+    removeButton: (id: string) => {
+      // Delete the component from its parent's children array
+      ContainerUtils.removeChild(id);
+
+      // Delete the component from the components object
+      delete blocks[id];
+
+      // Update the state
+      setBlocks({ ...blocks });
+    },
+
+    // Function to update the name of a button component
+    updateButtonName: (id: string, name: string) => {
+      blocks[id].name = name;
+      setBlocks({ ...blocks });
+    },
+
+    // function to update the style of a button component
+    updateButtonStyle: (id: string, attr: string, value: any) => {
+      blocks[id].style = { ...blocks[id].style, [attr]: value };
+      setBlocks({ ...blocks });
+    },
+
+    // Function to update the text of a button component
+    updateButtonText: (id: string, text: string) => {
+      const block = blocks[id] as ButtonBlockItem;
+      block.text = text;
+
+      // Update the state
+      setBlocks({ ...blocks, [id]: block });
+    },
+
+    // Function to update the onClickFunctionKey of a button component
+    updateButtonOnClickFunctionKey: (id: string, onClickFunctionKey: string) => {
+      const block = blocks[id] as ButtonBlockItem;
+      block.onClickFunctionKey = onClickFunctionKey;
+
+      // Update the state
+      setBlocks({ ...blocks, [id]: block });
+    },
+
+  };
+
+  const imageUtils: ImageUtils = {
+    // Function to add an image component
+    addImage: (parentId: string) => {
+      const newBlock: ImageBlockItem = {
+        id: String(Math.random()),
+        name: "New Image",
+        type: BlockContentType.Image,
+        src: "",
+        style: {},
+        parent: parentId,
+        alt: "",
+        width: 100,
+        height: 100,
+      };
+
+      const parent = blocks[parentId] as ContainerBlockItem;
+
+      // update the components
+      parent.children.push(newBlock.id);
+
+      // update the state
+
+      setBlocks({
+        ...blocks,
+        [newBlock.id]: newBlock,
+        [parentId]: parent,
+      });
+    },
+
+    // Function to remove an image component
+    removeImage: (id: string) => {
+      // Delete the component from its parent's children array
+      ContainerUtils.removeChild(id);
+
+      // Delete the component from the components object
+      delete blocks[id];
+
+      // Update the state
+      setBlocks({ ...blocks });
+    },
+
+    // Function to update the name of an image component
+    updateImageName: (id: string, name: string) => {
+      blocks[id].name = name;
+      setBlocks({ ...blocks });
+    },
+
+    // function to update the style of an image component
+    updateImageStyle: (id: string, attr: string, value: any) => {
+      blocks[id].style = { ...blocks[id].style, [attr]: value };
+      setBlocks({ ...blocks });
+    },
+
+    // Function to update the src of an image component
+    updateImageSrc: (id: string, src: string) => {
+      const block = blocks[id] as ImageBlockItem;
+      block.src = src;
+
+      // Update the state
+      setBlocks({ ...blocks, [id]: block });
+    },
+
+    // Function to update the alt of an image component
+    updateImageAlt: (id: string, alt: string) => {
+      const block = blocks[id] as ImageBlockItem;
+      block.alt = alt;
+
+      // Update the state
+      setBlocks({ ...blocks, [id]: block });
+    }
+  };
   return {
     blocks,
     ContainerUtils,
     TextUtils,
     componentUtils,
+    buttonUtils,
+    imageUtils,
     selectedVersion,
     versionUtils,
     settings,

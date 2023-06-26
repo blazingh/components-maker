@@ -16,13 +16,14 @@ export default function ComponentEditPage({
   _component,
   _componentVersions,
 }: ComponentEditPageProps) {
-
   const {
     blocks,
     ContainerUtils,
     component,
     componentVersions,
     TextUtils,
+    imageUtils,
+    buttonUtils,
     settings,
     settingsUtils,
     versionUtils,
@@ -84,6 +85,8 @@ export default function ComponentEditPage({
           activeBlockId={settings.activeBlockId}
           containerUtils={ContainerUtils}
           textUtils={TextUtils}
+          imageUtils={imageUtils}
+          buttonUtils={buttonUtils}
         />
       </div>
     </div>

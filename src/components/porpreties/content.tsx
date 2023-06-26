@@ -2,6 +2,7 @@ import {
   BlockContentType,
   BlockItem,
   BlocksTree,
+  ImageUtils,
   Locales,
   TextBlockType,
   TextBlockWrapper,
@@ -12,6 +13,8 @@ import TooltipButton from "../ui/tooltipButton";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { InputSelection } from "../inputs/inputSelection";
 import { InputWithLabel } from "../inputs/inputWithLabel";
+import { ComponentStylePropritiesOptions } from "@/constants/objects";
+import Background from "./background";
 
 // get proprities from BlockContentType
 const contentTypes = Object.keys(BlockContentType).map((key) => ({
@@ -41,6 +44,7 @@ interface ContentProps {
   blocks: BlocksTree;
   selectedBlock: BlockItem;
   textUtils: TextUtils;
+  imageUtils: ImageUtils;
   addBlock: (parent: string, type: BlockContentType) => void;
 }
 
@@ -49,6 +53,7 @@ export function Content({
   selectedBlock,
   textUtils,
   addBlock,
+  imageUtils,
 }: ContentProps) {
   const [selectedType, setSelectedType] = React.useState<BlockContentType>(
     contentTypes[0].value
@@ -155,6 +160,48 @@ export function Content({
               </div>
             )
           )}
+      </div>
+    );
+  }
+
+  // if the selected component is an image component
+  if (selectedBlock.type === BlockContentType.Image) {
+    return (
+      <div className="flex flex-col w-full h-full gap-y-2">
+        {/* input to change the image src of a component */}
+        <InputWithLabel
+          label="Image Src"
+          placeholder="Image Src"
+          type="text"
+          value={selectedBlock?.src || ""}
+          onChange={(e: any) =>
+            imageUtils.updateImageSrc(selectedBlock.id, e.target.value)
+          }
+        />
+
+        {/* input to change the image alt of a component */}
+        <InputWithLabel
+          label="Image Alt"
+          placeholder="Image Alt"
+          type="text"
+          value={selectedBlock?.alt || ""}
+          onChange={(e: any) =>
+            imageUtils.updateImageAlt(selectedBlock.id, e.target.value)
+          }
+        />
+
+        {/* input to change the object fit of a component */}
+        <InputSelection
+          label="Object Fit"
+          value={
+            selectedBlock?.style.objectFit ||
+            ComponentStylePropritiesOptions.objectFit[0].value
+          }
+          onValueChange={(e: any) =>
+            imageUtils.updateImageStyle(selectedBlock.id, "objectFit", e)
+          }
+          proprities={ComponentStylePropritiesOptions.objectFit}
+        />
       </div>
     );
   }
