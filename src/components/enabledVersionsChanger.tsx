@@ -37,9 +37,9 @@ export default function EnabledVersionsChanger({
   });
 
   return (
-    <div className="flex flex-row justify-between w-full">
+    <div className="flex flex-col justify-between w-full gap-y-2 ">
       <div className="flex flex-row items-center gap-x-2">
-        <Label className="w-24">Demo Version </Label>
+        <Label className="w-36">Demo Version </Label>
         <Select
           value={String(componentVersions.demo_version)}
           onValueChange={async (versionId: string) => {
@@ -71,8 +71,8 @@ export default function EnabledVersionsChanger({
             }
           }}
         >
-          <SelectTrigger className="w-20 h-8">
-            <SelectValue placeholder="0" />
+          <SelectTrigger>
+            <SelectValue placeholder="" />
           </SelectTrigger>
           <SelectContent>
             {porperties.map((proprity, index) => (
@@ -84,7 +84,7 @@ export default function EnabledVersionsChanger({
         </Select>
       </div>
       <div className="flex flex-row items-center gap-x-2">
-        <Label>Live Version </Label>
+        <Label className="w-36">Live Version </Label>
         <Select
           value={String(componentVersions.live_version)}
           onValueChange={async (versionId: string) => {
@@ -115,7 +115,7 @@ export default function EnabledVersionsChanger({
               });
           }}
         >
-          <SelectTrigger className="w-20 h-8">
+          <SelectTrigger>
             <SelectValue placeholder="0" />
           </SelectTrigger>
           <SelectContent>

@@ -12,20 +12,15 @@ export default function ComponentCard({
   component,
   versions,
 }: ComponentCardProps) {
-  const latestVersion = versions && versions[versions.length - 1];
-
   const versionPropreties = versions?.map((version) => {
-    return { label: version.version, value: version.id };
+    return { label: version.version_name, value: version.id };
   });
 
   return (
-    <div className="border border-gray-200 rounded-md p-2 pb-3 w-96 gap-y-2 flex flex-col">
+    <div className="border border-gray-200 rounded-md p-2 w-96 gap-y-4 flex flex-col">
       <div className="flex flex-row justify-between w-full">
         <div className="flex items-center gap-x-4">
-          <Label className="text-lg">{component.name}</Label>
-          <Label className="text-xs">
-            Latest Version : {latestVersion?.version || 0}
-          </Label>
+          <Label className="text-xl">{component.name}</Label>
         </div>
         <ComponentCardSettings component={component} />
       </div>

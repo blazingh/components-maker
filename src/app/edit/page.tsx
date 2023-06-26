@@ -8,7 +8,7 @@ export default async function Page() {
   const components = await supabase.from("component").select();
   const versions = await supabase
     .from("version")
-    .select("id, component, version");
+    .select("id, component, version , version_name");
 
   return (
     <div className="flex flex-wrap gap-4 justify-center items-center w-full pt-4">
