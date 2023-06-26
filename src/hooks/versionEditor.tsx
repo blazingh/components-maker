@@ -269,7 +269,7 @@ export default function VersionEditor({
 
   const ContainerUtils: ContainerUtils = {
     // Function to add a container component
-    addContainer: (parentId: string) => {
+    add: (parentId: string) => {
       const newBlock: ContainerBlockItem = {
         id: String(Math.random()),
         name: "New Container",
@@ -293,12 +293,12 @@ export default function VersionEditor({
     },
 
     // Function to remove a container component
-    removeContainer: (id: string) => {
+    remove: (id: string) => {
       const component = blocks[id] as ContainerBlockItem;
       // Delete children recursively
       for (const child of component.children) {
         if (blocks[child].type === BlockContentType.Container)
-          ContainerUtils.removeContainer(child);
+          ContainerUtils.remove(child);
       }
 
       const parent = blocks[component.parent] as ContainerBlockItem;
@@ -317,14 +317,17 @@ export default function VersionEditor({
     },
 
     // Function to update the name of a container component
-    updateContainerName: (id: string, name: string) => {
-      blocks[id].name = name;
+    updateName: (name: string) => {
+      blocks[settings.activeBlockId].name = name;
       setBlocks({ ...blocks });
     },
 
     // function to update the style of a container component
-    updateContainerStyle: (id: string, attr: string, value: any) => {
-      blocks[id].style = { ...blocks[id].style, [attr]: value };
+    updateStyle: (attr: string, value: any) => {
+      blocks[settings.activeBlockId].style = {
+        ...blocks[settings.activeBlockId].style,
+        [attr]: value,
+      };
       setBlocks({ ...blocks });
     },
 
@@ -363,7 +366,7 @@ export default function VersionEditor({
 
   const TextUtils: TextUtils = {
     // Function to add a text component
-    addText: (parentId: string) => {
+    add: (parentId: string) => {
       const newBlock: TextBlockItem = {
         id: String(Math.random()),
         name: "New Text",
@@ -390,59 +393,59 @@ export default function VersionEditor({
     },
 
     // Function to remove a text component
-    removeText: (id: string) => {
+    remove: () => {
       // Delete the component from its parent's children array
-      ContainerUtils.removeChild(id);
+      ContainerUtils.removeChild(settings.activeBlockId);
 
       // Delete the component from the components object
-      delete blocks[id];
+      delete blocks[settings.activeBlockId];
 
       // Update the state
       setBlocks({ ...blocks });
     },
 
     // Function to update the name of a text component
-    updateTextName: (id: string, name: string) => {
-      blocks[id].name = name;
+    updateName: (name: string) => {
+      blocks[settings.activeBlockId].name = name;
       setBlocks({ ...blocks });
     },
 
     // function to update the style of a text component
-    updateTextStyle: (id: string, attr: string, value: any) => {
-      blocks[id].style = { ...blocks[id].style, [attr]: value };
+    updateStyle: (attr: string, value: any) => {
+      blocks[settings.activeBlockId].style = { ...blocks[settings.activeBlockId].style, [attr]: value };
       setBlocks({ ...blocks });
     },
 
     // Function to update the text of a text component
-    updateTextContent: (id: string, text: string) => {
-      const block = blocks[id] as TextBlockItem;
+    updateContent: (text: string) => {
+      const block = blocks[settings.activeBlockId] as TextBlockItem;
       block.text = text;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
 
     // Function to update the wrapper of a text component
-    updateTextWrapper: (id: string, wrapper: TextBlockWrapper) => {
-      const block = blocks[id] as TextBlockItem;
+    updateWrapper: (wrapper: TextBlockWrapper) => {
+      const block = blocks[settings.activeBlockId] as TextBlockItem;
       block.wrapper = wrapper;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
 
     // Function to update the type of a text component
-    updateTextType: (id: string, type: TextBlockType) => {
-      const block = blocks[id] as TextBlockItem;
+    updateType: (type: TextBlockType) => {
+      const block = blocks[settings.activeBlockId] as TextBlockItem;
       block.textType = type;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
 
     // function to add localized text
-    addLocalizedText: (id: string, locale: Locales) => {
-      const block = blocks[id] as TextBlockItem;
+    addLocalized: (locale: Locales) => {
+      const block = blocks[settings.activeBlockId] as TextBlockItem;
 
       if (!block.localizedText) block.localizedText = {};
 
@@ -452,37 +455,37 @@ export default function VersionEditor({
       block.localizedText[locale] = "";
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
 
     // function to remove localized text
-    removeLocalizedText: (id: string, locale: Locales) => {
-      const block = blocks[id] as TextBlockItem;
+    removeLocalized: (locale: Locales) => {
+      const block = blocks[settings.activeBlockId] as TextBlockItem;
       // check if the locale exists
       if (!block.localizedText) return;
 
       delete block.localizedText[locale];
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
 
     // function to update localized text
-    updateLocalizedTextContent: (id: string, locale: Locales, text: string) => {
-      const block = blocks[id] as TextBlockItem;
+    updateLocalizedContent: (locale: Locales, text: string) => {
+      const block = blocks[settings.activeBlockId] as TextBlockItem;
       // check if the locale exists
       if (!block.localizedText) return;
 
       block.localizedText[locale] = text;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
   };
 
   const buttonUtils: ButtonUtils = {
     // Function to add a button component
-    addButton: (parentId: string) => {
+    add: (parentId: string) => {
       const newBlock: ButtonBlockItem = {
         id: String(Math.random()),
         name: "New Button",
@@ -507,52 +510,54 @@ export default function VersionEditor({
     },
 
     // Function to remove a button component
-    removeButton: (id: string) => {
+    remove: () => {
       // Delete the component from its parent's children array
-      ContainerUtils.removeChild(id);
+      ContainerUtils.removeChild(settings.activeBlockId);
 
       // Delete the component from the components object
-      delete blocks[id];
+      delete blocks[settings.activeBlockId];
 
       // Update the state
       setBlocks({ ...blocks });
     },
 
     // Function to update the name of a button component
-    updateButtonName: (id: string, name: string) => {
-      blocks[id].name = name;
+    updateName: (name: string) => {
+      blocks[settings.activeBlockId].name = name;
       setBlocks({ ...blocks });
     },
 
     // function to update the style of a button component
-    updateButtonStyle: (id: string, attr: string, value: any) => {
-      blocks[id].style = { ...blocks[id].style, [attr]: value };
+    updateStyle: (attr: string, value: any) => {
+      blocks[settings.activeBlockId].style = {
+        ...blocks[settings.activeBlockId].style,
+        [attr]: value,
+      };
       setBlocks({ ...blocks });
     },
 
     // Function to update the text of a button component
-    updateButtonText: (id: string, text: string) => {
-      const block = blocks[id] as ButtonBlockItem;
+    updateText: (text: string) => {
+      const block = blocks[settings.activeBlockId] as ButtonBlockItem;
       block.text = text;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
 
     // Function to update the onClickFunctionKey of a button component
-    updateButtonOnClickFunctionKey: (id: string, onClickFunctionKey: string) => {
-      const block = blocks[id] as ButtonBlockItem;
+    updateOnClickFunctionKey: (onClickFunctionKey: string) => {
+      const block = blocks[settings.activeBlockId] as ButtonBlockItem;
       block.onClickFunctionKey = onClickFunctionKey;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
-
   };
 
   const imageUtils: ImageUtils = {
     // Function to add an image component
-    addImage: (parentId: string) => {
+    add: (parentId: string) => {
       const newBlock: ImageBlockItem = {
         id: String(Math.random()),
         name: "New Image",
@@ -580,46 +585,49 @@ export default function VersionEditor({
     },
 
     // Function to remove an image component
-    removeImage: (id: string) => {
+    remove: () => {
       // Delete the component from its parent's children array
-      ContainerUtils.removeChild(id);
+      ContainerUtils.removeChild(settings.activeBlockId);
 
       // Delete the component from the components object
-      delete blocks[id];
+      delete blocks[settings.activeBlockId];
 
       // Update the state
       setBlocks({ ...blocks });
     },
 
     // Function to update the name of an image component
-    updateImageName: (id: string, name: string) => {
-      blocks[id].name = name;
+    updateName: (name: string) => {
+      blocks[settings.activeBlockId].name = name;
       setBlocks({ ...blocks });
     },
 
     // function to update the style of an image component
-    updateImageStyle: (id: string, attr: string, value: any) => {
-      blocks[id].style = { ...blocks[id].style, [attr]: value };
+    updateStyle: (attr: string, value: any) => {
+      blocks[settings.activeBlockId].style = {
+        ...blocks[settings.activeBlockId].style,
+        [attr]: value,
+      };
       setBlocks({ ...blocks });
     },
 
     // Function to update the src of an image component
-    updateImageSrc: (id: string, src: string) => {
-      const block = blocks[id] as ImageBlockItem;
+    updateSrc: (src: string) => {
+      const block = blocks[settings.activeBlockId] as ImageBlockItem;
       block.src = src;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
     },
 
     // Function to update the alt of an image component
-    updateImageAlt: (id: string, alt: string) => {
-      const block = blocks[id] as ImageBlockItem;
+    updateAlt: (alt: string) => {
+      const block = blocks[settings.activeBlockId] as ImageBlockItem;
       block.alt = alt;
 
       // Update the state
-      setBlocks({ ...blocks, [id]: block });
-    }
+      setBlocks({ ...blocks, [settings.activeBlockId]: block });
+    },
   };
   return {
     blocks,

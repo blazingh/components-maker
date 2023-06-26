@@ -104,47 +104,43 @@ export interface SettingsUtils {
 }
 
 export interface ContainerUtils {
-  addContainer: (parentId: string) => void;
-  removeContainer: (id: string) => void;
-  updateContainerName: (id: string, name: string) => void;
-  updateContainerStyle: (id: string, attr: string, value: any) => void;
-  changeChildPosition: (id: string, delta: number) => void;
-  removeChild: (id: string) => void;
+  add: (parentId: string) => void;
+  remove: (id: string) => void;
+  updateName: (name: string) => void;
+  updateStyle: (attr: string, value: any) => void;
+  changeChildPosition: (childId: string, delta: number) => void;
+  removeChild: (childId: string) => void;
 }
 
 export interface TextUtils {
-  addText: (parentId: string) => void;
-  removeText: (id: string) => void;
-  updateTextName: (id: string, name: string) => void;
-  updateTextContent: (id: string, text: string) => void;
-  updateTextWrapper: (id: string, wrapper: TextBlockWrapper) => void;
-  updateTextStyle: (id: string, attr: string, value: any) => void;
-  updateTextType: (id: string, type: TextBlockType) => void;
-  addLocalizedText: (id: string, locale: Locales) => void;
-  removeLocalizedText: (id: string, locale: Locales) => void;
-  updateLocalizedTextContent: (
-    id: string,
-    locale: Locales,
-    text: string
-  ) => void;
+  add: (parentId: string) => void;
+  remove: () => void;
+  updateName: (name: string) => void;
+  updateContent: (text: string) => void;
+  updateWrapper: (wrapper: TextBlockWrapper) => void;
+  updateStyle: (attr: string, value: any) => void;
+  updateType: (type: TextBlockType) => void;
+  addLocalized: (locale: Locales) => void;
+  removeLocalized: (locale: Locales) => void;
+  updateLocalizedContent: (locale: Locales, text: string) => void;
 }
 
 export interface ImageUtils {
-  addImage: (parentId: string) => void;
-  removeImage: (id: string) => void;
-  updateImageName: (id: string, name: string) => void;
-  updateImageSrc: (id: string, src: string) => void;
-  updateImageAlt: (id: string, alt: string) => void;
-  updateImageStyle: (id: string, attr: string, value: any) => void;
+  add: (parentId: string) => void;
+  remove: () => void;
+  updateName: (name: string) => void;
+  updateSrc: (src: string) => void;
+  updateAlt: (alt: string) => void;
+  updateStyle: (attr: string, value: any) => void;
 }
 
 export interface ButtonUtils {
-  addButton: (parentId: string) => void;
-  removeButton: (id: string) => void;
-  updateButtonName: (id: string, name: string) => void;
-  updateButtonText: (id: string, text: string) => void;
-  updateButtonStyle: (id: string, attr: string, value: any) => void;
-  updateButtonOnClickFunctionKey: (id: string, key: string) => void;
+  add: (parentId: string) => void;
+  remove: () => void;
+  updateName: (name: string) => void;
+  updateText: (text: string) => void;
+  updateStyle: (attr: string, value: any) => void;
+  updateOnClickFunctionKey: (key: string) => void;
 }
 
 export interface DtoComponentItem {
