@@ -412,7 +412,10 @@ export default function VersionEditor({
 
     // function to update the style of a text component
     updateStyle: (attr: string, value: any) => {
-      blocks[settings.activeBlockId].style = { ...blocks[settings.activeBlockId].style, [attr]: value };
+      blocks[settings.activeBlockId].style = {
+        ...blocks[settings.activeBlockId].style,
+        [attr]: value,
+      };
       setBlocks({ ...blocks });
     },
 

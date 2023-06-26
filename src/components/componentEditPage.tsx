@@ -6,6 +6,8 @@ import ComponentsPreviewTree from "./componentsPreviewTree";
 import ComponentsEditBar from "./componentsEditBar";
 import ComponentEditSettings from "./componentEditSettings";
 import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import useAuthProvider from "@/hooks/authProvider";
 
 interface ComponentEditPageProps {
   _component: DtoComponentItem;
@@ -16,6 +18,8 @@ export default function ComponentEditPage({
   _component,
   _componentVersions,
 }: ComponentEditPageProps) {
+  const { user } = useAuthProvider();
+
   const {
     blocks,
     ContainerUtils,
@@ -33,6 +37,8 @@ export default function ComponentEditPage({
     _component: _component,
     _componentVersions: _componentVersions,
   });
+
+  if (!user) return null;
 
   return (
     <div className="flex w-full h-full">
