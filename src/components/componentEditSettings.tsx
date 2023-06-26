@@ -7,7 +7,7 @@ import {
   VersionUtils,
 } from "@/types/types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Copy, Pen, Plus, Save, Trash } from "lucide-react";
+import { ArrowDown, ChevronDown, Copy, Pen, Plus, Save, Settings2, SettingsIcon, Trash } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Label } from "./ui/label";
@@ -27,6 +27,7 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { Accordion } from "./ui/accordion";
 
 interface ComponentCardSettingsProps {
   component: DtoComponentItem;
@@ -50,6 +51,8 @@ export default function ComponentEditSettings({
   const [newVersionName, setNewVersionName] = useState("");
 
   const [newComponentName, setNewComponentName] = useState(component.name);
+
+  const [optionsOpen, setOptionsOpen] = useState(false);
 
   const versionsProprities = versions?.map((version) => ({
     label: version.version_name,
@@ -82,10 +85,19 @@ export default function ComponentEditSettings({
           }}
           proprities={versionsProprities || []}
         />
+        <Button
+          variant={optionsOpen ? "default" : "outline"}
+          onClick={() => {
+            setOptionsOpen(!optionsOpen);
+          }}
+          className="p-2"
+        >
+          <Settings2 className="w-5 h-5" />
+        </Button>
       </div>
 
       {/* buttons to delete, save, create or duplicate component */}
-      <div className="flex flex-col gap-y-2">
+      <div className={`flex flex-col gap-y-2 ${optionsOpen ? "" : "hidden"}`}>
         <div className="flex items-center gap-x-2">
           {/* button to duplicate component */}
           <Popover
