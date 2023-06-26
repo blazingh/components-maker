@@ -90,52 +90,20 @@ export default function ComponentsEditBar({
               />
             </AccordionContent>
           </AccordionItem>
-
-          {/* input to change the text style of a component */}
-          <AccordionItem value="Typography">
-            <AccordionTrigger>Typography</AccordionTrigger>
-            <AccordionContent>
-              <Typography
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  textUtils.updateTextStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the size of a component */}
-          <AccordionItem value="Component Size">
-            <AccordionTrigger>Size</AccordionTrigger>
-            <AccordionContent>
-              <Size
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  textUtils.updateTextStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the background of a component */}
-          <AccordionItem value="Component Color">
-            <AccordionTrigger>Background</AccordionTrigger>
-            <AccordionContent>
-              <Background
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  textUtils.updateTextStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
+
+        <PropretyEditorsList
+          styles={selectedBlock?.style}
+          setStyles={(attr: string, value: any) =>
+            textUtils.updateTextStyle(activeBlockId, attr, value)
+          }
+        />
 
         {/* button to delete a component */}
         <TooltipButton
           variant="destructive"
           onClick={() => textUtils.removeText(activeBlockId)}
-          tooltipText="delete the block"
+          tooltipText="delete the text block"
         >
           <Trash className="mr-2 h-4 w-4" />
           Delete Block
@@ -174,43 +142,24 @@ export default function ComponentsEditBar({
               />
             </AccordionContent>
           </AccordionItem>
-          {/* input to change the size of a component */}
-          <AccordionItem value="Component Size">
-            <AccordionTrigger>Size</AccordionTrigger>
-            <AccordionContent>
-              <Size
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  imageUtils.updateImageStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-          {/* input to change the border of a component */}
-          <AccordionItem value="Component Border">
-            <AccordionTrigger>Border</AccordionTrigger>
-            <AccordionContent>
-              <Border
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  imageUtils.updateImageStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-          {/* input to change the background of a component */}
-          <AccordionItem value="Component Color">
-            <AccordionTrigger>Background</AccordionTrigger>
-            <AccordionContent>
-              <Background
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  imageUtils.updateImageStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
+
+        <PropretyEditorsList
+          styles={selectedBlock?.style}
+          setStyles={(atr: any, value: any) =>
+            imageUtils.updateImageStyle(activeBlockId, atr, value)
+          }
+        />
+
+        {/* button to delete a component */}
+        <TooltipButton
+          variant="destructive"
+          onClick={() => imageUtils.removeImage(activeBlockId)}
+          tooltipText="delete the image block"
+        >
+          <Trash className="mr-2 h-4 w-4" />
+          Delete Block
+        </TooltipButton>
       </>
     );
   }
@@ -245,43 +194,24 @@ export default function ComponentsEditBar({
               />
             </AccordionContent>
           </AccordionItem>
-          {/* input to change the size of a component */}
-          <AccordionItem value="Component Size">
-            <AccordionTrigger>Size</AccordionTrigger>
-            <AccordionContent>
-              <Size
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  buttonUtils.updateButtonStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-          {/* input to change the border of a component */}
-          <AccordionItem value="Component Border">
-            <AccordionTrigger>Border</AccordionTrigger>
-            <AccordionContent>
-              <Border
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  buttonUtils.updateButtonStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-          {/* input to change the background of a component */}
-          <AccordionItem value="Component Color">
-            <AccordionTrigger>Background</AccordionTrigger>
-            <AccordionContent>
-              <Background
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  buttonUtils.updateButtonStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
+
+        <PropretyEditorsList
+          styles={selectedBlock?.style}
+          setStyles={(atr: any, value: any) =>
+            buttonUtils.updateButtonStyle(activeBlockId, atr, value)
+          }
+        />
+
+        {/* button to delete a component */}
+        <TooltipButton
+          variant="destructive"
+          onClick={() => buttonUtils.removeButton(activeBlockId)}
+          tooltipText="delete the button block"
+        >
+          <Trash className="mr-2 h-4 w-4" />
+          Delete Block
+        </TooltipButton>
       </>
     );
   }
@@ -315,104 +245,20 @@ export default function ComponentsEditBar({
               />
             </AccordionContent>
           </AccordionItem>
-
-          {/* input to change the position of a component */}
-          <AccordionItem value="Move Component">
-            <AccordionTrigger>Position</AccordionTrigger>
-            <AccordionContent>
-              <Position
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the layout of a component */}
-          <AccordionItem value="Layout">
-            <AccordionTrigger>Layout</AccordionTrigger>
-            <AccordionContent>
-              <Layout
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the width and height of a component */}
-          <AccordionItem value="Component Size">
-            <AccordionTrigger>Size</AccordionTrigger>
-            <AccordionContent>
-              <Size
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the  margin of a component */}
-          <AccordionItem value="Component Margin">
-            <AccordionTrigger>Margin</AccordionTrigger>
-            <AccordionContent>
-              <Margin
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the padding of a component */}
-          <AccordionItem value="Component Padding">
-            <AccordionTrigger>Padding</AccordionTrigger>
-            <AccordionContent>
-              <Padding
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the background of a component */}
-          <AccordionItem value="Component Color">
-            <AccordionTrigger>Background</AccordionTrigger>
-            <AccordionContent>
-              <Background
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
-
-          {/* input to change the border of a component */}
-          <AccordionItem value="Component Border">
-            <AccordionTrigger>Border</AccordionTrigger>
-            <AccordionContent>
-              <Border
-                styles={selectedBlock?.style}
-                setStyles={(atr: any, value: any) =>
-                  containerUtils.updateContainerStyle(activeBlockId, atr, value)
-                }
-              />
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
+
+        <PropretyEditorsList
+          styles={selectedBlock?.style}
+          setStyles={(atr: any, value: any) =>
+            containerUtils.updateContainerStyle(activeBlockId, atr, value)
+          }
+        />
 
         {/* button to delete a component */}
         <TooltipButton
           variant="destructive"
           onClick={() => containerUtils.removeContainer(activeBlockId)}
-          tooltipText="delete the block and all its children"
+          tooltipText="delete the container block and all its children"
         >
           <Trash className="mr-2 h-4 w-4" />
           Delete Block
@@ -420,4 +266,71 @@ export default function ComponentsEditBar({
       </>
     );
   }
+}
+
+interface PropretyEditorsListProps {
+  styles: any;
+  setStyles: (attr: string, value: any) => void;
+}
+
+function PropretyEditorsList({ styles, setStyles }: PropretyEditorsListProps) {
+  return (
+    <Accordion type="single" collapsible>
+      {/* input to change the position of a block */}
+      <AccordionItem value="Move Block">
+        <AccordionTrigger>Position</AccordionTrigger>
+        <AccordionContent>
+          <Position styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+      {/* input to change the layout of a block */}
+      <AccordionItem value="Layout">
+        <AccordionTrigger>Layout</AccordionTrigger>
+        <AccordionContent>
+          <Layout styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="Block Size">
+        <AccordionTrigger>Size</AccordionTrigger>
+        <AccordionContent>
+          <Size styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+      {/* input to change the  margin of a block */}
+      <AccordionItem value="Block Margin">
+        <AccordionTrigger>Margin</AccordionTrigger>
+        <AccordionContent>
+          <Margin styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+      {/* input to change the padding of a block */}
+      <AccordionItem value="Block Padding">
+        <AccordionTrigger>Padding</AccordionTrigger>
+        <AccordionContent>
+          <Padding styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+      {/* input to change the border of a block */}
+      <AccordionItem value="Block Border">
+        <AccordionTrigger>Border</AccordionTrigger>
+        <AccordionContent>
+          <Border styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+      {/* input to change the background of a block */}
+      <AccordionItem value="Block Color">
+        <AccordionTrigger>Background</AccordionTrigger>
+        <AccordionContent>
+          <Background styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+      {/* input to change the typography of a block */}
+      <AccordionItem value="Block Typography">
+        <AccordionTrigger>Typography</AccordionTrigger>
+        <AccordionContent>
+          <Typography styles={styles} setStyles={setStyles} />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
 }
