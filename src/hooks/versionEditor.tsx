@@ -48,8 +48,9 @@ export default function VersionEditor({
 
   const [component, setBlock] = useState<DtoComponentItem>(_component);
 
-  const [componentVersions, setBlockVersions] =
-    useState<DtoVersionItem[]>(_componentVersions);
+  const [componentVersions, setBlockVersions] = useState<DtoVersionItem[]>(
+    _componentVersions || []
+  );
 
   const [selectedVersion, setSelectedVersion] = useState<DtoVersionItem>(
     _componentVersions[0]

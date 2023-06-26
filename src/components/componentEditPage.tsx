@@ -16,6 +16,7 @@ export default function ComponentEditPage({
   _component,
   _componentVersions,
 }: ComponentEditPageProps) {
+
   const {
     blocks,
     ContainerUtils,
