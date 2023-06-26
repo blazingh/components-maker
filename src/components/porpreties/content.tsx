@@ -2,6 +2,7 @@ import {
   BlockContentType,
   BlockItem,
   BlocksTree,
+  ButtonUtils,
   ImageUtils,
   Locales,
   TextBlockType,
@@ -45,6 +46,7 @@ interface ContentProps {
   selectedBlock: BlockItem;
   textUtils: TextUtils;
   imageUtils: ImageUtils;
+  buttonUtils: ButtonUtils;
   addBlock: (parent: string, type: BlockContentType) => void;
 }
 
@@ -54,6 +56,7 @@ export function Content({
   textUtils,
   addBlock,
   imageUtils,
+  buttonUtils,
 }: ContentProps) {
   const [selectedType, setSelectedType] = React.useState<BlockContentType>(
     contentTypes[0].value
@@ -201,6 +204,38 @@ export function Content({
             imageUtils.updateImageStyle(selectedBlock.id, "objectFit", e)
           }
           proprities={ComponentStylePropritiesOptions.objectFit}
+        />
+      </div>
+    );
+  }
+
+  // if the selected component is a button component
+  if (selectedBlock.type === BlockContentType.Button) {
+    return (
+      <div className="flex flex-col w-full h-full gap-y-2">
+        {/* input to change the button text of a component */}
+        <InputWithLabel
+          label="Button Text"
+          placeholder="Button Text"
+          type="text"
+          value={selectedBlock?.text || ""}
+          onChange={(e: any) =>
+            buttonUtils.updateButtonText(selectedBlock.id, e.target.value)
+          }
+        />
+
+        {/* input to change the button onClickFunctionKey of a component */}
+        <InputWithLabel
+          label="Button Function Key"
+          placeholder="Button Function Key"
+          type="text"
+          value={selectedBlock?.onClickFunctionKey || ""}
+          onChange={(e: any) =>
+            buttonUtils.updateButtonOnClickFunctionKey(
+              selectedBlock.id,
+              e.target.value
+            )
+          }
         />
       </div>
     );

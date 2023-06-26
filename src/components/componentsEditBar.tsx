@@ -81,6 +81,7 @@ export default function ComponentsEditBar({
             <AccordionTrigger>Content</AccordionTrigger>
             <AccordionContent>
               <Content
+                buttonUtils={buttonUtils}
                 blocks={blocks}
                 imageUtils={imageUtils}
                 selectedBlock={selectedBlock}
@@ -165,6 +166,7 @@ export default function ComponentsEditBar({
             <AccordionContent>
               <Content
                 blocks={blocks}
+                buttonUtils={buttonUtils}
                 selectedBlock={selectedBlock}
                 textUtils={textUtils}
                 addBlock={addBlock}
@@ -213,6 +215,77 @@ export default function ComponentsEditBar({
     );
   }
 
+  // if the selected component is a button component
+  if (selectedBlock?.type === BlockContentType.Button) {
+    return (
+      <>
+        {/* input to change the name of a component */}
+        <InputWithLabel
+          label="Block Name"
+          placeholder="Block Name"
+          type="text"
+          value={selectedBlock?.name || ""}
+          onChange={(e) =>
+            buttonUtils.updateButtonName(activeBlockId, e.target.value)
+          }
+        />
+
+        {/* input to change the content of a component */}
+        <Accordion type="single" collapsible>
+          <AccordionItem value="Edit Content">
+            <AccordionTrigger>Content</AccordionTrigger>
+            <AccordionContent>
+              <Content
+                buttonUtils={buttonUtils}
+                blocks={blocks}
+                selectedBlock={selectedBlock}
+                textUtils={textUtils}
+                addBlock={addBlock}
+                imageUtils={imageUtils}
+              />
+            </AccordionContent>
+          </AccordionItem>
+          {/* input to change the size of a component */}
+          <AccordionItem value="Component Size">
+            <AccordionTrigger>Size</AccordionTrigger>
+            <AccordionContent>
+              <Size
+                styles={selectedBlock?.style}
+                setStyles={(atr: any, value: any) =>
+                  buttonUtils.updateButtonStyle(activeBlockId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
+          {/* input to change the border of a component */}
+          <AccordionItem value="Component Border">
+            <AccordionTrigger>Border</AccordionTrigger>
+            <AccordionContent>
+              <Border
+                styles={selectedBlock?.style}
+                setStyles={(atr: any, value: any) =>
+                  buttonUtils.updateButtonStyle(activeBlockId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
+          {/* input to change the background of a component */}
+          <AccordionItem value="Component Color">
+            <AccordionTrigger>Background</AccordionTrigger>
+            <AccordionContent>
+              <Background
+                styles={selectedBlock?.style}
+                setStyles={(atr: any, value: any) =>
+                  buttonUtils.updateButtonStyle(activeBlockId, atr, value)
+                }
+              />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </>
+    );
+  }
+
   // if the selected component is a container component
   if (selectedBlock?.type === BlockContentType.Container) {
     return (
@@ -235,6 +308,7 @@ export default function ComponentsEditBar({
               <Content
                 blocks={blocks}
                 textUtils={textUtils}
+                buttonUtils={buttonUtils}
                 imageUtils={imageUtils}
                 selectedBlock={selectedBlock}
                 addBlock={addBlock}
