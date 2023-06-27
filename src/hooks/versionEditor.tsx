@@ -25,6 +25,8 @@ import {
   VersionUtils,
 } from "@/types/types";
 import { useEffect, useState } from "react";
+import useAuthProvider from "./authProvider";
+import pb from "@/lib/pocketbase";
 
 interface VersionEditorProps {
   _component: DtoComponentItem;
@@ -51,6 +53,8 @@ export default function VersionEditor({
   _componentVersions,
 }: VersionEditorProps): VersionEditorReturn {
   const { toast } = useToast();
+
+  const { user } = useAuthProvider();
 
   const [component, setBlock] = useState<DtoComponentItem>(_component);
 
@@ -86,22 +90,18 @@ export default function VersionEditor({
 
   const componentUtils: ComponentUtils = {
     renameComponent: async (name: string) => {
-      const { data, error } = await supabase
-        .from("component")
-        .update({ name })
-        .eq("id", component.id)
-        .select();
-
-      if (error)
+      try {
+        await pb
+          .collection("components")
+          .update(String(component.id), { name });
+        toast({
+          description: "Component renamed",
+        });
+      } catch (error: any) {
         toast({
           variant: "destructive",
           title: "Error renaming component",
-          description: error.message,
-        });
-      else if (data) {
-        setBlock({ ...component, name });
-        toast({
-          description: "Block renamed",
+          description: error.message || "An unknown error occurred",
         });
       }
     },

@@ -21,8 +21,8 @@ export const InitialVersionCreator = ({
 
   const handleCreateNewVersion = async () => {
     try {
-      const res = await pb.collection("versions").create({
-        name: "Initial Version",
+      await pb.collection("versions").create({
+        version_name: "Initial Version",
         data: initialVersionData,
         component: componentId,
       });
