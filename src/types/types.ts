@@ -82,7 +82,7 @@ export interface BlocksTree {
 export interface Settings {
   showOutline: boolean;
   activeBlockId: string;
-  selectedVersion: number;
+  selectedVersion: string;
 }
 
 export interface ComponentUtils {
@@ -100,7 +100,7 @@ export interface VersionUtils {
 export interface SettingsUtils {
   toggleOutline: (vale?: boolean) => void;
   setActiveBlockId: (id: string) => void;
-  setSelectedVersion: (version: number) => void;
+  setSelectedVersion: (version: string) => void;
 }
 
 export interface ContainerUtils {
@@ -144,16 +144,15 @@ export interface ButtonUtils {
 }
 
 export interface DtoComponentItem {
-  id: number;
+  id: string;
   name: string;
-  live_version: number;
-  demo_version: number;
+  live_version: string;
+  demo_version: string;
 }
 
 export interface DtoVersionItem {
-  id: number;
-  version: number;
+  id: string;
   version_name: string;
-  component: number;
+  component: string;
   data: BlocksTree;
 }

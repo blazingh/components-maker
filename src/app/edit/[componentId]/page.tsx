@@ -1,9 +1,7 @@
 import * as React from "react";
 
 import { DtoComponentItem, DtoVersionItem } from "@/types/types";
-import supabase from "@/lib/supabase";
 import ComponentEditPage from "@/components/componentEditPage";
-import { initialVersionData } from "@/constants/version";
 import pb from "@/lib/pocketbase";
 import { InitialVersionCreator } from "@/components/initialVersionCreator";
 

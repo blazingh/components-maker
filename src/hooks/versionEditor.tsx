@@ -2,7 +2,6 @@
 
 import { useToast } from "@/components/ui/use-toast";
 import { initialVersionData } from "@/constants/version";
-import supabase from "@/lib/supabase";
 import {
   BlockContentType,
   BlocksTree,
@@ -26,7 +25,7 @@ import {
 } from "@/types/types";
 import { useEffect, useState } from "react";
 import useAuthProvider from "./authProvider";
-import pb from "@/lib/pocketbase";
+import { UsePocketBase } from "./pocketbase";
 
 interface VersionEditorProps {
   _component: DtoComponentItem;
@@ -56,7 +55,9 @@ export default function VersionEditor({
 
   const { user } = useAuthProvider();
 
-  const [component, setBlock] = useState<DtoComponentItem>(_component);
+  const { pb } = UsePocketBase();
+
+  const [component, setComponet] = useState<DtoComponentItem>(_component);
 
   const [componentVersions, setBlockVersions] = useState<DtoVersionItem[]>(
     _componentVersions || []
@@ -90,20 +91,7 @@ export default function VersionEditor({
 
   const componentUtils: ComponentUtils = {
     renameComponent: async (name: string) => {
-      try {
-        await pb
-          .collection("components")
-          .update(String(component.id), { name });
-        toast({
-          description: "Component renamed",
-        });
-      } catch (error: any) {
-        toast({
-          variant: "destructive",
-          title: "Error renaming component",
-          description: error.message || "An unknown error occurred",
-        });
-      }
+      pb.update("components", component.id, { name }, "Component renamed");
     },
   };
 
@@ -116,134 +104,102 @@ export default function VersionEditor({
           (v) => v.id === settings.selectedVersion
         ) as DtoVersionItem;
 
-      const { data, error } = await supabase
-        .from("version")
-        .insert({
-          component: component.id,
-          version_name: versionName,
-          data: copyVersion ? copyVersion.data : initialVersionData,
-        })
-        .select();
+      const creationData = {
+        component: component.id,
+        version_name: versionName,
+        data: copyVersion ? copyVersion.data : initialVersionData,
+      };
 
-      if (error)
-        toast({
-          variant: "destructive",
-          title: "Error creating version",
-          description: error.message,
-        });
-      else if (data) {
-        setBlockVersions([...componentVersions, data[0]]);
-        setSettings({ ...settings, selectedVersion: data[0].id });
-        toast({
-          description: "Version created",
-        });
-      }
+      const res = await pb.create<DtoVersionItem>(
+        "versions",
+        creationData,
+        "Version has been created"
+      );
+
+      if (!res) return;
+      setBlockVersions([...componentVersions, res]);
+      setSettings({ ...settings, selectedVersion: res.id });
     },
 
     deleteVersion: async () => {
-      const { data, error } = await supabase
-        .from("version")
-        .delete()
-        .eq("id", settings.selectedVersion)
-        .select();
+      const res = await pb.delete<DtoVersionItem>(
+        "versions",
+        settings.selectedVersion,
+        "Version has been deleted"
+      );
 
-      if (error)
-        toast({
-          variant: "destructive",
-          title: "Error deleting version",
-          description: error.message,
-        });
-      else if (data) {
-        const newBlockVersions = componentVersions.filter(
-          (v) => v.id !== settings.selectedVersion
-        );
-        setBlockVersions(newBlockVersions);
-        setSettings({
-          ...settings,
-          selectedVersion: newBlockVersions[0].id,
-        });
-        toast({
-          description: "Version deleted",
-        });
-      }
+      if (!res) return;
+      const newBlockVersions = componentVersions.filter(
+        (v) => v.id !== settings.selectedVersion
+      );
+      setBlockVersions(newBlockVersions);
+      setSettings({
+        ...settings,
+        selectedVersion: newBlockVersions[0].id,
+      });
     },
 
     updateVersionNumber: async (versionNumber: number) => {
-      const { data, error } = await supabase
-        .from("version")
-        .update({ number: versionNumber })
-        .eq("id", settings.selectedVersion)
-        .select();
+      const updationData = {
+        number: versionNumber,
+      };
 
-      if (error)
-        toast({
-          variant: "destructive",
-          title: "Error updating version number",
-          description: error.message,
-        });
-      else if (data) {
-        setBlockVersions(
-          componentVersions.map((v) => {
-            if (v.id === settings.selectedVersion) return data[0];
-            else return v;
-          })
-        );
-        toast({
-          description: "Version number updated",
-        });
-      }
+      const res = await pb.update<DtoVersionItem>(
+        "versions",
+        settings.selectedVersion,
+        updationData,
+        "Version number has been updated"
+      );
+
+      if (!res) return;
+      setBlockVersions(
+        componentVersions.map((v) => {
+          if (v.id === settings.selectedVersion) return res;
+          else return v;
+        })
+      );
     },
 
     updateVersionName: async (versionName: string) => {
-      const { data, error } = await supabase
-        .from("version")
-        .update({ version_name: versionName })
-        .eq("id", settings.selectedVersion)
-        .select();
+      const updationData = {
+        version_name: versionName,
+      };
 
-      if (error)
-        toast({
-          variant: "destructive",
-          title: "Error updating version name",
-          description: error.message,
-        });
-      else if (data) {
-        setBlockVersions(
-          componentVersions.map((v) => {
-            if (v.id === settings.selectedVersion) return data[0];
-            else return v;
-          })
-        );
-        toast({
-          description: "Version name updated",
-        });
-      }
+      const res = await pb.update<DtoVersionItem>(
+        "versions",
+        settings.selectedVersion,
+        updationData,
+        "Version name has been updated"
+      );
+
+      if (!res) return;
+      setBlockVersions(
+        componentVersions.map((v) => {
+          if (v.id === settings.selectedVersion) return res;
+          else return v;
+        })
+      );
     },
 
     updateVersionData: async () => {
-      const { error } = await supabase
-        .from("version")
-        .update({ data: blocks })
-        .eq("id", settings.selectedVersion);
+      const updationData = {
+        data: blocks,
+      };
 
-      if (error)
-        toast({
-          variant: "destructive",
-          title: "Error updating version data",
-          description: error.message,
-        });
-      else {
-        setBlockVersions(
-          componentVersions.map((v) => {
-            if (v.id === settings.selectedVersion)
-              return { ...v, data: blocks };
-            else return v;
-          })
-        );
-        toast({
-          description: "Version data updated",
-        });
-      }
+      const res = await pb.update<DtoVersionItem>(
+        "versions",
+        settings.selectedVersion,
+        updationData,
+        "Version data has been updated"
+      );
+
+      if (!res) return;
+      setBlockVersions(
+        componentVersions.map((v) => {
+          if (v.id === settings.selectedVersion) return res;
+          else return v;
+        })
+      );
     },
   };
 
@@ -255,7 +211,7 @@ export default function VersionEditor({
     setActiveBlockId: (id: string) => {
       setSettings({ ...settings, activeBlockId: id });
     },
-    setSelectedVersion: (id: number) => {
+    setSelectedVersion: (id: string) => {
       const version = componentVersions.find(
         (v) => v.id === id
       ) as DtoVersionItem;

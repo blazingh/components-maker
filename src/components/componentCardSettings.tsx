@@ -22,8 +22,8 @@ import {
 } from "./ui/alert-dialog";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
-import supabase from "@/lib/supabase";
 import { Button } from "./ui/button";
+import { UsePocketBase } from "@/hooks/pocketbase";
 
 interface ComponentCardSettingsProps {
   component: DtoComponentItem;
@@ -36,28 +36,17 @@ export default function ComponentCardSettings({
 }: ComponentCardSettingsProps) {
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { toast } = useToast();
+  const { pb } = UsePocketBase();
 
   const handleDelete = async () => {
-    console.log("delete");
-    const res = await supabase
-      .from("component")
-      .delete()
-      .eq("id", component.id);
+    const res = await pb.delete<DtoComponentItem>(
+      "components",
+      component.id,
+      "Component deleted"
+    );
 
-    if (res.error) {
-      toast({
-        variant: "destructive",
-        title: "Error deleting component",
-        description: res.error.message,
-      });
-    } else {
-      toast({
-        title: "Component deleted",
-        description: `Component ${component.name} was deleted`,
-      });
-      router.refresh();
-    }
+    if (!res) return;
+    router.refresh();
   };
 
   return (

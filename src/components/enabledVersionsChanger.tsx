@@ -8,10 +8,10 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Label } from "./ui/label";
-import supabase from "@/lib/supabase";
-import { useToast } from "./ui/use-toast";
 import { DtoComponentItem } from "@/types/types";
 import { useState } from "react";
+import { UsePocketBase } from "@/hooks/pocketbase";
+import { useRouter } from "next/navigation";
 
 interface EnabledVersionsChangerProps {
   component: DtoComponentItem;
@@ -26,7 +26,8 @@ export default function EnabledVersionsChanger({
   porperties,
   component,
 }: EnabledVersionsChangerProps) {
-  const { toast } = useToast();
+  const { pb } = UsePocketBase();
+  const router = useRouter();
 
   const [componentVersions, setComponentVersions] = useState<{
     live_version: number;
@@ -36,6 +37,29 @@ export default function EnabledVersionsChanger({
     demo_version: demo_version || 0,
   });
 
+  const handleUpdate = async (versionName: string, versionId: string) => {
+    setComponentVersions({
+      ...componentVersions,
+      [versionName]: versionId,
+    });
+    const res = await pb.update<DtoComponentItem>(
+      "components",
+      component.id,
+      {
+        [versionName]: versionId,
+      },
+      "Version Has been updated"
+    );
+
+    if (!res)
+      setComponentVersions({
+        ...componentVersions,
+        [versionName]:
+          versionName === "live_version" ? live_version : demo_version,
+      });
+    else router.refresh();
+  };
+
   return (
     <div className="flex flex-col justify-between w-full gap-y-2 ">
       <div className="flex flex-row items-center gap-x-2">
@@ -43,32 +67,7 @@ export default function EnabledVersionsChanger({
         <Select
           value={String(componentVersions.demo_version)}
           onValueChange={async (versionId: string) => {
-            setComponentVersions({
-              ...componentVersions,
-              demo_version: Number(versionId),
-            });
-            const res = await supabase
-              .from("component")
-              .update({
-                demo_version: Number(versionId),
-              })
-              .eq("id", component.id)
-              .select();
-
-            if (res.error) {
-              setComponentVersions({
-                ...componentVersions,
-                demo_version: demo_version || 0,
-              });
-              toast({
-                variant: "destructive",
-                description: `Failed to update "Demo Version" for ${component.name}`,
-              });
-            } else {
-              toast({
-                description: `"Demo Version" updated for ${component.name}`,
-              });
-            }
+            handleUpdate("demo_version", versionId);
           }}
         >
           <SelectTrigger>
@@ -88,31 +87,7 @@ export default function EnabledVersionsChanger({
         <Select
           value={String(componentVersions.live_version)}
           onValueChange={async (versionId: string) => {
-            setComponentVersions({
-              ...componentVersions,
-              live_version: Number(versionId),
-            });
-            const res = await supabase
-              .from("component")
-              .update({
-                live_version: Number(versionId),
-              })
-              .eq("id", component.id)
-              .select();
-
-            if (res.error) {
-              setComponentVersions({
-                ...componentVersions,
-                live_version: live_version || 0,
-              });
-              toast({
-                variant: "destructive",
-                description: `Failed to update "Live Version" for "${component.name}"`,
-              });
-            } else
-              toast({
-                description: `"Live Version" updated for "${component.name}"`,
-              });
+            handleUpdate("live_version", versionId);
           }}
         >
           <SelectTrigger>

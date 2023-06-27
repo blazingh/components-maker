@@ -1,5 +1,7 @@
-import supabase from "@/lib/supabase";
+import pb from "@/lib/pocketbase";
 import CloudComponentRender from "./cloudComponetRender";
+import { safePocketBase } from "@/hooks/pocketbase";
+import { DtoComponentItem, DtoVersionItem } from "@/types/types";
 
 interface CloudComponentProps {
   name: string;
@@ -12,35 +14,33 @@ export default async function CloudComponent({
   searchParams,
   data,
 }: CloudComponentProps) {
-  const component = await supabase
-    .from("component")
-    .select()
-    .eq("name", name)
-    .single();
+  const component = await safePocketBase.getFirstListItem<DtoComponentItem>(
+    "components",
+    "name",
+    { name }
+  );
 
-  if (component.error) {
-    return <div>error</div>;
+  if (!component) {
+    return <div>component not found</div>;
   }
 
   let demo = null;
 
   if (searchParams && searchParams.showDemo) demo = true;
 
-  const version = await supabase
-    .from("version")
-    .select()
-    .eq("id", demo ? component.data.demo_version : component.data.live_version)
-    .single();
+  const version = await safePocketBase.getFirstListItem<DtoVersionItem>(
+    "versions",
+    "id",
+    {
+      id: demo ? component.demo_version : component.live_version,
+    }
+  );
 
-  if (version.error) {
-    return <div>error</div>;
+  if (!version) {
+    return <div>version not found</div>;
   }
 
   return (
-    <CloudComponentRender
-      data={data}
-      component={component.data}
-      version={version.data}
-    />
+    <CloudComponentRender data={data} component={component} version={version} />
   );
 }

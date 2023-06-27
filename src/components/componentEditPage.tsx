@@ -6,7 +6,6 @@ import ComponentsPreviewTree from "./componentsPreviewTree";
 import ComponentsEditBar from "./componentsEditBar";
 import ComponentEditSettings from "./componentEditSettings";
 import { Label } from "./ui/label";
-import { Button } from "./ui/button";
 import useAuthProvider from "@/hooks/authProvider";
 
 interface ComponentEditPageProps {

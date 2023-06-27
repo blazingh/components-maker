@@ -7,7 +7,17 @@ import {
   VersionUtils,
 } from "@/types/types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { ArrowDown, ChevronDown, Copy, Pen, Plus, Save, Settings2, SettingsIcon, Trash } from "lucide-react";
+import {
+  ArrowDown,
+  ChevronDown,
+  Copy,
+  Pen,
+  Plus,
+  Save,
+  Settings2,
+  SettingsIcon,
+  Trash,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Label } from "./ui/label";
@@ -81,7 +91,7 @@ export default function ComponentEditSettings({
           label="Selected Version"
           value={String(settings.selectedVersion)}
           onValueChange={(value) => {
-            settingsUtils.setSelectedVersion(parseInt(value));
+            settingsUtils.setSelectedVersion(value);
           }}
           proprities={versionsProprities || []}
         />
